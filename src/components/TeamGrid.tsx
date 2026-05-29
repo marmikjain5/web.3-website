@@ -334,24 +334,27 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
             {glitching && (
               <>
                 <div className="glitch-layer-1" aria-hidden="true"
-                  style={{ fontFamily: "'Syne',sans-serif", fontSize: "clamp(52px,8vw,96px)", fontWeight: 800 }}>
+                  style={{ fontFamily: "'Syne',sans-serif", fontSize: "clamp(20px, 9vw, 96px)", fontWeight: 800 }}>
                   OUR TEAM
                 </div>
                 <div className="glitch-layer-2" aria-hidden="true"
-                  style={{ fontFamily: "'Syne',sans-serif", fontSize: "clamp(52px,8vw,96px)", fontWeight: 800 }}>
+                  style={{ fontFamily: "'Syne',sans-serif", fontSize: "clamp(20px, 9vw, 96px)", fontWeight: 800 }}>
                   OUR TEAM
                 </div>
               </>
             )}
-            <h2 style={{
-              fontFamily: "'Syne', sans-serif",
-              fontSize: "clamp(52px, 8vw, 96px)",
-              fontWeight: 800,
-              margin: 0,
-              lineHeight: 1,
-              letterSpacing: "-0.02em",
-              position: "relative",
-            }}>
+            <h2
+  style={{
+    fontFamily: "'Syne', sans-serif",
+    fontSize: "clamp(20px, 9vw, 96px)",
+    fontWeight: 800,
+    whiteSpace: "nowrap",
+    margin: 0,
+    lineHeight: 0.9,
+    letterSpacing: "-0.03em",
+    position: "relative",
+  }}
+>
               {"OUR TEAM".split("").map((char, i) => (
                 <span key={i} className="letter-anim" style={{
                   animationDelay: `${i * 0.06}s`,

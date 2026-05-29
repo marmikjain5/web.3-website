@@ -285,26 +285,30 @@ export async function upsertRegistrationFields(
 // ─────────────────────────────────────────────────────────────
 
 export async function getTeamMembers(): Promise<TeamMemberRow[]> {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from("team_members")
-    .select("*")
-    .order("sort_order", { ascending: true });
-
-  if (!data) return [];
-
-  const hierarchyWeights: Record<string, number> = {
-    president: 1,
-    lead: 2,
-    "": 3, // Associates / default
-  };
-
-  return (data as TeamMemberRow[]).sort((a, b) => {
-    const wA = hierarchyWeights[a.hierarchy_level || ""] || 3;
-    const wB = hierarchyWeights[b.hierarchy_level || ""] || 3;
-    if (wA !== wB) return wA - wB;
-    return a.sort_order - b.sort_order;
-  });
+  return [
+    {
+      id: "1",
+      name: "John Doe",
+      role: "President",
+      department: "Leadership",
+      description: "Temporary mock data",
+      image_url: null,
+      sort_order: 1,
+      hierarchy_level: "president",
+      socials: {},
+    },
+    {
+      id: "2",
+      name: "Jane Smith",
+      role: "Lead",
+      department: "Core",
+      description: "Temporary mock data",
+      image_url: null,
+      sort_order: 2,
+      hierarchy_level: "lead",
+      socials: {},
+    },
+  ];
 }
 
 import { writeFile, mkdir } from "fs/promises";
