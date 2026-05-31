@@ -16,6 +16,7 @@ const NAV_TABS = [
   { label: "About", href: "/about" },
   { label: "Team", href: "/team" },
   { label: "Events", href: "/events" },
+  { label: "Media", href: "/media" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -81,6 +82,7 @@ export default function Navbar() {
     else if (pathname.startsWith("/about")) setWithActive("About");
     else if (pathname.startsWith("/team")) setWithActive("Team");
     else if (pathname.startsWith("/events")) setWithActive("Events");
+    else if (pathname.startsWith("/media")) setWithActive("Media");
     else if (pathname.startsWith("/contact")) setWithActive("Contact");
     else if (pathname.startsWith("/admin")) setWithActive("Admin");
   }, [pathname]);

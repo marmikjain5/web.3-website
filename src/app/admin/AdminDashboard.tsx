@@ -5,6 +5,8 @@ import {
   getEvents,
   createEvent,
   updateEventStatus,
+  updateEvent,
+  updateEventMeta,
   deleteEvent,
   getRegistrationFields,
   upsertRegistrationFields,
@@ -12,9 +14,14 @@ import {
   createTeamMember,
   updateTeamMember,
   deleteTeamMember,
+  uploadEventMedia,
+  getEventMedia,
+  deleteEventMedia,
+  getStorageUsage,
   type EventRow,
   type RegistrationFieldRow,
   type TeamMemberRow,
+  type EventMediaRow,
 } from "@/app/actions/admin";
 
 // ─────────────────────────────────────────────────────────────
@@ -84,6 +91,7 @@ function EventsPanel() {
   const [events, setEvents] = useState<EventRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [showMediaUpload, setShowMediaUpload] = useState(false);
   const [editingFieldsFor, setEditingFieldsFor] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -121,6 +129,12 @@ function EventsPanel() {
     setTimeout(() => setFeedback(null), 3000);
   };
 
+  const handleMediaUploaded = () => {
+    setShowMediaUpload(false);
+    setFeedback({ type: "success", text: "Media uploaded successfully!" });
+    setTimeout(() => setFeedback(null), 3000);
+  };
+
   return (
     <div>
       {/* Feedback toast */}
@@ -141,13 +155,30 @@ function EventsPanel() {
         <h2 className="font-mono text-lg text-foreground/60">
           Events <span className="text-foreground/20">({events.length})</span>
         </h2>
-        <button
-          onClick={() => setShowForm(true)}
-          className="px-5 py-2.5 bg-accent text-black font-mono text-xs font-bold rounded-lg hover:bg-green-300 transition-colors cursor-pointer"
-        >
-          + Add Event
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowMediaUpload(true)}
+            className="px-5 py-2.5 bg-blue-600 text-white font-mono text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+          >
+            📸 Upload Media
+          </button>
+          <button
+            onClick={() => setShowForm(true)}
+            className="px-5 py-2.5 bg-accent text-black font-mono text-xs font-bold rounded-lg hover:bg-green-300 transition-colors cursor-pointer"
+          >
+            + Add Event
+          </button>
+        </div>
       </div>
+
+      {/* Media upload modal */}
+      {showMediaUpload && (
+        <MediaUploadModal
+          events={events}
+          onClose={() => setShowMediaUpload(false)}
+          onUploaded={handleMediaUploaded}
+        />
+      )}
 
       {/* Event creation modal */}
       {showForm && (
@@ -194,6 +225,7 @@ function EventsPanel() {
               onStatusChange={handleStatusChange}
               onDelete={handleDelete}
               onEditFields={() => setEditingFieldsFor(event.id)}
+              onUploadMedia={() => setShowMediaUpload(true)}
             />
           ))}
         </div>
@@ -209,11 +241,13 @@ function EventCard({
   onStatusChange,
   onDelete,
   onEditFields,
+  onUploadMedia,
 }: {
   event: EventRow;
   onStatusChange: (id: string, status: "open" | "soon" | "closed") => void;
   onDelete: (id: string, title: string) => void;
   onEditFields: () => void;
+  onUploadMedia: () => void;
 }) {
   const statusColors: Record<string, string> = {
     open: "bg-accent/10 text-accent border-accent/20",
@@ -255,7 +289,7 @@ function EventCard({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
           {/* Status toggle */}
           <select
             value={event.status}
@@ -266,6 +300,15 @@ function EventCard({
             <option value="soon" className="bg-[#0a0c0f]">Coming Soon</option>
             <option value="closed" className="bg-[#0a0c0f]">Closed</option>
           </select>
+
+          {/* Upload media button */}
+          <button
+            onClick={onUploadMedia}
+            className="px-3 py-1.5 border border-blue-500/30 text-blue-400 text-xs font-mono rounded-md hover:bg-blue-500/10 hover:border-blue-400/60 transition-colors cursor-pointer"
+            title="Upload event media"
+          >
+            📸 Media
+          </button>
 
           {/* Edit registration fields */}
           <button
@@ -699,6 +742,354 @@ function FieldsEditorModal({
             </>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Media Upload Modal ────────────────────────────────────────
+
+function MediaUploadModal({
+  events,
+  onClose,
+  onUploaded,
+}: {
+  events: EventRow[];
+  onClose: () => void;
+  onUploaded: () => void;
+}) {
+  const [selectedEventId, setSelectedEventId] = useState<string>(events[0]?.id || "");
+  const [eventTitle, setEventTitle] = useState<string>(events[0]?.title || "");
+  const [eventDescription, setEventDescription] = useState<string>(events[0]?.description || "");
+  const [mediaTitles, setMediaTitles] = useState<Record<string, string>>({});
+  const [mediaDescriptions, setMediaDescriptions] = useState<Record<string, string>>({});
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadingIndex, setUploadingIndex] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [storageInfo, setStorageInfo] = useState<{ used: number; limit: number; remaining: number; percentage: number } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const selectedEvent = events.find((event) => event.id === selectedEventId) || events[0];
+    if (selectedEvent) {
+      setEventTitle(selectedEvent.title);
+      setEventDescription(selectedEvent.description || "");
+    }
+  }, [selectedEventId, events]);
+
+  useEffect(() => {
+    const loadStorageInfo = async () => {
+      try {
+        const info = await getStorageUsage();
+        setStorageInfo(info);
+      } catch (err: any) {
+        setError(`Storage status failed: ${err?.message ?? "Unknown error"}`);
+      }
+    };
+    loadStorageInfo();
+  }, []);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 0) {
+      setSelectedFiles((prev) => [...prev, ...files]);
+      setError(null);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+    const fileName = selectedFiles[index].name;
+    setMediaTitles((prev) => {
+      const newTitles = { ...prev };
+      delete newTitles[fileName];
+      return newTitles;
+    });
+    setMediaDescriptions((prev) => {
+      const newDescs = { ...prev };
+      delete newDescs[fileName];
+      return newDescs;
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedEventId || selectedFiles.length === 0) {
+      setError("Please select an event and at least one file.");
+      return;
+    }
+
+    setUploading(true);
+    setError(null);
+
+    const selectedEvent = events.find((event) => event.id === selectedEventId);
+    if (selectedEvent && (eventTitle !== selectedEvent.title || eventDescription !== (selectedEvent.description || ""))) {
+      const metaUpdate = await updateEventMeta(selectedEventId, eventTitle, eventDescription);
+      if (!metaUpdate.success) {
+        setUploading(false);
+        setError(metaUpdate.error || "Failed to update event metadata.");
+        return;
+      }
+    }
+
+    let successCount = 0;
+    let failureCount = 0;
+    let firstFailureMessage: string | null = null;
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      setUploadingIndex(i);
+      const file = selectedFiles[i];
+      const res = await uploadEventMedia(
+        selectedEventId,
+        mediaTitles[file.name] || "",
+        mediaDescriptions[file.name] || "",
+        file
+      );
+
+      if (res.success) {
+        successCount++;
+      } else {
+        failureCount++;
+        if (!firstFailureMessage) {
+          firstFailureMessage = `Upload failed for ${file.name}: ${res.error || "Unknown error"}`;
+        }
+      }
+    }
+
+    setUploading(false);
+    setUploadingIndex(null);
+
+    if (failureCount === 0) {
+      setError(null);
+      onUploaded();
+    } else {
+      setError(`${firstFailureMessage}. Uploaded ${successCount}, failed ${failureCount}.`);
+    }
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-4"
+      onClick={(e) => e.target === e.currentTarget && onClose()}
+    >
+      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-[#0a0c0f] border border-blue-500/20 rounded-xl shadow-[0_0_100px_rgba(59,130,246,0.15)]">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-blue-500/10 bg-blue-500/5 sticky top-0 z-10 backdrop-blur-md">
+          <h3 className="font-mono text-base font-bold text-blue-300">📸 UPLOAD_EVENT_MEDIA</h3>
+          <button
+            onClick={onClose}
+            className="w-7 h-7 rounded-full bg-foreground/[0.08] hover:bg-foreground/[0.15] flex items-center justify-center text-blue-200 hover:text-white transition-colors cursor-pointer text-xs"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-5">
+          {error && (
+            <div className="px-4 py-3 rounded-lg bg-red-400/10 border border-red-400/30 text-red-300 text-xs font-mono">
+              {error}
+            </div>
+          )}
+
+          {/* Storage info */}
+          {storageInfo && (
+            <div className="px-4 py-3 rounded-lg bg-blue-500/10 border border-blue-400/30 text-blue-200 text-[11px] font-mono space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="font-semibold">Storage Status</span>
+                <span className="text-blue-300 font-bold text-sm">{storageInfo.percentage}%</span>
+              </div>
+              <div className="w-full h-2.5 bg-blue-500/10 rounded-full overflow-hidden border border-blue-400/20">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all"
+                  style={{ width: `${storageInfo.percentage}%` }}
+                />
+              </div>
+              <div className="flex justify-between text-[10px]">
+                <span>Used: {(storageInfo.used / 1024 / 1024).toFixed(2)} MB</span>
+                <span>Limit: {(storageInfo.limit / 1024 / 1024 / 1024).toFixed(1)} GB</span>
+                <span className="text-blue-300 font-semibold">Free: {(storageInfo.remaining / 1024 / 1024).toFixed(2)} MB</span>
+              </div>
+            </div>
+          )}
+
+          {/* Event selector */}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-[11px] font-mono font-bold text-blue-300 uppercase tracking-wider mb-2.5">
+                Select Event *
+              </label>
+              <select
+                value={selectedEventId}
+                onChange={(e) => setSelectedEventId(e.target.value)}
+                className="w-full bg-foreground/[0.08] border border-blue-400/20 text-foreground/80 text-sm font-mono rounded-lg px-3 py-3 outline-none focus:border-blue-400/50 focus:bg-foreground/[0.1] transition-colors"
+              >
+                <option value="">-- Choose an event --</option>
+                {events.map((event) => (
+                  <option key={event.id} value={event.id} className="bg-[#0a0c0f]">
+                    {event.title}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold text-blue-300 uppercase tracking-wider mb-2.5">
+                Event Title
+              </label>
+              <input
+                type="text"
+                value={eventTitle}
+                onChange={(e) => setEventTitle(e.target.value)}
+                className="w-full bg-foreground/[0.08] border border-blue-400/20 text-foreground/90 text-sm font-mono rounded-lg px-3 py-3 outline-none focus:border-blue-400/50 focus:bg-foreground/[0.1] transition-colors"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold text-blue-300 uppercase tracking-wider mb-2.5">
+                Event Description
+              </label>
+              <textarea
+                value={eventDescription}
+                onChange={(e) => setEventDescription(e.target.value)}
+                rows={3}
+                className="w-full bg-foreground/[0.08] border border-blue-400/20 text-foreground/90 text-sm font-mono rounded-lg px-3 py-3 outline-none focus:border-blue-400/50 focus:bg-foreground/[0.1] transition-colors resize-none"
+              />
+            </div>
+          </div>
+
+          {/* File upload */}
+          <div>
+            <label className="block text-[11px] font-mono font-bold text-blue-300 uppercase tracking-wider mb-2.5">
+              Choose Files (Multiple) *
+            </label>
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="relative border-2 border-dashed border-blue-400/30 hover:border-blue-400/60 bg-blue-500/5 hover:bg-blue-500/10 rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all group"
+            >
+              <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">📸</div>
+              <p className="text-sm text-blue-200 font-mono font-semibold">Click to upload or drag & drop</p>
+              <p className="text-[11px] text-blue-300/60 font-mono mt-2">Images, videos — max 500MB each</p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/*,video/*"
+                className="hidden"
+                onChange={handleFileSelect}
+              />
+            </div>
+          </div>
+
+          {/* Selected files list */}
+          {selectedFiles.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="block text-[11px] font-mono font-bold text-blue-300 uppercase tracking-wider">
+                  Selected Files ({selectedFiles.length})
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedFiles([]);
+                    setMediaTitles({});
+                    setMediaDescriptions({});
+                  }}
+                  className="text-[10px] text-red-400/70 hover:text-red-300 font-mono cursor-pointer"
+                >
+                  Clear All
+                </button>
+              </div>
+
+              <div className="max-h-96 overflow-y-auto space-y-3 bg-foreground/[0.03] p-4 rounded-lg border border-foreground/[0.06]">
+                {selectedFiles.map((file, index) => (
+                  <div
+                    key={`${file.name}-${index}`}
+                    className="bg-foreground/[0.05] border border-blue-400/15 rounded-lg p-4 space-y-2.5"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-[10px] font-mono bg-blue-500/20 text-blue-300 px-2 py-1 rounded">
+                            #{index + 1}
+                          </span>
+                          <p className="text-[10px] text-foreground/50 font-mono truncate">{file.name}</p>
+                        </div>
+                        <p className="text-[10px] text-foreground/30 font-mono">
+                          {(file.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeFile(index)}
+                        className="text-red-400/50 hover:text-red-300 text-lg transition-colors"
+                        title="Remove"
+                      >
+                        🗑
+                      </button>
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-mono font-bold text-blue-200 uppercase mb-1.5">
+                        Title (optional)
+                      </label>
+                      <input
+                        type="text"
+                        value={mediaTitles[file.name] || ""}
+                        onChange={(e) =>
+                          setMediaTitles((prev) => ({ ...prev, [file.name]: e.target.value }))
+                        }
+                        placeholder="e.g., Opening Ceremony"
+                        className="w-full bg-foreground/[0.08] border border-blue-400/20 text-foreground/90 text-xs font-mono rounded-lg px-2.5 py-2 outline-none focus:border-blue-400/50 focus:bg-foreground/[0.12] transition-colors placeholder:text-foreground/40"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-[10px] font-mono font-bold text-blue-200 uppercase mb-1.5">
+                        Description (optional)
+                      </label>
+                      <textarea
+                        value={mediaDescriptions[file.name] || ""}
+                        onChange={(e) =>
+                          setMediaDescriptions((prev) => ({ ...prev, [file.name]: e.target.value }))
+                        }
+                        placeholder="Add details..."
+                        rows={2}
+                        className="w-full bg-foreground/[0.05] border border-foreground/[0.1] text-foreground/80 text-xs font-mono rounded-lg px-2.5 py-2 outline-none focus:border-blue-400/40 transition-colors resize-none placeholder:text-foreground/20"
+                      />
+                    </div>
+
+                    {uploadingIndex === index && (
+                      <div className="flex items-center gap-2">
+                        <div className="w-4 h-4 border-2 border-blue-400/30 border-t-blue-400 rounded-full animate-spin" />
+                        <span className="text-[10px] text-blue-300 font-mono">Uploading...</span>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Submit */}
+          <div className="flex gap-3 justify-end pt-4 border-t border-foreground/[0.06]">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-5 py-2.5 border border-blue-400/20 text-blue-200 text-xs font-mono font-semibold rounded-lg hover:text-white hover:border-blue-300 transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={uploading || !selectedEventId || selectedFiles.length === 0}
+              className="px-6 py-2.5 bg-blue-600 text-white text-xs font-mono font-bold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            >
+              {uploading ? `Uploading (${uploadingIndex !== null ? uploadingIndex + 1 : 0}/${selectedFiles.length})...` : `Upload ${selectedFiles.length} File${selectedFiles.length !== 1 ? "s" : ""} →`}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
