@@ -1,21 +1,17 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import MagneticButton from "@/components/MagneticButton";
+import MagneticButton from "../MagneticButton";
 import HeroFrameScrubber from "./HeroFrameScrubber";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function ResidencyHero() {
   const sectionRef = useRef<HTMLElement>(null);
   const headlineRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
 
-  // GSAP ScrollTrigger Entrance
   useEffect(() => {
     if (!sectionRef.current) return;
 
@@ -78,10 +74,10 @@ export default function ResidencyHero() {
 
         {/* Coordinate markers */}
         <span className="absolute top-28 left-8 sm:left-16 font-mono text-[10px] text-white/60 tracking-widest uppercase">
-          SYS:RESIDENCY_V2.4 // LATENCY: 0.14MS
+          SYS:BMSIT_NODE_V2.4 // BANGALORE
         </span>
         <span className="hidden sm:block absolute bottom-8 left-8 sm:left-16 font-mono text-[10px] text-white/60 tracking-widest uppercase">
-          PROTOCOL: CAPITAL + ADVISORY
+          PROTOCOL: READ.WRITE.OWN // STUDENT LAB
         </span>
       </div>
 
@@ -112,7 +108,7 @@ export default function ResidencyHero() {
             {/* Pill Tag */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/30 border border-white/30 backdrop-blur-md text-white font-mono text-[11px] font-bold tracking-widest uppercase shadow-sm">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span>INCUBATION RESIDENCY 2026</span>
+              <span>BMSIT&M // WEB.3_ STUDENT INNOVATION LAB</span>
             </div>
 
             {/* Headline */}
@@ -126,22 +122,22 @@ export default function ResidencyHero() {
             </div>
 
             <p className="font-mono text-xs sm:text-sm text-white/95 leading-relaxed uppercase tracking-wider max-w-md drop-shadow-sm">
-              A CURATED, HIGH-TOUCH RESIDENCY DESIGNED TO TAKE WEB3 TEAMS FROM EARLY TRACTION TO FULLY LAUNCH-READY, WITH HANDS-ON SUPPORT ACROSS PRODUCT, TOKENOMICS, FUNDRAISING, AND GO-TO-MARKET.
+              THE PREMIER STUDENT-LED BLOCKCHAIN & WEB3 TECHNICAL CLUB AT BMS INSTITUTE OF TECHNOLOGY AND MANAGEMENT, BENGALURU. EMPOWERING STUDENTS TO BUILD, SHIP, AND SCALE DECENTRALIZED PROTOCOLS.
             </p>
 
             {/* Proof Points */}
             <div className="grid grid-cols-3 gap-3 pt-3 max-w-md border-t border-white/20">
               <div>
-                <div className="font-mono font-black text-xl sm:text-2xl text-white tracking-tight drop-shadow-sm">$40M+</div>
-                <div className="font-mono text-[10px] text-white/80 uppercase tracking-wider">Capital Raised</div>
+                <div className="font-mono font-black text-xl sm:text-2xl text-white tracking-tight drop-shadow-sm">500+</div>
+                <div className="font-mono text-[10px] text-white/80 uppercase tracking-wider">Club Builders</div>
               </div>
               <div>
-                <div className="font-mono font-black text-xl sm:text-2xl text-white tracking-tight drop-shadow-sm">14+</div>
-                <div className="font-mono text-[10px] text-white/80 uppercase tracking-wider">Incubations</div>
+                <div className="font-mono font-black text-xl sm:text-2xl text-white tracking-tight drop-shadow-sm">15+</div>
+                <div className="font-mono text-[10px] text-white/80 uppercase tracking-wider">DApps & Wins</div>
               </div>
               <div>
-                <div className="font-mono font-black text-xl sm:text-2xl text-white tracking-tight drop-shadow-sm">100%</div>
-                <div className="font-mono text-[10px] text-white/80 uppercase tracking-wider">Hands-On</div>
+                <div className="font-mono text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-sm">10+</div>
+                <div className="font-mono text-[10px] text-white/80 uppercase tracking-wider">Bootcamps</div>
               </div>
             </div>
 
@@ -152,17 +148,17 @@ export default function ResidencyHero() {
                   href="/join"
                   className="cyber-btn px-7 py-3.5 !bg-white !text-[#BE4105] hover:!bg-white/95 font-mono font-black text-xs uppercase tracking-widest shadow-[0_12px_36px_rgba(0,0,0,0.35)] transition-all flex items-center gap-2 inline-flex cursor-pointer"
                 >
-                  <span>APPLY FOR RESIDENCY</span>
+                  <span>JOIN THE CLUB</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </MagneticButton>
 
               <MagneticButton strength={0.2}>
                 <Link
-                  href="/#incubation-hub"
+                  href="/#portfolio"
                   className="cyber-btn px-6 py-3.5 bg-black/25 hover:bg-black/35 text-white font-mono font-bold text-xs uppercase tracking-widest border border-white/40 backdrop-blur-md transition-all inline-flex cursor-pointer"
                 >
-                  LEARN MORE
+                  EXPLORE PROJECTS
                 </Link>
               </MagneticButton>
             </div>
@@ -178,18 +174,18 @@ export default function ResidencyHero() {
               {[
                 {
                   code: "01",
-                  title: "CAPITAL & GRANTS",
-                  desc: "Up to $250k initial check, syndicate co-investment, and non-dilutive grant backing.",
+                  title: "HACKATHONS & BOUNTIES",
+                  desc: "Team delegations to ETHIndia, Solana Renaissance, and Polygon Guilds with hands-on mentor support.",
                 },
                 {
                   code: "02",
-                  title: "TECHNICAL CO-BUILDING",
-                  desc: "Direct pairing with senior cryptography, smart contract, and tokenomics engineers.",
+                  title: "PEER-TO-PEER CO-BUILDING",
+                  desc: "Direct technical pairing with senior student devs in Solidity, Rust, and ZK proofs.",
                 },
                 {
                   code: "03",
-                  title: "INSTITUTIONAL ACCESS",
-                  desc: "Immediate introductions to tier-1 market makers, audited launchpads, and exchanges.",
+                  title: "ECOSYSTEM NETWORK",
+                  desc: "Direct introductions to foundation developer grants, bounties, and leading Web3 internships.",
                 },
               ].map((item) => (
                 <div
@@ -215,7 +211,7 @@ export default function ResidencyHero() {
             </div>
 
             <div className="text-xs font-mono text-white/95 leading-relaxed pt-1 drop-shadow-sm">
-              Strategy, capital, and launch support, working alongside your team from day one.
+              Workshops, peer review, and campus demo days—building the decentralized web right from BMSIT&M.
             </div>
 
             <div className="border border-white/30 px-4 py-2.5 flex items-center justify-between font-mono text-xs text-white/95 bg-black/30 backdrop-blur-md rounded-xl shadow-sm">
@@ -227,10 +223,10 @@ export default function ResidencyHero() {
                     <div className="w-1.5 h-1.5 bg-white rounded-sm shadow-[0_0_8px_white]" />
                   </div>
                 </div>
-                <span className="tracking-widest uppercase font-bold text-[11px]">ISO_NODE // ACTIVE</span>
+                <span className="tracking-widest uppercase font-bold text-[11px]">BMSIT_NODE // BANGALORE</span>
               </div>
               <span className="text-[10px] text-emerald-300 font-bold tracking-wider">
-                ● 100% SYNCED
+                ● 100% ONLINE
               </span>
             </div>
           </div>
@@ -246,7 +242,7 @@ export default function ResidencyHero() {
           <div className="w-full text-center space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/30 border border-white/30 backdrop-blur-md text-white font-mono text-[10px] font-bold tracking-widest uppercase shadow-sm">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span>INCUBATION RESIDENCY 2026</span>
+              <span>BMSIT&M // WEB.3_ STUDENT LAB</span>
             </div>
 
             <div className="space-y-0.5">
@@ -277,22 +273,22 @@ export default function ResidencyHero() {
           {/* 3. Pitch Description & Metrics */}
           <div className="w-full max-w-md text-center space-y-4">
             <p className="font-mono text-xs text-white/90 leading-relaxed uppercase tracking-wider px-2">
-              A curated, high-touch residency designed to take web3 teams from early traction to fully launch-ready.
+              The premier student-led blockchain & Web3 technical club at BMS Institute of Technology and Management, Bengaluru.
             </p>
 
             {/* Proof Points Strip */}
             <div className="grid grid-cols-3 gap-2 py-3 border-y border-white/20 bg-black/15 rounded-xl px-2">
               <div>
-                <div className="font-mono font-black text-lg text-white">$40M+</div>
-                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Raised</div>
+                <div className="font-mono font-black text-lg text-white">500+</div>
+                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Builders</div>
               </div>
               <div className="border-x border-white/15">
-                <div className="font-mono font-black text-lg text-white">14+</div>
-                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Incubations</div>
+                <div className="font-mono font-black text-lg text-white">15+</div>
+                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">DApps & Wins</div>
               </div>
               <div>
-                <div className="font-mono font-black text-lg text-white">100%</div>
-                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Hands-On</div>
+                <div className="font-mono font-black text-lg text-white">10+</div>
+                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Bootcamps</div>
               </div>
             </div>
 
@@ -302,15 +298,15 @@ export default function ResidencyHero() {
                 href="/join"
                 className="cyber-btn w-full sm:w-auto px-6 py-3.5 !bg-white !text-[#BE4105] hover:!bg-white/95 font-mono font-black text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>APPLY FOR RESIDENCY</span>
+                <span>JOIN THE CLUB</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
               <Link
-                href="/#incubation-hub"
+                href="/#portfolio"
                 className="cyber-btn w-full sm:w-auto px-6 py-3 bg-black/25 text-white font-mono font-bold text-xs uppercase tracking-widest border border-white/40 flex items-center justify-center cursor-pointer"
               >
-                LEARN MORE
+                EXPLORE PROJECTS
               </Link>
             </div>
           </div>
@@ -320,18 +316,18 @@ export default function ResidencyHero() {
             {[
               {
                 code: "01",
-                title: "CAPITAL & GRANTS",
-                desc: "Up to $250k initial check, syndicate co-investment, and non-dilutive grant backing.",
+                title: "HACKATHONS & BOUNTIES",
+                desc: "Team delegations to ETHIndia, Solana Renaissance, and Polygon Guilds with hands-on mentor support.",
               },
               {
                 code: "02",
-                title: "TECHNICAL CO-BUILDING",
-                desc: "Direct pairing with senior cryptography, smart contract, and tokenomics engineers.",
+                title: "PEER-TO-PEER CO-BUILDING",
+                desc: "Direct technical pairing with senior student devs in Solidity, Rust, and ZK proofs.",
               },
               {
                 code: "03",
-                title: "INSTITUTIONAL ACCESS",
-                desc: "Immediate introductions to tier-1 market makers, audited launchpads, and exchanges.",
+                title: "ECOSYSTEM NETWORK",
+                desc: "Direct introductions to foundation developer grants, bounties, and leading Web3 internships.",
               },
             ].map((item) => (
               <div
@@ -353,9 +349,9 @@ export default function ResidencyHero() {
 
             {/* Mobile ISO Node Status */}
             <div className="border border-white/25 px-3.5 py-2 flex items-center justify-between font-mono text-[11px] text-white/95 bg-black/25 backdrop-blur-md rounded-xl mt-3">
-              <span className="tracking-widest uppercase font-bold text-[10px]">ISO_NODE // ACTIVE</span>
+              <span className="tracking-widest uppercase font-bold text-[10px]">BMSIT_NODE // BANGALORE</span>
               <span className="text-[10px] text-emerald-300 font-bold tracking-wider">
-                ● 100% SYNCED
+                ● 100% ONLINE
               </span>
             </div>
           </div>

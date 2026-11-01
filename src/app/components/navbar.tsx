@@ -15,9 +15,9 @@ import ScrambleText from "@/components/chaingpt/ScrambleText";
 // NAV TABS (Matching labs.chaingpt.org navigation)
 // ─────────────────────────────────────────────────────────────
 const NAV_TABS = [
-  { label: "Programs", href: "/events" },
-  { label: "Portfolio", href: "/#portfolio" },
-  { label: "Residency", href: "/#residency" },
+  { label: "Events", href: "/events" },
+  { label: "Projects", href: "/#portfolio" },
+  { label: "Incubator", href: "/#incubation-hub" },
   { label: "Team", href: "/team" },
   { label: "FAQ", href: "/#faq" },
   { label: "About", href: "/about" },
@@ -140,7 +140,7 @@ export default function Navbar() {
           {/* Right Action Bar */}
           <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             
-            {/* ":: Our Ecosystem" indicator */}
+            {/* ":: BMSIT&M Chapter" indicator */}
             <Link
               href="/#portfolio"
               className="hidden xl:flex items-center gap-1.5 font-mono text-xs font-semibold text-foreground/70 hover:text-[#E50914] transition-colors"
@@ -276,7 +276,7 @@ export default function Navbar() {
                 onClick={() => setMenuOpen(false)}
                 className="cyber-btn w-full py-3 bg-[#E50914] text-white font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg cursor-pointer"
               >
-                <span>APPLY NOW FOR INCUBATION</span>
+                <span>JOIN BMSIT WEB.3 CLUB</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>

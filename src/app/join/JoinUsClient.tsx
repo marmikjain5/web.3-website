@@ -36,12 +36,12 @@ const STAGES = [
 ];
 
 const SUPPORT_OPTIONS = [
-  "Pre-Seed / Seed Grant Funding ($25k - $250k)",
-  "Technical Architecture & Smart Contract Audits",
-  "Tokenomics Modeling & Incentive Design",
-  "Tier-1 Venture Introductions & Syndicate Access",
-  "Go-To-Market, PR & Web3 Community Distribution",
-  "Exchange Listing & Liquidity Support",
+  "Smart Contract Architecture & Peer Code Reviews",
+  "Hackathon Mentorship & Team Matchmaking",
+  "Student Developer Grants (Polygon, Solana, Arbitrum)",
+  "Web3 Frontend & Integration (viem, wagmi, ethers)",
+  "Zero-Knowledge & Cryptography Research Guidance",
+  "Campus Demo Day Showcase & Community Feedback",
 ];
 
 export default function JoinUsClient() {
@@ -144,7 +144,7 @@ export default function JoinUsClient() {
         {/* ═══════════════════════════════════════════════════════════════════════
             HERO SECTION: Matching User's Uploaded Banner Exactly
             - Title: UNLOCK EXPONENTIAL GROWTH in LabsAmiga font
-            - Subtitle: For builders, dreamers and pioneers shaping the next era of web3
+            - Subtitle: Join the official student-led Web3 club of BMSIT&M. Build dApps, win hackathons, and learn decentralized technology.
             - Chamfered Button: APPLY NOW in brand #E50914
             - Retro terminal computer with flying robot & CRT "read.write.own"
         ═══════════════════════════════════════════════════════════════════════ */}
@@ -167,7 +167,7 @@ export default function JoinUsClient() {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="font-mono text-xs sm:text-sm md:text-base text-black/60 tracking-wider max-w-2xl mb-8"
           >
-            For builders, dreamers and pioneers shaping the next era of web3
+            Join the official student-led Web3 club of BMSIT&M. Build dApps, win hackathons, and learn decentralized technology.
           </motion.p>
 
           {/* Chamfered CTA Button: APPLY NOW */}
@@ -221,18 +221,18 @@ export default function JoinUsClient() {
           {[
             {
               num: "01",
-              title: "SMART CAPITAL & GRANTS",
-              desc: "Direct pre-seed check deployment, syndicate co-investment, and non-dilutive ecosystem grants for breakthrough builders.",
+              title: "GRANTS & BOUNTY GUIDANCE",
+              desc: "Step-by-step mentoring to win hackathon bounties, student developer grants, and open-source bounties.",
             },
             {
               num: "02",
-              title: "TECHNICAL ARCHITECTURE",
-              desc: "Direct pairing with senior cryptography engineers for smart contract reviews, ZK proving systems, and token incentive modeling.",
+              title: "TECHNICAL CO-BUILDING",
+              desc: "Direct pairing with experienced student developers for smart contract audits, ZK cryptography, and dApp frontends.",
             },
             {
               num: "03",
-              title: "GLOBAL ECOSYSTEM REACH",
-              desc: "Direct introductions to tier-1 market makers, institutional liquidity providers, audits, and premier launch syndicates.",
+              title: "CAMPUS TO CAREER NETWORK",
+              desc: "Direct access to Web3 DevRel advocates, foundation fellowships, internships, and alumni working in top crypto protocols.",
             },
           ].map((pillar) => (
             <div

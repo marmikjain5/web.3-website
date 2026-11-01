@@ -8,18 +8,18 @@ import DecryptedText from "@/app/components/ui/DecryptedText";
 const benefits = [
   {
     icon: <Shield className="w-8 h-8 text-[#FF5500]" />,
-    title: "Exclusive Access",
-    description: "Get early access to verified Web3 projects, private round allocations, and exclusive networking events with industry leaders.",
+    title: "Hands-On Learning",
+    description: "Master smart contract development, zero-knowledge proofs, and decentralized protocols through workshops and peer mentorship.",
   },
   {
     icon: <Zap className="w-8 h-8 text-[#FF5500]" />,
     title: "Project Incubation",
-    description: "Receive hands-on tokenomics mentorship, capital grants, and full-stack technical engineering support to scale your protocol.",
+    description: "Build production dApps, compete in premier hackathons (ETHIndia, Solana Renaissance), and secure student developer grants.",
   },
   {
     icon: <Users className="w-8 h-8 text-[#FF5500]" />,
-    title: "DAO Governance",
-    description: "Participate in strategic ecosystem decisions, protocol treasury allocations, and community initiatives via decentralized governance.",
+    title: "Student Community",
+    description: "Join 500+ active student engineers, researchers, and creators at BMSIT&M shaping the future of decentralized technology.",
   },
 ];
 

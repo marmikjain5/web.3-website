@@ -23,34 +23,34 @@ interface FaqSectionProps {
 
 const DEFAULT_FAQS: FaqItem[] = [
   {
-    question: "What is the Web3 Club Incubation Program?",
+    question: "What is the Web.3 Club at BMSIT&M?",
     answer:
-      "We are an end-to-end Web3 incubator and venture studio backing early-stage visionary founders across AI, DeFi, DePIN, and Layer 1/2 infrastructure with capital, engineering, marketing, and institutional exchange listings.",
+      "We are the official student-led Web3 and blockchain technical community at BMS Institute of Technology and Management, Bengaluru. We bring together developers, researchers, designers, and enthusiasts to learn, build decentralized protocols, and compete in global hackathons.",
+    category: "About Club",
+  },
+  {
+    question: "Who can join the Web.3 Club, and do I need prior experience?",
+    answer:
+      "Any student at BMSIT&M—from any engineering branch and any semester—is welcome! No prior blockchain experience is required. We host beginner-friendly bootcamps covering programming fundamentals, smart contract development, and Web3 frontends from scratch.",
+    category: "Membership",
+  },
+  {
+    question: "What events and activities does the club organize?",
+    answer:
+      "We organize our flagship hackathon (Decrypto), technical hands-on workshops (Solidity, Rust on Solana, Zero-Knowledge proofs), project incubation cohorts, guest talks by Web3 founders, and team delegations to ETHIndia and global hackathons.",
+    category: "Activities",
+  },
+  {
+    question: "How does project incubation work for student teams?",
+    answer:
+      "If you have an idea or prototype for a decentralized application, our senior core team pairs you with technical mentors, assists with architecture reviews and smart contract security, connects you to ecosystem developer grants, and helps you pitch at hackathons.",
     category: "Incubation",
   },
   {
-    question: "How do teams get selected for incubation?",
+    question: "Is there any membership fee to join?",
     answer:
-      "Our investment committee reviews applications on a rolling basis. We evaluate team technical capability, product-market fit, tokenomics design, and long-term ecosystem alignment.",
-    category: "Selection",
-  },
-  {
-    question: "What support does Web3 Labs provide beyond funding?",
-    answer:
-      "We provide hands-on tokenomics design, smart contract security audits, go-to-market advisory, top-tier exchange listings, and direct access to Tier 1 VC partners.",
-    category: "Support",
-  },
-  {
-    question: "Can student projects or hackathon winners apply?",
-    answer:
-      "Absolutely! Many of our most successful incubations started at university hackathons. We provide customized fast-track grants for standout builder teams.",
+      "No! Membership is 100% free and open to all BMSIT&M students. All our workshops, bootcamps, learning roadmaps, and community sessions are open-source and free.",
     category: "Eligibility",
-  },
-  {
-    question: "What are the tokenomics and equity terms?",
-    answer:
-      "Our terms are founder-friendly and customized based on project stage. We typically combine strategic advisory tokens with seed or private allocation guarantees.",
-    category: "Investment",
   },
 ];
 
