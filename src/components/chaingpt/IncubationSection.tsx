@@ -8,7 +8,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MagneticButton from "@/components/MagneticButton";
 import ScrambleText from "./ScrambleText";
-import CoinCapsuleChamber from "./CoinCapsuleChamber";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -154,7 +153,7 @@ export default function IncubationSection() {
 
             {/* Support Cards Grid with AnimatePresence */}
             <div className="space-y-3.5 min-h-[260px]">
-              <AnimatePresence mode="popLayout">
+              <AnimatePresence mode="wait">
                 {visibleCards.map((card) => {
                   const IconComponent = card.icon;
                   return (
@@ -165,15 +164,15 @@ export default function IncubationSection() {
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.25 }}
                       whileHover={{ y: -3, borderColor: "rgba(229,9,20,0.5)" }}
-                      className="bg-card border border-border p-4.5 rounded-xl relative group transition-colors shadow-sm flex flex-col justify-between"
+                      className="bg-card border border-border p-5 rounded-xl relative group transition-colors shadow-sm flex flex-col justify-between"
                     >
                       <span className="tech-bracket-tl" />
                       <span className="tech-bracket-tr" />
 
                       <div>
                         <div className="flex justify-between items-center text-xs font-mono text-foreground/40 mb-2.5">
-                          <span className="w-1.5 h-1.5 bg-[#E50914]" />
-                          <span className="font-bold text-[#E50914]">{card.num}</span>
+                          <span className="w-1.5 h-1.5 bg-[#E50914] ml-1.5" />
+                          <span className="font-bold text-[#E50914] mr-2 text-sm">{card.num}</span>
                         </div>
 
                         <div className="flex items-center gap-3 mb-2">
@@ -217,13 +216,38 @@ export default function IncubationSection() {
             </div>
           </div>
 
-          {/* Center Column: 3D Coin Capsule Chamber (Matching labs.chaingpt.org) */}
+          {/* Center Column: 3D Autonomous Robot Stage */}
           <div ref={centerColRef} className="lg:col-span-4 flex flex-col items-center justify-center relative py-4 lg:py-0">
-            <CoinCapsuleChamber defaultMode="gold_coin" showControls={true} />
-            
-            <div className="font-mono text-[10px] text-foreground/40 tracking-widest uppercase mt-3">
-              :: AUTONOMOUS INCUBATION POD // BMSIT
+            <div className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-[4/5] rounded-2xl overflow-visible flex items-center justify-center">
+              {/* Subtle ambient radiant glow behind the robot */}
+              <div className="absolute inset-0 bg-[#E50914]/[0.08] blur-3xl rounded-full pointer-events-none" />
+              
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                preload="auto"
+                className="w-full h-full object-contain pointer-events-none drop-shadow-[0_16px_36px_rgba(229,9,20,0.22)]"
+              >
+                <source
+                  src="/chaingpt-assets/LABS_robot_SAFARI_HEVC.mp4"
+                  type='video/mp4; codecs="hvc1"'
+                />
+                <source
+                  src="/chaingpt-assets/LABS_robot_CHROME_VP9.webm"
+                  type="video/webm"
+                />
+              </video>
             </div>
+            
+            <Link
+              href="/laboratory"
+              className="mt-3 inline-flex items-center gap-1.5 font-mono text-[10px] text-foreground/50 hover:text-[#E50914] tracking-widest uppercase transition-colors group cursor-pointer"
+            >
+              <span>:: AUTONOMOUS AI AGENT // LAUNCH 3D LAB</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+            </Link>
           </div>
 
           {/* Right Column: Unique Approach & Narrative (4 cols) */}

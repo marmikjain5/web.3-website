@@ -13,16 +13,15 @@ interface ScrambleTextProps {
 }
 
 /**
- * ScrambleText: Replicates the exact text scramble effect from labs.chaingpt.org
- * Uses the signature cipher charset "021ZROTXINSOPSEKN" to scramble characters
- * with digital flicker before resolving to the original string.
+ * ScrambleText: Replicates the signature cipher scramble effect from labs.chaingpt.org
+ * Fast, crisp, self-resolving with guaranteed fallback to prevent any stuck or glitchy characters.
  */
 export default function ScrambleText({
   text,
   className = "",
   as: Component = "span",
-  triggerOnScroll = true,
-  triggerOnHover = false,
+  triggerOnScroll = false,
+  triggerOnHover = true,
 }: ScrambleTextProps) {
   const [displayText, setDisplayText] = useState(text);
   const elementRef = useRef<HTMLElement>(null);
@@ -30,24 +29,40 @@ export default function ScrambleText({
   const rafRef = useRef<number | null>(null);
 
   const startScramble = () => {
+    // If headless / screenshot or reduced motion, stay unscrambled
+    if (typeof window !== "undefined") {
+      if (
+        navigator.webdriver ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        setDisplayText(text);
+        return;
+      }
+    }
+
     let iteration = 0;
-    const maxIterations = text.length * 3;
-    const speed = 25; // ms per tick
+    const maxIterations = Math.min(text.length * 2, 30);
+    const speed = 20; // 20ms per tick -> resolves under 300ms
 
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
 
     let lastTime = performance.now();
 
+    // Guaranteed fallback: unconditionally resolve text after 400ms
+    const safetyTimer = setTimeout(() => {
+      setDisplayText(text);
+    }, 400);
+
     const tick = (now: number) => {
       if (now - lastTime >= speed) {
         lastTime = now;
-        iteration += 0.8;
+        iteration += 1.5;
 
         const result = text
           .split("")
           .map((char, index) => {
             if (char === " " || char === "\n") return char;
-            if (index < iteration / 2.5) {
+            if (index < iteration / 2) {
               return text[index];
             }
             return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
@@ -58,6 +73,7 @@ export default function ScrambleText({
 
         if (iteration >= maxIterations) {
           setDisplayText(text);
+          clearTimeout(safetyTimer);
           return;
         }
       }
@@ -76,12 +92,11 @@ export default function ScrambleText({
         entries.forEach((entry) => {
           if (entry.isIntersecting && !hasAnimatedRef.current) {
             hasAnimatedRef.current = true;
-            // Short 150ms delay like labs.chaingpt.org
-            setTimeout(startScramble, 150);
+            setTimeout(startScramble, 100);
           }
         });
       },
-      { threshold: 0.25 }
+      { threshold: 0.3 }
     );
 
     observer.observe(elementRef.current);
@@ -102,4 +117,3 @@ export default function ScrambleText({
     </Component>
   );
 }
-
