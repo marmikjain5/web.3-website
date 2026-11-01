@@ -8,6 +8,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MagneticButton from "@/components/MagneticButton";
 import ScrambleText from "./ScrambleText";
+import CoinCapsuleChamber from "./CoinCapsuleChamber";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -216,33 +217,12 @@ export default function IncubationSection() {
             </div>
           </div>
 
-          {/* Center Column: 3D Transparent Robot Stage (4 cols - Perfectly Centered & Never Clipped) */}
+          {/* Center Column: 3D Coin Capsule Chamber (Matching labs.chaingpt.org) */}
           <div ref={centerColRef} className="lg:col-span-4 flex flex-col items-center justify-center relative py-4 lg:py-0">
-            <div className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-[4/5] rounded-2xl overflow-visible flex items-center justify-center">
-              {/* Subtle ambient radiant glow behind the robot */}
-              <div className="absolute inset-0 bg-[#E50914]/[0.08] blur-3xl rounded-full pointer-events-none" />
-              
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                className="w-full h-full object-contain pointer-events-none drop-shadow-[0_16px_36px_rgba(229,9,20,0.22)]"
-              >
-                <source
-                  src="/chaingpt-assets/LABS_robot_SAFARI_HEVC.mp4"
-                  type='video/mp4; codecs="hvc1"'
-                />
-                <source
-                  src="/chaingpt-assets/LABS_robot_CHROME_VP9.webm"
-                  type="video/webm"
-                />
-              </video>
-            </div>
+            <CoinCapsuleChamber defaultMode="gold_coin" showControls={true} />
             
-            <div className="font-mono text-[10px] text-foreground/40 tracking-widest uppercase mt-2">
-              :: AUTONOMOUS INCUBATION AGENT // BMSIT
+            <div className="font-mono text-[10px] text-foreground/40 tracking-widest uppercase mt-3">
+              :: AUTONOMOUS INCUBATION POD // BMSIT
             </div>
           </div>
 

@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/chaingpt/CookieBanner";
+import ChainHoverScramble from "@/components/chaingpt/ChainHoverScramble";
 import LenisProvider from "@/components/LenisProvider";
 
 const geistSans = Geist({
@@ -48,6 +49,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           {/* LenisProvider integrates Lenis smooth scroll + GSAP ScrollTrigger sync */}
           <LenisProvider>
+            <ChainHoverScramble />
             <GlobalLogo />
             <PreloaderWrapper>
               <Navbar />
