@@ -1,272 +1,271 @@
 "use client";
-import { useState, useRef } from "react";
-type MemberCardProps = {
+
+import { useState, useEffect } from "react";
+import { Plus, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+
+function TwitterIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+function LinkedinIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
+
+function GithubIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+    </svg>
+  );
+}
+
+function InstagramIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
+export type MemberCardProps = {
   name: string;
   role: string;
   description?: string;
   image?: string;
-  socials: {
+  socials?: {
     twitter?: string;
     linkedin?: string;
     github?: string;
     instagram?: string;
   };
 };
+
 export default function MemberCard({
   name,
   role,
   description,
   image,
-  socials,
+  socials = {},
 }: MemberCardProps) {
-  const [rotate, setRotate] = useState({ x: 0, y: 0 });
-  const [glow, setGlow] = useState({ x: 50, y: 50 });
-  const [hovered, setHovered] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { width, height, left, top } = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - left;
-    const y = e.clientY - top;
-    setGlow({ x, y });
-    setRotate({
-      x: ((y / height) - 0.5) * 10,
-      y: ((x / width) - 0.5) * -10,
-    });
-  };
-  const handleMouseLeave = () => {
-    setRotate({ x: 0, y: 0 });
-    setHovered(false);
-  };
+  const [showBio, setShowBio] = useState(false);
+
+  // Close modal on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowBio(false);
+    };
+    if (showBio) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [showBio]);
+
+  const defaultAvatar = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=60";
 
   return (
-    
-  <div
-        ref={cardRef}
-        className="member-card-root"
-        onMouseMove={handleMouseMove}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={handleMouseLeave}
-        style={{
-          position: "relative",
-          borderRadius: "16px",
-          padding: "1.5px", 
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          background: hovered
-            ? "conic-gradient(from var(--angle, 0deg), #CDEF33 0%, #202221 25%, #000 50%, #CDEF33 75%, #202221 100%)"
-            : "linear-gradient(135deg, #20222130 0%, #CDEF3320 50%, #20222115 100%)",
-          animation: hovered ? "spinBorder 2s linear infinite" : "none",
-          // transition on background would fight animation — intentionally omitted
-        }}
+    <>
+      <motion.div
+        whileHover={{ y: -6 }}
+        transition={{ duration: 0.2 }}
+        className="relative bg-card border border-border p-5 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#E50914]/60 transition-colors duration-300 flex flex-col justify-between group h-full"
       >
+        {/* 4 Corner Markers */}
+        <span className="tech-bracket-tl text-[#E50914]" />
+        <span className="tech-bracket-tr text-[#E50914]" />
+        <span className="tech-bracket-bl text-[#E50914]" />
+        <span className="tech-bracket-br text-[#E50914]" />
 
-        {/* Outer ambient glow — purely decorative, doesn't affect layout */}
-        {hovered && (
-          <div style={{
-            position: "absolute",
-            inset: "-12px",
-            borderRadius: "28px",
-            background: `radial-gradient(ellipse at ${glow.x}px ${glow.y}px, rgba(205,239,51,0.12), transparent 70%)`,
-            pointerEvents: "none",
-            zIndex: 0,
-          }} />
-        )}
+        {/* Member Name & Role at Top */}
+        <div className="text-center mb-4 select-none">
+          <h3 className="font-mono font-bold text-base md:text-lg text-foreground tracking-tight group-hover:text-[#E50914] transition-colors line-clamp-1">
+            {name}
+          </h3>
+          <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-foreground/50 block mt-0.5 truncate">
+            {role}
+          </span>
+        </div>
 
-        {/* Inner card — perspective tilt lives here */}
-        <div
-          style={{
-            transform: `perspective(900px) rotateX(${rotate.x}deg) rotateY(${rotate.y}deg) translateZ(${hovered ? 6 : 0}px)`,
-            transition: "transform 0.15s ease-out",
-            borderRadius: "15px",
-            background: "#000000",
-            border: "1px solid rgba(32,34,33,0.18)",
-            overflow: "hidden",
-            position: "relative",
-            zIndex: 1,
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {/* Cursor-tracking radial glow inside card */}
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            borderRadius: "15px",
-            background: hovered
-              ? `radial-gradient(240px at ${glow.x}px ${glow.y}px, rgba(205,239,51,0.08), transparent)`
-              : "transparent",
-            pointerEvents: "none",
-            zIndex: 0,
-            transition: "background 0.1s",
-          }} />
+        {/* Black & White Photo with Corner Bevels */}
+        <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-foreground/[0.04] border border-border my-2">
+          <img
+            src={image || defaultAvatar}
+            alt={name}
+            className="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-500 ease-out"
+            loading="lazy"
+          />
+        </div>
 
-          {/* Scanline texture overlay — Web3 aesthetic */}
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 4px)",
-            pointerEvents: "none",
-            zIndex: 1,
-          }} />
+        {/* Bottom Bar: BIO + Trigger Button */}
+        <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
+          <button
+            onClick={() => setShowBio(true)}
+            className="flex items-center gap-1.5 font-mono text-xs font-bold text-foreground/70 hover:text-[#E50914] transition-colors cursor-pointer py-1"
+          >
+            <span>BIO</span>
+            <Plus className="w-3.5 h-3.5 text-[#E50914] stroke-[3]" />
+          </button>
 
-          {/* IMAGE */}
-          <div style={{
-            width: "100%",
-            aspectRatio: "4 / 3",
-            position: "relative",
-            zIndex: 2,
-            overflow: "hidden",
-          }}>
-            <img
-              src={image || "https://i.pravatar.cc/400?img=1"}
-              alt={name}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: "50% 20%",
-                display: "block",
-                filter: hovered
-                  ? "brightness(1.05) grayscale(0)"
-                  : "brightness(0.88) grayscale(0.15)",
-                transition: "filter 0.4s ease-out",
-              }}
-            />
-            <div style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: "80px",
-              background: "linear-gradient(to bottom, transparent, #000000)",
-              pointerEvents: "none",
-              zIndex: 3,
-            }} />
-          </div>
-
-          {/* CONTENT */}
-          <div style={{
-            padding: "16px 18px 20px",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            textAlign: "center",
-            position: "relative",
-            zIndex: 2,
-            flex: 1,
-          }}>
-            {/* Role pill */}
-            <span style={{
-              fontSize: "10px",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              color: "#CDEF33",
-              background: "rgba(205,239,51,0.08)",
-              border: "1px solid rgba(205,239,51,0.2)",
-              borderRadius: "999px",
-              padding: "3px 10px",
-              marginBottom: "8px",
-              fontFamily: "'IBM Plex Mono', monospace",
-            }}>
-              {role}
-            </span>
-
-            <h3 style={{
-              fontSize: "17px",
-              fontWeight: 700,
-              color: "#D9D9D9",
-              margin: "0 0 6px",
-              letterSpacing: "0.02em",
-              fontFamily: "'Syne', sans-serif",
-            }}>
-              {name}
-            </h3>
-
-                        {description && (
-              <p style={{
-                fontSize: "12px",
-                color: hovered ? "rgba(217,217,217,0.92)" : "rgba(217,217,217,0.6)",
-                lineHeight: 1.6,
-                margin: "0 0 14px",
-                maxWidth: "220px",
-                fontFamily: "'IBM Plex Mono', monospace",
-                transition: "color 0.3s ease",
-              }}>
-                {description}
-              </p>
+          {/* Minimal Social Links */}
+          <div className="flex items-center gap-2.5 text-foreground/40">
+            {socials?.twitter && (
+              <a
+                href={socials.twitter}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[#E50914] transition-colors"
+                title="Twitter / X"
+              >
+                <TwitterIcon className="w-3.5 h-3.5" />
+              </a>
             )}
-
-            {/* Divider */}
-            <div style={{
-              width: "40px",
-              height: "1px",
-              background: "linear-gradient(to right, transparent, rgba(205,239,51,0.4), transparent)",
-              margin: "auto auto 14px",
-            }} />
-      
-    <div style={{ display: "flex", gap: "18px", justifyContent: "center" }}>
-              {socials.twitter && (
-                <SocialLink href={socials.twitter} hoverColor="#CDEF33">
-                  <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18.244 2H21l-6.56 7.49L22.5 22h-6.828l-5.346-6.993L4.5 22H1.744l7.02-8.017L1.5 2h6.914l4.838 6.418L18.244 2z"/>
-                  </svg>
-                </SocialLink>
-              )}
-              {socials.linkedin && (
-                <SocialLink href={socials.linkedin} hoverColor="#D9D9D9">
-                  <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M4.98 3.5C4.98 4.88 3.87 6 2.49 6S0 4.88 0 3.5 1.11 1 2.49 1s2.49 1.12 2.49 2.5zM.5 8h4V24h-4zM8.5 8h3.6v2.2h.05c.5-.95 1.7-2.2 3.5-2.2 3.7 0 4.4 2.4 4.4 5.6V24h-4v-7.8c0-1.9-.03-4.3-2.6-4.3-2.6 0-3 2-3 4.2V24h-4z"/>
-                  </svg>
-                </SocialLink>
-              )}
-              {socials.github && (
-                <SocialLink href={socials.github} hoverColor="#D9D9D9">
-                  <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 .5C5.7.5.8 5.4.8 11.7c0 5 3.2 9.3 7.6 10.8.6.1.8-.2.8-.6v-2c-3.1.7-3.7-1.3-3.7-1.3-.5-1.3-1.2-1.6-1.2-1.6-1-.7.1-.7.1-.7 1.1.1 1.7 1.2 1.7 1.2 1 .1.8 1.7 2.8 2.4 1.5.3 2.5-.6 3.1-1.2.1-.7.4-1.2.7-1.5-2.5-.3-5.2-1.2-5.2-5.5 0-1.2.4-2.2 1.2-3-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11.2 11.2 0 015.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3 0 4.3-2.7 5.2-5.2 5.5.4.3.8 1 .8 2v3c0 .4.2.7.8.6 4.4-1.5 7.6-5.8 7.6-10.8C23.2 5.4 18.3.5 12 .5z"/>
-                  </svg>
-                </SocialLink>
-              )}
-              {socials.instagram && (
-                <SocialLink href={socials.instagram} hoverColor="#CDEF33">
-                  <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M7.75 2h8.5C19.66 2 22 4.34 22 7.75v8.5C22 19.66 19.66 22 16.25 22h-8.5C4.34 22 2 19.66 2 16.25v-8.5C2 4.34 4.34 2 7.75 2zm4.25 5.5A4.75 4.75 0 1016.75 12 4.75 4.75 0 0012 7.5zm0 7.8A3.05 3.05 0 1115.05 12 3.05 3.05 0 0112 15.3zm4.9-8.4a1.1 1.1 0 11-1.1-1.1 1.1 1.1 0 011.1 1.1z"/>
-                  </svg>
-                </SocialLink>
-              )}
-            </div>
+            {socials?.linkedin && (
+              <a
+                href={socials.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[#E50914] transition-colors"
+                title="LinkedIn"
+              >
+                <LinkedinIcon className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {socials?.github && (
+              <a
+                href={socials.github}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[#E50914] transition-colors"
+                title="GitHub"
+              >
+                <GithubIcon className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {socials?.instagram && (
+              <a
+                href={socials.instagram}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-[#E50914] transition-colors"
+                title="Instagram"
+              >
+                <InstagramIcon className="w-3.5 h-3.5" />
+              </a>
+            )}
           </div>
         </div>
-      </div>
+      </motion.div>
+
+      {/* Bio Modal / Dossier with AnimatePresence */}
+      <AnimatePresence>
+        {showBio && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
+            onClick={() => setShowBio(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 15 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 15 }}
+              transition={{ duration: 0.2 }}
+              className="relative w-full max-w-lg bg-card border border-border p-6 md:p-8 rounded-2xl shadow-2xl overflow-hidden font-mono"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <span className="tech-bracket-tl text-[#E50914]" />
+              <span className="tech-bracket-tr text-[#E50914]" />
+              <span className="tech-bracket-bl text-[#E50914]" />
+              <span className="tech-bracket-br text-[#E50914]" />
+
+              <button
+                onClick={() => setShowBio(false)}
+                className="absolute top-4 right-4 p-2 text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05] rounded-lg transition-colors cursor-pointer"
+                aria-label="Close dossier"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 rounded-xl overflow-hidden border border-border shrink-0">
+                  <img
+                    src={image || defaultAvatar}
+                    alt={name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-xl font-bold text-foreground truncate">{name}</h3>
+                  <span className="text-xs uppercase text-[#E50914] font-bold tracking-wider block mt-0.5 truncate">
+                    {role}
+                  </span>
+                </div>
+              </div>
+
+              <div className="border-t border-border pt-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">
+                    EXECUTIVE_DOSSIER
+                  </h4>
+                  <div className="flex items-center gap-2 text-foreground/50">
+                    {socials?.twitter && (
+                      <a href={socials.twitter} target="_blank" rel="noreferrer" className="hover:text-[#E50914]">
+                        <TwitterIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    {socials?.linkedin && (
+                      <a href={socials.linkedin} target="_blank" rel="noreferrer" className="hover:text-[#E50914]">
+                        <LinkedinIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    {socials?.github && (
+                      <a href={socials.github} target="_blank" rel="noreferrer" className="hover:text-[#E50914]">
+                        <GithubIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                    {socials?.instagram && (
+                      <a href={socials.instagram} target="_blank" rel="noreferrer" className="hover:text-[#E50914]">
+                        <InstagramIcon className="w-3.5 h-3.5" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+                <p className="text-sm text-foreground/80 leading-relaxed max-h-60 overflow-y-auto pr-1">
+                  {description || "Core member of Web3 Labs driving incubator acceleration, tokenomics strategy, and partner integrations across the global decentralized ecosystem."}
+                </p>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs text-foreground/60">
+                <span className="flex items-center gap-1.5 font-bold">
+                  <span className="w-2 h-2 rounded-full bg-[#E50914] animate-pulse" />
+                  STATUS: ACTIVE_OPERATOR
+                </span>
+                <button
+                  onClick={() => setShowBio(false)}
+                  className="px-4 py-1.5 rounded-lg bg-foreground/[0.06] hover:bg-[#E50914] hover:text-white transition-colors cursor-pointer font-bold"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
-function SocialLink({
-  href,
-  children,
-  hoverColor,
-}: {
-  href: string;
-  children: React.ReactNode;
-  hoverColor: string;
-}) {
-  const [hov, setHov] = useState(false);
-  return (
-    <a
-      href={href}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        color: hov ? hoverColor : "rgba(217,217,217,0.35)",
-        transform: hov ? "scale(1.3) translateY(-1px)" : "scale(1)",
-        transition: "color 0.2s, transform 0.2s",
-        display: "flex",
-      }}
-    >
-      {children}
-    </a>
-  );
-}
-
-
-      

@@ -253,7 +253,7 @@ export default function DecryptoUpdates() {
               >
                 <p
                   className="decrypto-card-title"
-                  style={c.accent ? { color: "#CDEF33" } : undefined}
+                  style={c.accent ? { color: "#FF5500" } : undefined}
                 >
                   {c.title}
                 </p>
@@ -307,7 +307,7 @@ export default function DecryptoUpdates() {
                     </p>
                     {slot.subs?.map((s, j) => (
                       <p key={j} className="decrypto-slot-sub">
-                        <span style={{ color: "#CDEF33" }}>— </span>
+                        <span style={{ color: "#FF5500" }}>— </span>
                         {s}
                       </p>
                     ))}

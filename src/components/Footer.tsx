@@ -24,6 +24,16 @@ const CUBES = [
   { size: 70, left: 70, top: 90, z: 50, rx: 5, ry: -45, delay: 0.3, duration: 19 },
 ];
 
+const TICKER_ITEMS = [
+  "DECENTRALIZED ARCHITECTURE",
+  "READ. WRITE. OWN",
+  "INCUBATION COHORT 2026",
+  "LAYER-1 & LAYER-2 ECOSYSTEMS",
+  "ZERO-KNOWLEDGE INFRASTRUCTURE",
+  "GLOBAL BUILDER NETWORK",
+  "WEB.3_ ECOSYSTEM",
+];
+
 export default function Footer() {
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
@@ -38,9 +48,7 @@ export default function Footer() {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
       
-      // Only track if footer is visible or near visible to save performance
       if (rect.top < window.innerHeight + 100) {
-        // Normalize mouse pos from -1 to 1 based on screen
         const x = (e.clientX / window.innerWidth) * 2 - 1;
         const y = (e.clientY / window.innerHeight) * 2 - 1;
         
@@ -60,15 +68,13 @@ export default function Footer() {
 
   const isDark = !mounted || resolvedTheme !== "light";
 
-  // Strict Design System Colors
   const themeStyle = {
     "--footer-bg": "var(--background)",
     "--footer-text": "var(--foreground)",
-    "--footer-accent": "var(--accent)",
-    "--footer-secondary": isDark ? "#202221" : "#666666", // Kept a bit visible in light mode
-    "--bg-opacity": isDark ? "0.25" : "0.6", // Much higher opacity for light mode text
+    "--footer-accent": "#E50914",
+    "--footer-secondary": isDark ? "#202221" : "#666666",
+    "--bg-opacity": isDark ? "0.2" : "0.5",
     
-    // Cube face shading for 3D depth
     "--cube-border": isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.15)",
     "--cube-front": isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.05)",
     "--cube-back": isDark ? "rgba(255,255,255,0.01)" : "rgba(0,0,0,0.02)",
@@ -89,9 +95,9 @@ export default function Footer() {
         
         .bg-web3-text {
           position: absolute;
-          top: 50%;
+          top: 45%;
           left: 50%;
-          font-size: clamp(8rem, 30vw, 35rem);
+          font-size: clamp(6rem, 25vw, 28rem);
           font-weight: 900;
           line-height: 1;
           opacity: var(--bg-opacity);
@@ -103,7 +109,7 @@ export default function Footer() {
           white-space: nowrap;
           z-index: 1;
           transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-          font-family: 'Inter', sans-serif;
+          font-family: 'Space Grotesk', system-ui, sans-serif;
         }
         
         .cube-scene {
@@ -173,36 +179,47 @@ export default function Footer() {
         }
         .link-hover:hover {
           color: var(--footer-accent);
-          text-shadow: 0 0 12px rgba(205, 239, 51, 0.4);
+          text-shadow: 0 0 12px rgba(255, 30, 39, 0.4);
         }
         .link-hover:hover::after {
           transform: scaleX(1);
         }
       `}</style>
 
+      {/* Ticker Marquee Ribbon */}
+      <div className="w-full bg-[#E50914] text-white py-2 overflow-hidden border-t border-b border-[#CC0009] select-none z-30 relative">
+        <div className="flex whitespace-nowrap ticker-track">
+          {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
+            <span key={idx} className="font-mono text-xs font-bold tracking-widest uppercase mx-6 flex items-center gap-4">
+              <span>{item}</span>
+              <span className="w-1.5 h-1.5 bg-white rounded-full inline-block" />
+            </span>
+          ))}
+        </div>
+      </div>
+
       <footer 
         ref={containerRef} 
-        className="footer-container relative w-full h-[75vh] flex flex-col justify-end font-sans" 
+        className="footer-container relative w-full min-h-[70vh] flex flex-col justify-end font-sans overflow-hidden" 
         style={themeStyle}
       >
         
         {/* Top Gradient Fade to blend with page above */}
         <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none mix-blend-normal opacity-100" />
 
-        {/* Background Layer: Large WEB3 Typography */}
+        {/* Background Layer: Large web.3_ Typography */}
         <div 
-          className="bg-web3-text" 
+          className="bg-web3-text font-mono tracking-tight" 
           style={{ 
             transform: `translate(calc(-50% + ${mousePos.x * -30}px), calc(-50% + ${mousePos.y * -30}px))` 
           }}
         >
-          WEB3
+          web.3_
         </div>
 
         {/* Mid Layer: Floating Geometric Cubes */}
         <div className="cube-scene">
           {CUBES.map((c, i) => {
-            // Calculate parallax depth
             const pX = (mousePos.x * (c.z + 800)) / 40;
             const pY = (mousePos.y * (c.z + 800)) / 40;
             
@@ -245,23 +262,59 @@ export default function Footer() {
         </div>
 
         {/* Foreground Layer: Minimal UI */}
-        <div className="relative z-20 flex flex-col md:flex-row justify-between items-center md:items-end p-8 md:p-12 lg:px-24 w-full mx-auto gap-8 mb-4">
+        <div className="relative z-20 flex flex-col justify-end w-full px-6 md:px-12 lg:px-20 pb-8 pt-16">
           
-          {/* Left Column */}
-          <div className="flex flex-col items-center md:items-start text-center md:text-left gap-1">
-            <h3 className="text-3xl md:text-4xl font-semibold tracking-tight m-0">WEB3</h3>
-            <p className="text-sm font-light" style={{ color: "var(--footer-secondary)" }}>
-              © 2026 Web3 Club
-            </p>
+          {/* Top Info Bar */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-border/60 text-xs font-mono">
+            <div className="flex items-center gap-6">
+              <Link href="/contact" className="hover:text-[#E50914] transition-colors">
+                Contact
+              </Link>
+              <Link href="/about" className="hover:text-[#E50914] transition-colors">
+                Manifesto
+              </Link>
+              <Link href="/events" className="hover:text-[#E50914] transition-colors">
+                Incubation Program
+              </Link>
+            </div>
+
+            <div className="text-foreground/60 text-[11px] font-mono tracking-widest uppercase">
+              © 2026 WEB.3_ — READ.WRITE.OWN
+            </div>
+
+            <div className="flex gap-6 items-center">
+              {socialLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  className="link-hover text-xs font-mono uppercase tracking-wider text-foreground/70"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           </div>
 
-          {/* Right Column */}
-          <div className="flex gap-8 items-center">
-            {socialLinks.map((link) => (
-              <Link key={link.label} href={link.href} target="_blank" className="link-hover text-base md:text-lg font-medium tracking-wide capitalize">
-                {link.label.toLowerCase()}
-              </Link>
-            ))}
+          {/* Giant Cyber WEB.3_ Display Block with Pixel Underscore & Corner Brackets */}
+          <div className="relative my-8 py-8 border border-border/80 bg-foreground/[0.01] rounded-xl overflow-hidden">
+            {/* 4 Red Coordinate Squares */}
+            <span className="absolute top-2 left-2 w-3 h-3 bg-[#E50914] shadow-[0_0_10px_#E50914]" />
+            <span className="absolute top-2 right-2 w-3 h-3 bg-[#E50914] shadow-[0_0_10px_#E50914]" />
+            <span className="absolute bottom-2 left-2 w-3 h-3 bg-[#E50914] shadow-[0_0_10px_#E50914]" />
+            <span className="absolute bottom-2 right-2 w-3 h-3 bg-[#E50914] shadow-[0_0_10px_#E50914]" />
+
+            <div className="text-center select-none overflow-hidden py-4 flex flex-col items-center justify-center">
+              <div className="flex items-baseline justify-center">
+                <span className="text-[14vw] font-black cyber-font tracking-tight leading-none text-foreground/90 font-mono">
+                  web.3
+                </span>
+                <span className="inline-block w-[4vw] h-[2vw] bg-[#E50914] ml-2 animate-pulse align-baseline shadow-[0_0_16px_#E50914]" />
+              </div>
+              <span className="font-mono text-xs md:text-sm tracking-[0.4em] uppercase text-foreground/50 mt-3">
+                read . write . own
+              </span>
+            </div>
           </div>
 
         </div>

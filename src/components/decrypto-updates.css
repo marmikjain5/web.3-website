@@ -40,7 +40,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #cdef33;
+  background: #E50914;
   margin: 0 18px;
   flex-shrink: 0;
 }
@@ -80,7 +80,7 @@
 }
 
 .decrypto-heading-accent {
-  color: #cdef33;
+  color: #E50914;
 }
 
 .decrypto-subtext {
@@ -93,11 +93,11 @@
 
 .decrypto-date-badge {
   display: inline-block;
-  border: 1px solid #cdef33;
+  border: 1px solid #E50914;
   border-radius: 20px;
   padding: 6px 16px;
   font-size: 11px;
-  color: #cdef33;
+  color: #E50914;
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
@@ -113,7 +113,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #cdef33;
+  background: #E50914;
   flex-shrink: 0;
   animation: decryptoPulse 1.8s ease-in-out infinite;
 }
@@ -158,7 +158,7 @@
 }
 
 .decrypto-card--accent {
-  border-color: #cdef33;
+  border-color: #E50914;
 }
 
 .decrypto-card-title {
@@ -202,10 +202,10 @@
 }
 
 .decrypto-tab--active {
-  background: #cdef33;
+  background: #E50914;
   color: #202221;
   font-weight: 700;
-  border-color: #cdef33;
+  border-color: #E50914;
 }
 
 /* ── PANEL HEADER ── */
@@ -223,7 +223,7 @@
 
 .decrypto-panel-date {
   font-size: 11px;
-  color: #cdef33;
+  color: #E50914;
   text-transform: uppercase;
   margin: 0 0 2px 0;
 }
@@ -261,7 +261,7 @@
 }
 
 .decrypto-slot-dot--hl {
-  background: #cdef33;
+  background: #E50914;
 }
 
 .decrypto-slot-time {

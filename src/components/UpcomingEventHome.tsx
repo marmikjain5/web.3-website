@@ -39,19 +39,26 @@ export default function UpcomingEventHome() {
       <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
         <div className="flex flex-col items-start text-left z-30 mb-20 lg:mb-0">
-          <h2 className="text-5xl lg:text-7xl font-black mb-6 text-[#202221] dark:text-[#CDEF33]">
-            Flagship<br />Events
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-2.5 h-2.5 bg-[#E50914]" />
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-foreground/60">
+              COMMUNITY & COMPETITIONS
+            </span>
+          </div>
+          <h2 className="text-5xl lg:text-7xl font-black mb-6 cyber-font text-foreground">
+            FLAGSHIP<br />
+            <span className="text-[#E50914]">EVENTS</span>
           </h2>
-          <p className="text-xl max-w-md text-foreground/60">
-            Card stacks have never looked so good. Discover our premier hackathons, workshops, and exclusive summits shifting the frontier of Web3.
+          <p className="font-mono text-sm md:text-base max-w-md text-foreground/70 leading-relaxed">
+            Discover premier student-led hackathons, builder sprints, and exclusive developer workshops shifting the frontier of Web3.
           </p>
         </div>
 
         {/* Right Side Cards */}
         <div className="relative w-full flex justify-center lg:justify-end py-10 pointer-events-auto">
           {isLoading ? (
-            <div className="w-[600px] h-[560px] rounded-xl bg-[#202221] dark:bg-card border border-[#D9D9D9]/10 dark:border-border flex flex-col items-center justify-center text-[#D9D9D9] dark:text-foreground">
-              <Loader2 className="w-8 h-8 animate-spin opacity-50 mb-4" />
+            <div className="w-[600px] h-[560px] rounded-xl bg-card border border-border flex flex-col items-center justify-center text-foreground">
+              <Loader2 className="w-8 h-8 animate-spin text-[#E50914] mb-4" />
               <p className="font-mono text-xs opacity-50 tracking-widest uppercase">Syncing to chain...</p>
             </div>
           ) : (
@@ -69,9 +76,9 @@ export default function UpcomingEventHome() {
                   return (
                     <Card
                       key={event.id}
-                      className="flex flex-col justify-between p-0 overflow-hidden shadow-2xl bg-[#202221] dark:bg-card"
+                      className="flex flex-col justify-between p-0 overflow-hidden shadow-2xl bg-card border border-border"
                     >
-                      <div className="w-full h-48 bg-black/20 flex items-center justify-center border-b border-[#D9D9D9]/10 dark:border-border overflow-hidden">
+                      <div className="w-full h-48 bg-black/20 flex items-center justify-center border-b border-border overflow-hidden">
                         <img
                           src={event.image_url || "/placeholder-event.png"}
                           alt={event.title}
@@ -83,20 +90,20 @@ export default function UpcomingEventHome() {
                         <div>
                           <div className="flex justify-between items-start mb-4">
                             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest ${event.status === "open" ? "border-green-400/20 bg-green-400/10 text-green-400" :
-                                "border-yellow-400/20 bg-yellow-400/10 text-yellow-400"
+                                "border-[#E50914]/20 bg-[#E50914]/10 text-[#E50914]"
                               }`}>
-                              <span className={`w-2 h-2 rounded-full animate-ping ${event.status === "open" ? "bg-green-400" : "bg-yellow-400"}`} />
+                              <span className={`w-2 h-2 rounded-full animate-ping ${event.status === "open" ? "bg-green-400" : "bg-[#E50914]"}`} />
                               {event.status === "open" ? "Registration Open" : "Coming Soon"}
                             </div>
-                            <span className="font-mono text-xs text-[#D9D9D9]/60 dark:text-foreground/40">
+                            <span className="font-mono text-xs text-foreground/50">
                               {event.date}
                             </span>
                           </div>
 
-                          <h2 className="text-3xl font-black leading-tight mb-2 text-[#D9D9D9] dark:text-foreground">
+                          <h2 className="text-2xl md:text-3xl font-black cyber-font leading-tight mb-2 text-foreground">
                             {event.title}
                           </h2>
-                          <p className="text-sm line-clamp-2 text-[#D9D9D9]/80 dark:text-foreground/60">
+                          <p className="font-mono text-xs md:text-sm line-clamp-2 text-foreground/70">
                             {event.description}
                           </p>
                         </div>
@@ -105,14 +112,14 @@ export default function UpcomingEventHome() {
                           {event.status === "open" ? (
                             <button
                               onClick={() => handleRegister(event.title)}
-                              className="px-6 py-3 w-full font-bold rounded-lg transition-all flex items-center justify-center gap-2 group bg-[#CDEF33] text-[#202221] hover:bg-[#CDEF33]/80"
+                              className="cyber-btn px-6 py-3.5 w-full font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 group bg-[#E50914] hover:bg-[#e0151e] text-white shadow-[0_0_15px_rgba(255,30,39,0.35)] cursor-pointer"
                             >
-                              Register for the event <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                              Register for event <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                             </button>
                           ) : (
                             <button
                               disabled
-                              className="px-6 py-3 w-full font-bold rounded-lg transition-all flex items-center justify-center gap-2 group bg-[#D9D9D9]/5 dark:bg-foreground/5 text-[#D9D9D9]/50 dark:text-foreground/50 cursor-not-allowed"
+                              className="px-6 py-3 w-full font-mono text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 group bg-foreground/5 text-foreground/40 cursor-not-allowed"
                             >
                               Registration not open yet
                             </button>

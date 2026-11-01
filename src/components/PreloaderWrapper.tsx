@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Preloader from "./Preloader";
 
 export default function PreloaderWrapper({
@@ -10,15 +10,17 @@ export default function PreloaderWrapper({
 }) {
   const [loaded, setLoaded] = useState(false);
 
+  // Instant fallback so the user NEVER encounters a black or blank screen
+  useEffect(() => {
+    // Fast 650ms max timeout
+    const t = setTimeout(() => setLoaded(true), 650);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <>
       {!loaded && <Preloader onComplete={() => setLoaded(true)} />}
-      <div
-        style={{
-          opacity: loaded ? 1 : 0,
-          transition: "opacity 0.4s ease",
-        }}
-      >
+      <div className="w-full min-h-full">
         {children}
       </div>
     </>

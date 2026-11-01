@@ -1,13 +1,14 @@
 "use client";
 import MemberCard from "./MemberCard";
+import Image from "next/image";
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { TeamMemberRow } from "@/app/actions/admin";
+
 function chunkArray<T>(arr: T[], size: number): T[][] {
   return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
     arr.slice(i * size, i * size + size)
   );
 }
-
 
 function useInView(threshold = 0.12) {
   const ref = useRef<HTMLDivElement>(null);
@@ -16,7 +17,9 @@ function useInView(threshold = 0.12) {
     const el = ref.current;
     if (!el) return;
     const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) setInView(true); },
+      ([e]) => {
+        if (e.isIntersecting) setInView(true);
+      },
       { threshold }
     );
     obs.observe(el);
@@ -26,23 +29,30 @@ function useInView(threshold = 0.12) {
 }
 
 type Particle = {
-  x: number; y: number;
-  vx: number; vy: number;
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
   opacity: number;
   size: number;
   pulse: number;
   pulseSpeed: number;
 };
 
-
 export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
   const [selectedDept, setSelectedDept] = useState("all");
-  const filteredMembers = selectedDept === "all"
-    ? members
-    : members.filter((m) => m.department?.toLowerCase() === selectedDept);
+  const filteredMembers =
+    selectedDept === "all"
+      ? members
+      : members.filter((m) => m.department?.toLowerCase() === selectedDept);
   const chunkedRows = chunkArray(filteredMembers, 3);
 
-  const departments = ["all", ...Array.from(new Set(members.map((m) => m.department?.toLowerCase() || "other")))];
+  const departments = [
+    "all",
+    ...Array.from(
+      new Set(members.map((m) => m.department?.toLowerCase() || "other"))
+    ),
+  ];
 
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [glitching, setGlitching] = useState(false);
@@ -52,6 +62,7 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
   const particlesRef = useRef<Particle[]>([]);
   const rafRef = useRef<number>(0);
   const frameRef = useRef(0);
+
   const initParticles = useCallback((w: number, h: number) => {
     particlesRef.current = Array.from({ length: 60 }, () => ({
       x: Math.random() * w,
@@ -77,6 +88,7 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
     };
     resize();
     window.addEventListener("resize", resize);
+
     const draw = () => {
       const { width: W, height: H } = canvas;
       ctx.clearRect(0, 0, W, H);
@@ -87,27 +99,23 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
 
       // Animated grid lines — subtle, scrolling
       const gridOffset = (frameRef.current * 0.3) % 32;
-      ctx.strokeStyle = "rgba(205,239,51,0.028)";
+      ctx.strokeStyle = "rgba(255,85,0,0.035)";
       ctx.lineWidth = 0.5;
       for (let x = 0; x < W; x += 32) {
-        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, H);
+        ctx.stroke();
       }
       for (let y = -gridOffset; y < H; y += 32) {
-        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(W, y);
+        ctx.stroke();
       }
 
-      // Moving aurora streaks in background
+      // Background is kept pure, clean & neutral (no reddish/orange tint)
       const t = frameRef.current * 0.005;
-      for (let i = 0; i < 3; i++) {
-        const bx = W * (0.2 + i * 0.3 + Math.sin(t + i * 1.5) * 0.1);
-        const by = H * (0.3 + Math.cos(t * 0.7 + i) * 0.25);
-        const grad = ctx.createRadialGradient(bx, by, 0, bx, by, 300 + i * 60);
-        grad.addColorStop(0, `rgba(205,239,51,${0.04 + Math.sin(t + i) * 0.015})`);
-        grad.addColorStop(0.5, `rgba(205,239,51,0.01)`);
-        grad.addColorStop(1, "transparent");
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, W, H);
-      }
 
       particlesRef.current.forEach((p) => {
         p.pulse += p.pulseSpeed;
@@ -123,7 +131,10 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
         }
 
         const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-        if (speed > 3) { p.vx = (p.vx / speed) * 3; p.vy = (p.vy / speed) * 3; }
+        if (speed > 3) {
+          p.vx = (p.vx / speed) * 3;
+          p.vy = (p.vy / speed) * 3;
+        }
 
         p.vx *= 0.97;
         p.vy *= 0.97;
@@ -138,14 +149,14 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
         // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(205,239,51,${pulsedOpacity})`;
+        ctx.fillStyle = `rgba(100,100,100,${pulsedOpacity * 0.4})`;
         ctx.fill();
 
         // Halo for bigger particles
         if (p.size > 1.8) {
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size * 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(205,239,51,${pulsedOpacity * 0.15})`;
+          ctx.fillStyle = `rgba(100,100,100,${pulsedOpacity * 0.1})`;
           ctx.fill();
         }
       });
@@ -161,7 +172,7 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
             ctx.beginPath();
             ctx.moveTo(pts[i].x, pts[i].y);
             ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.strokeStyle = `rgba(205,239,51,${(1 - d / 110) * 0.18})`;
+            ctx.strokeStyle = `rgba(0,0,0,${(1 - d / 110) * 0.05})`;
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }
@@ -170,8 +181,8 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
       // Mouse proximity glow
       if (mx > 0) {
         const grad = ctx.createRadialGradient(mx, my, 0, mx, my, 260);
-        grad.addColorStop(0, "rgba(205,239,51,0.10)");
-        grad.addColorStop(0.5, "rgba(205,239,51,0.03)");
+        grad.addColorStop(0, "rgba(0,0,0,0.03)");
+        grad.addColorStop(0.5, "rgba(0,0,0,0.005)");
         grad.addColorStop(1, "transparent");
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, W, H);
@@ -186,7 +197,7 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
         [W - cornerPad, H - cornerPad],
       ] as const;
       const cornerAlpha = 0.22 + 0.08 * Math.sin(t * 2);
-      ctx.strokeStyle = `rgba(32,34,33,${cornerAlpha})`;
+      ctx.strokeStyle = `rgba(0,0,0,${cornerAlpha * 0.15})`;
       ctx.lineWidth = 1;
       corners.forEach(([cx, cy]) => {
         const sx = cx === cornerPad ? 1 : -1;
@@ -230,14 +241,11 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
 
   return (
     <>
-
       <section
-        className="bg-background"
+        className="bg-background relative overflow-hidden"
         style={{
           minHeight: "100vh",
-          paddingTop: "170px",
-          position: "relative",
-          overflow: "hidden",
+          paddingTop: "150px",
         }}
         onMouseMove={handleSectionMouseMove}
         onMouseLeave={handleSectionMouseLeave}
@@ -256,12 +264,17 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
         />
 
         {/* Dot grid */}
-        <div style={{
-          position: "absolute", inset: 0, pointerEvents: "none",
-          backgroundImage: "radial-gradient(circle, rgba(205,239,51,0.35) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-          zIndex: 0,
-        }} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            backgroundImage:
+              "radial-gradient(circle, var(--grid-line) 1px, transparent 1px)",
+            backgroundSize: "32px 32px",
+            zIndex: 0,
+          }}
+        />
 
         {/* Hex decorations */}
         {[
@@ -270,207 +283,237 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
           { top: "33%", left: "91%", size: 75, delay: "0.8s" },
           { top: "80%", left: "2%", size: 85, delay: "2s" },
         ].map((h, i) => (
-          <svg key={i} style={{
-            position: "absolute", top: h.top, left: h.left,
-            width: h.size, height: h.size,
-            animation: `hexPulse 5s ease-in-out ${h.delay} infinite`,
-            zIndex: 1, pointerEvents: "none",
-          }} viewBox="0 0 100 100">
-            <polygon points="50,2 93,26 93,74 50,98 7,74 7,26"
-              fill="none" stroke="var(--accent)" strokeWidth="1" />
+          <svg
+            key={i}
+            style={{
+              position: "absolute",
+              top: h.top,
+              left: h.left,
+              width: h.size,
+              height: h.size,
+              animation: `hexPulse 5s ease-in-out ${h.delay} infinite`,
+              zIndex: 1,
+              pointerEvents: "none",
+            }}
+            viewBox="0 0 100 100"
+          >
+            <polygon
+              points="50,2 93,26 93,74 50,98 7,74 7,26"
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth="1"
+            />
           </svg>
         ))}
 
         {/* Scanline */}
-        <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 1, overflow: "hidden" }}>
-          <div style={{
-            position: "absolute", left: 0, right: 0, height: "2px",
-            background: "linear-gradient(to right, transparent, rgba(0,0,0,0.08), transparent)",
-            animation: "scanline 9s linear infinite",
-          }} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            pointerEvents: "none",
+            zIndex: 1,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              height: "2px",
+              background:
+                "linear-gradient(to right, transparent, rgba(229,9,20,0.15), transparent)",
+              animation: "scanline 9s linear infinite",
+            }}
+          />
         </div>
 
         {/* Live data ticker at top */}
-        <div style={{
-          position: "absolute",
-          top: "110px",
-          left: 0,
-          right: 0,
-          height: "28px",
-          background: "var(--card-bg)",
-          borderBottom: "1px solid rgba(0,0,0,0.3)",
-          overflow: "hidden",
-          zIndex: 3,
-          display: "flex",
-          alignItems: "center",
-        }}>
-          <div className="data-ticker-inner" style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: "9px",
-            color: "rgba(205,239,51,0.7)",
-            letterSpacing: "0.1em",
-          }}>
+        <div
+          style={{
+            position: "absolute",
+            top: "90px",
+            left: 0,
+            right: 0,
+            height: "28px",
+            background: "var(--card-bg)",
+            borderBottom: "1px solid var(--border)",
+            overflow: "hidden",
+            zIndex: 3,
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <div
+            className="data-ticker-inner"
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: "9px",
+              color: "rgba(229,9,20,0.85)",
+              letterSpacing: "0.1em",
+            }}
+          >
             {Array.from({ length: 2 }, () =>
-              `◈ PROTOCOL_v3.1.4 ◈ NODES_ACTIVE: ${members.length.toString().padStart(2, "0")} ◈ CHAIN_STATUS: NOMINAL ◈ UPTIME: 99.97% ◈ BLOCK_HEIGHT: 8,421,337 ◈ LATENCY: 12ms ◈ SYNC: COMPLETE ◈ CONTRIBUTORS: VERIFIED ◈ `
+              `◈ PROTOCOL_v3.1.4 ◈ NODES_ACTIVE: ${members.length
+                .toString()
+                .padStart(
+                  2,
+                  "0"
+                )} ◈ CHAIN_STATUS: NOMINAL ◈ UPTIME: 99.97% ◈ BLOCK_HEIGHT: 8,421,337 ◈ LATENCY: 12ms ◈ SYNC: COMPLETE ◈ CONTRIBUTORS: VERIFIED ◈ `
             ).join("")}
           </div>
         </div>
 
-        {/* ── HEADING ── */}
-        <div
-          style={{ position: "relative", zIndex: 2, textAlign: "center", padding: "28px 24px 64px" }}
-          onMouseMove={handleHeadingMove}
-          onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-          onClick={triggerGlitch}
-        >
-          {/* Main heading — no tag above it */}
-          <div style={{
-            transform: `perspective(800px) rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
-            transition: "transform 0.2s ease-out",
-            display: "inline-block",
-            position: "relative",
-            cursor: "pointer",
-          }}>
-            {glitching && (
-              <>
-                <div className="glitch-layer-1" aria-hidden="true"
-                  style={{ fontFamily: "'Syne',sans-serif", fontSize: "clamp(52px,8vw,96px)", fontWeight: 800 }}>
-                  OUR TEAM
-                </div>
-                <div className="glitch-layer-2" aria-hidden="true"
-                  style={{ fontFamily: "'Syne',sans-serif", fontSize: "clamp(52px,8vw,96px)", fontWeight: 800 }}>
-                  OUR TEAM
-                </div>
-              </>
-            )}
-            <h2 style={{
-              fontFamily: "'Syne', sans-serif",
-              fontSize: "clamp(52px, 8vw, 96px)",
-              fontWeight: 800,
-              margin: 0,
-              lineHeight: 1,
-              letterSpacing: "-0.02em",
-              position: "relative",
-            }}>
-              {"OUR TEAM".split("").map((char, i) => (
-                <span key={i} className="letter-anim" style={{
-                  animationDelay: `${i * 0.06}s`,
-                  color: char === " " ? "transparent" : (i >= 4 ? "var(--accent)" : "var(--foreground)"),
-                  display: char === " " ? "inline-block" : undefined,
-                  width: char === " " ? "0.3em" : undefined,
-                }}>
-                  {char}
+        {/* ── HERO BANNER (Matched to Reference) ── */}
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-4 pb-10">
+          <div 
+            className="relative rounded-2xl overflow-hidden border border-border/70 shadow-[0_20px_50px_rgba(0,0,0,0.06)] bg-[#F4F3F0] transition-transform duration-300 group"
+            style={{
+              transform: `perspective(1000px) rotateX(${tilt.x * 0.35}deg) rotateY(${tilt.y * 0.35}deg)`,
+            }}
+            onMouseMove={handleHeadingMove}
+            onMouseLeave={() => setTilt({ x: 0, y: 0 })}
+          >
+            {/* Technical Corner Brackets */}
+            <span className="absolute top-2 left-3 font-mono text-xs opacity-40 z-20 select-none">┌</span>
+            <span className="absolute top-2 right-3 font-mono text-xs opacity-40 z-20 select-none">┐</span>
+            <span className="absolute bottom-10 left-3 font-mono text-xs opacity-40 z-20 select-none">└</span>
+            <span className="absolute bottom-10 right-3 font-mono text-xs opacity-40 z-20 select-none">┘</span>
+
+            {/* Banner Image */}
+            <div className="relative w-full aspect-[2/1] sm:aspect-[2.1/1] overflow-hidden">
+              <Image
+                src="/chaingpt-assets/team-hero-banner.png"
+                alt="Our Team - Web3 Core Contributors"
+                fill
+                priority
+                sizes="(max-width: 1200px) 100vw, 1100px"
+                className="object-cover object-center select-none"
+              />
+            </div>
+
+            {/* Bottom Telemetry HUD overlay */}
+            <div className="px-5 py-3 bg-card/90 backdrop-blur-md border-t border-border flex items-center justify-between text-xs font-mono text-foreground/80">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#E50914] animate-pulse shadow-[0_0_8px_#E50914]" />
+                <span className="font-bold tracking-wider uppercase text-[11px] sm:text-xs">
+                  SYS:TEAM_V2.4 // PROTOCOL:VERIFIED
                 </span>
-              ))}
-            </h2>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-foreground/40 hidden md:inline text-[11px]">
+                  BLOCK_SYNC: 100%
+                </span>
+                <span className="px-2.5 py-1 rounded-md bg-foreground/5 border border-border/80 font-bold text-foreground text-[11px] sm:text-xs">
+                  {members.length.toString().padStart(2, "0")} ACTIVE NODES
+                </span>
+              </div>
+            </div>
           </div>
-
-          {/* Nodes active — bigger font */}
-          <p style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: "15px",
-            color: "rgba(32,34,33,0.75)",
-            letterSpacing: "0.15em",
-            marginTop: "18px",
-            animation: "fadeUp 0.8s 0.9s cubic-bezier(.22,1,.36,1) both, nodesBright 3s 1.7s ease-in-out infinite",
-            textShadow: "0 0 12px rgba(205,239,51,0.3)",
-          }}>
-            {members.length.toString().padStart(2, "0")} NODES ACTIVE
-          </p>
-
-          <div style={{
-            width: "80px", height: "1px", margin: "20px auto 0",
-            background: "linear-gradient(to right, transparent, var(--accent), transparent)",
-            animation: "fadeUp 0.8s 1s cubic-bezier(.22,1,.36,1) both",
-          }} />
         </div>
 
         {/* Filters */}
-        <div style={{
-          display: "flex",
-          justifyContent: "center",
-          gap: "12px",
-          flexWrap: "wrap",
-          padding: "0 24px 40px",
-          position: "relative",
-          zIndex: 2,
-        }}>
-          {departments.map(dept => (
-            <button
-              key={dept}
-              onClick={() => setSelectedDept(dept)}
-              style={{
-                background: selectedDept === dept ? "rgba(205,239,51,0.15)" : "transparent",
-                color: selectedDept === dept ? "#CDEF33" : "rgba(255,255,255,0.4)",
-                border: `1px solid ${selectedDept === dept ? "rgba(205,239,51,0.4)" : "rgba(255,255,255,0.1)"}`,
-                padding: "6px 16px",
-                borderRadius: "999px",
-                fontSize: "12px",
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                cursor: "pointer",
-                fontFamily: "'IBM Plex Mono', monospace",
-                transition: "all 0.2s",
-              }}
-              onMouseEnter={(e) => {
-                if (selectedDept !== dept) {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.8)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (selectedDept !== dept) {
-                  e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)";
-                  e.currentTarget.style.color = "rgba(255,255,255,0.4)";
-                }
-              }}
-            >
-              {dept}
-            </button>
-          ))}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px",
+            flexWrap: "wrap",
+            padding: "0 24px 36px",
+            position: "relative",
+            zIndex: 2,
+          }}
+        >
+          {departments.map((dept) => {
+            const isSelected = selectedDept === dept;
+            return (
+              <button
+                key={dept}
+                onClick={() => setSelectedDept(dept)}
+                className="font-mono text-xs uppercase tracking-wider px-4 py-2 rounded-full transition-all duration-200 cursor-pointer"
+                style={{
+                  background: isSelected ? "rgba(229,9,20,0.15)" : "var(--card-bg)",
+                  color: isSelected ? "#E50914" : "var(--foreground)",
+                  border: `1px solid ${
+                    isSelected ? "rgba(229,9,20,0.6)" : "var(--border)"
+                  }`,
+                  fontWeight: isSelected ? 700 : 500,
+                  opacity: isSelected ? 1 : 0.75,
+                }}
+              >
+                {dept}
+              </button>
+            );
+          })}
         </div>
 
         {/* Grid */}
-        <div style={{ position: "relative", zIndex: 2, padding: "0 24px 120px", maxWidth: "1100px", margin: "0 auto" }}>
-          {chunkedRows.map((row, rowIdx) => (
-            <RevealRow
-              key={rowIdx}
-              row={row}
-              rowIdx={rowIdx}
-            />
-          ))}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 2,
+            padding: "0 24px 120px",
+            maxWidth: "1150px",
+            margin: "0 auto",
+          }}
+        >
+          {chunkedRows.length > 0 ? (
+            chunkedRows.map((row, rowIdx) => (
+              <RevealRow key={rowIdx} row={row} rowIdx={rowIdx} />
+            ))
+          ) : (
+            <div className="text-center py-20 font-mono text-sm text-foreground/40">
+              No team members found in this division.
+            </div>
+          )}
         </div>
 
         {/* Bottom web3 status bar */}
-        <div style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "40px",
-          background: "var(--card-bg)",
-          borderTop: "1px solid rgba(0,0,0,0.2)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "32px",
-          zIndex: 3,
-          backdropFilter: "blur(4px)",
-        }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: "40px",
+            background: "var(--card-bg)",
+            borderTop: "1px solid var(--border)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "32px",
+            zIndex: 3,
+            backdropFilter: "blur(6px)",
+          }}
+        >
           {[
             { label: "NETWORK", value: "MAINNET" },
             { label: "STATUS", value: "● LIVE" },
             { label: "EPOCH", value: "0x1A3F" },
           ].map(({ label, value }) => (
-            <div key={label} style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: "9px",
-              letterSpacing: "0.1em",
-              display: "flex",
-              gap: "6px",
-            }}>
-              <span style={{ color: "rgba(217,217,217,0.4)" }}>{label}</span>
-              <span style={{ color: value.startsWith("●") ? "var(--accent)" : "rgba(217,217,217,0.75)" }}>{value}</span>
+            <div
+              key={label}
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: "9px",
+                letterSpacing: "0.1em",
+                display: "flex",
+                gap: "6px",
+              }}
+            >
+              <span style={{ color: "var(--foreground)", opacity: 0.4 }}>
+                {label}
+              </span>
+              <span
+                style={{
+                  color: value.startsWith("●") ? "var(--accent)" : "var(--foreground)",
+                  opacity: value.startsWith("●") ? 1 : 0.8,
+                  fontWeight: 600,
+                }}
+              >
+                {value}
+              </span>
             </div>
           ))}
         </div>
@@ -491,26 +534,32 @@ function RevealRow({
     <div
       ref={ref}
       className={`row-reveal${inView ? " visible" : ""}`}
-      style={{ transitionDelay: `${rowIdx * 0.08}s`, marginBottom: "32px" }}
+      style={{ transitionDelay: `${rowIdx * 0.08}s`, marginBottom: "28px" }}
     >
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-        gap: "20px",
-      }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+          gap: "24px",
+        }}
+      >
         {row.map((member, cardIdx) => (
           <div
-            key={member.name}
+            key={member.id || member.name}
             style={{
               opacity: inView ? 1 : 0.25,
-              transform: inView ? "translateY(0) scale(1)" : "translateY(28px) scale(0.98)",
-              transition: `opacity 0.65s cubic-bezier(.22,1,.36,1) ${cardIdx * 0.1 + rowIdx * 0.08}s, transform 0.65s cubic-bezier(.22,1,.36,1) ${cardIdx * 0.1 + rowIdx * 0.08}s`,
+              transform: inView
+                ? "translateY(0) scale(1)"
+                : "translateY(28px) scale(0.98)",
+              transition: `opacity 0.65s cubic-bezier(.22,1,.36,1) ${
+                cardIdx * 0.1 + rowIdx * 0.08
+              }s, transform 0.65s cubic-bezier(.22,1,.36,1) ${
+                cardIdx * 0.1 + rowIdx * 0.08
+              }s`,
               height: "100%",
             }}
           >
-            <MemberCardWrapper
-              member={member}
-            />
+            <MemberCardWrapper member={member} />
           </div>
         ))}
       </div>
@@ -518,19 +567,16 @@ function RevealRow({
   );
 }
 
-// Thin wrapper so we can intercept social icon hover events
-function MemberCardWrapper({
-  member,
-}: {
-  member: TeamMemberRow;
-}) {
+function MemberCardWrapper({ member }: { member: TeamMemberRow }) {
+  const roleText = member.department
+    ? `${member.role} | ${member.department.toUpperCase()}`
+    : member.role;
+
   return (
-    <div
-      style={{ position: "relative", height: "100%" }}
-    >
+    <div style={{ position: "relative", height: "100%" }}>
       <MemberCard
         name={member.name}
-        role={`${member.role} | ${member.department}`}
+        role={roleText}
         description={member.description || ""}
         image={member.image_url || ""}
         socials={member.socials}
