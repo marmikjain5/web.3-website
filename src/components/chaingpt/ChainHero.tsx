@@ -20,9 +20,9 @@ interface ChainHeroProps {
 
 const CATEGORIES = [
   { id: "ai", label: "AI", desc: "Decentralized Machine Learning & Autonomous Agents" },
-  { id: "defi", label: "DeFi", desc: "Institutional Liquidity & Next-Gen Yield Protocols" },
+  { id: "defi", label: "DeFi", desc: "Automated Market Makers & Micro-lending Protocols" },
   { id: "depin", label: "DePin", desc: "Physical Infrastructure Networks & Compute Nodes" },
-  { id: "l1l2", label: "L1/L2", desc: "High-Throughput Rollups & Modular State Chains" },
+  { id: "l1l2", label: "L1/L2", desc: "High-Throughput Rollups & Zero-Knowledge Verification" },
 ];
 
 export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
@@ -120,7 +120,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
               <div className="flex items-center gap-2.5 mb-8">
                 <span className="w-2.5 h-2.5 bg-foreground inline-block shrink-0" />
                 <ScrambleText
-                  text="SUPERCHARGING WEB3 BUILDERS"
+                  text="SUPERCHARGING STUDENT BUILDERS"
                   as="h2"
                   className="text-xl sm:text-2xl font-black cyber-font tracking-tight text-foreground uppercase block"
                 />
@@ -168,7 +168,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
               </div>
             </div>
 
-            {/* Chamfered Brand Orange Button: APPLY FOR FUNDING */}
+            {/* Chamfered Brand Orange Button: SUBMIT PROJECT / IDEA */}
             <div className="pt-4">
               <MagneticButton strength={0.25}>
                 <Link
@@ -176,7 +176,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
                   onClick={onApplyClick}
                   className="cyber-btn px-6 py-3.5 bg-[#E50914] hover:bg-[#e05500] text-white font-mono font-black text-xs uppercase tracking-widest shadow-[0_8px_24px_rgba(229,9,20,0.35)] transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
-                  <span>APPLY FOR FUNDING</span>
+                  <span>SUBMIT PROJECT / IDEA</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </MagneticButton>
@@ -211,20 +211,20 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
                 <div className="flex items-center gap-2.5">
                   <span className="w-2.5 h-2.5 bg-foreground inline-block shrink-0" />
                   <ScrambleText
-                    text="SMART CAPITAL"
+                    text="CAMPUS INCUBATOR"
                     as="h3"
                     className="text-xl sm:text-2xl font-black cyber-font tracking-tight text-foreground uppercase block"
                   />
                 </div>
                 <p className="font-mono text-xs text-foreground/50 tracking-wider pl-5">
-                  Our ecosystem support
+                  Student mentorship & grant guidance
                 </p>
               </div>
 
               {/* 2 White/Dark Beveled Cards with 3D Isometric Shapes side-by-side */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-3.5">
                 
-                {/* CARD 01: Incubation & Acceleration Program */}
+                {/* CARD 01: Project Incubation & Mentorship */}
                 <div className="relative p-5 rounded-2xl border border-border bg-card/90 shadow-sm hover:shadow-xl hover:border-[#E50914]/60 transition-all duration-300 flex flex-col justify-between group min-h-[190px]">
                   <span className="tech-bracket-tl text-foreground/30" />
                   <span className="tech-bracket-tr text-foreground/30" />
@@ -258,11 +258,11 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
                   </div>
 
                   <h4 className="font-mono font-bold text-xs sm:text-sm text-foreground uppercase tracking-tight group-hover:text-[#E50914] transition-colors leading-snug">
-                    Incubation & Acceleration Program
+                    Project Incubation & Mentorship
                   </h4>
                 </div>
 
-                {/* CARD 02: Investment & Funding */}
+                {/* CARD 02: Grants & Hackathon Bounties */}
                 <div className="relative p-5 rounded-2xl border border-border bg-card/90 shadow-sm hover:shadow-xl hover:border-[#E50914]/60 transition-all duration-300 flex flex-col justify-between group min-h-[190px]">
                   <span className="tech-bracket-tl text-foreground/30" />
                   <span className="tech-bracket-tr text-foreground/30" />
@@ -289,7 +289,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
                   </div>
 
                   <h4 className="font-mono font-bold text-xs sm:text-sm text-foreground uppercase tracking-tight group-hover:text-[#E50914] transition-colors leading-snug">
-                    Investment & Funding
+                    Grants & Hackathon Bounties
                   </h4>
                 </div>
 

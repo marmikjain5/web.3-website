@@ -5,23 +5,16 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { socialLinks } from "@/data/footerData";
 
+// Subtle ambient cubes placed along the perimeter to frame the central branding
 const CUBES = [
-  { size: 80, left: 15, top: 30, z: -200, rx: 35, ry: 45, delay: 0, duration: 18 },
-  { size: 45, left: 85, top: 20, z: -400, rx: -25, ry: 15, delay: 2, duration: 22 },
-  { size: 110, left: 25, top: 60, z: 150, rx: 15, ry: -35, delay: 1, duration: 25 },
-  { size: 35, left: 75, top: 70, z: -100, rx: 55, ry: 45, delay: 3, duration: 20 },
-  { size: 65, left: 65, top: 40, z: 50, rx: -15, ry: 25, delay: 0.5, duration: 15 },
-  { size: 55, left: 10, top: 75, z: -300, rx: 10, ry: -10, delay: 4, duration: 24 },
-  { size: 90, left: 45, top: 25, z: -50, rx: 70, ry: 20, delay: 1.5, duration: 19 },
-  { size: 40, left: 55, top: 85, z: -150, rx: -35, ry: -45, delay: 2.5, duration: 17 },
-  { size: 75, left: 80, top: 55, z: 200, rx: 45, ry: -25, delay: 1.2, duration: 21 },
-  { size: 50, left: 35, top: 15, z: -250, rx: -45, ry: 35, delay: 3.5, duration: 16 },
-  { size: 100, left: 90, top: 80, z: 300, rx: 25, ry: 15, delay: 0.8, duration: 23 },
-  { size: 60, left: 20, top: 45, z: -100, rx: 15, ry: 65, delay: 2.2, duration: 18 },
-  { size: 30, left: 40, top: 65, z: -350, rx: -15, ry: -25, delay: 4.5, duration: 14 },
-  { size: 85, left: 5, top: 50, z: 100, rx: 35, ry: 5, delay: 1.8, duration: 20 },
-  { size: 45, left: 60, top: 15, z: -180, rx: -25, ry: 55, delay: 2.8, duration: 22 },
-  { size: 70, left: 70, top: 90, z: 50, rx: 5, ry: -45, delay: 0.3, duration: 19 },
+  { size: 70, left: 8, top: 25, z: -150, rx: 35, ry: 45, delay: 0, duration: 18 },
+  { size: 40, left: 88, top: 15, z: -300, rx: -25, ry: 15, delay: 2, duration: 22 },
+  { size: 85, left: 14, top: 65, z: 80, rx: 15, ry: -35, delay: 1, duration: 25 },
+  { size: 30, left: 82, top: 72, z: -80, rx: 55, ry: 45, delay: 3, duration: 20 },
+  { size: 55, left: 92, top: 45, z: 40, rx: -15, ry: 25, delay: 0.5, duration: 15 },
+  { size: 45, left: 5, top: 80, z: -200, rx: 10, ry: -10, delay: 4, duration: 24 },
+  { size: 60, left: 78, top: 28, z: 120, rx: 45, ry: -25, delay: 1.2, duration: 21 },
+  { size: 40, left: 18, top: 15, z: -180, rx: -45, ry: 35, delay: 3.5, duration: 16 },
 ];
 
 const TICKER_ITEMS = [
@@ -71,17 +64,16 @@ export default function Footer() {
   const themeStyle = {
     "--footer-bg": "var(--background)",
     "--footer-text": "var(--foreground)",
-    "--footer-accent": "#E50914",
+    "--footer-accent": "#BE4105",
     "--footer-secondary": isDark ? "#202221" : "#666666",
-    "--bg-opacity": isDark ? "0.2" : "0.5",
     
-    "--cube-border": isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.15)",
-    "--cube-front": isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.05)",
-    "--cube-back": isDark ? "rgba(255,255,255,0.01)" : "rgba(0,0,0,0.02)",
-    "--cube-right": isDark ? "rgba(0,0,0,0.4)" : "rgba(0,0,0,0.25)",
-    "--cube-left": isDark ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.8)",
-    "--cube-top": isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,1)",
-    "--cube-bottom": isDark ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.4)",
+    "--cube-border": isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.12)",
+    "--cube-front": isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.03)",
+    "--cube-back": isDark ? "rgba(255,255,255,0.01)" : "rgba(0,0,0,0.01)",
+    "--cube-right": isDark ? "rgba(0,0,0,0.3)" : "rgba(0,0,0,0.15)",
+    "--cube-left": isDark ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.6)",
+    "--cube-top": isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.9)",
+    "--cube-bottom": isDark ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.25)",
   } as React.CSSProperties;
 
   return (
@@ -93,37 +85,18 @@ export default function Footer() {
           transition: background-color 0.5s ease, color 0.5s ease;
         }
         
-        .bg-web3-text {
-          position: absolute;
-          top: 45%;
-          left: 50%;
-          font-size: clamp(6rem, 25vw, 28rem);
-          font-weight: 900;
-          line-height: 1;
-          opacity: var(--bg-opacity);
-          background: linear-gradient(to bottom, var(--footer-text) 0%, transparent 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          pointer-events: none;
-          user-select: none;
-          white-space: nowrap;
-          z-index: 1;
-          transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-          font-family: 'Space Grotesk', system-ui, sans-serif;
-        }
-        
         .cube-scene {
           position: absolute;
           inset: 0;
-          perspective: 1000px;
+          perspective: 1200px;
           pointer-events: none;
-          z-index: 2;
+          z-index: 1;
           overflow: hidden;
         }
         
         .cube-parallax-layer {
           position: absolute;
-          transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+          transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .cube-wrapper {
@@ -135,7 +108,7 @@ export default function Footer() {
         
         @keyframes floatCube {
           0% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
-          100% { transform: translateY(-120px) rotateX(15deg) rotateY(25deg); }
+          100% { transform: translateY(-70px) rotateX(15deg) rotateY(25deg); }
         }
         
         .cube {
@@ -150,7 +123,7 @@ export default function Footer() {
           width: 100%;
           height: 100%;
           border: 1px solid var(--cube-border);
-          backdrop-filter: blur(2px);
+          backdrop-filter: blur(1px);
         }
         
         .face-front  { transform: translateZ(calc(var(--size) / 2)); background: var(--cube-front); }
@@ -163,23 +136,22 @@ export default function Footer() {
         .link-hover {
           position: relative;
           text-decoration: none;
-          transition: color 0.3s ease;
+          transition: color 0.25s ease;
         }
         .link-hover::after {
           content: '';
           position: absolute;
           left: 0;
-          bottom: -4px;
+          bottom: -3px;
           width: 100%;
           height: 2px;
-          background-color: var(--footer-accent);
+          background-color: #BE4105;
           transform: scaleX(0);
           transform-origin: left;
-          transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .link-hover:hover {
-          color: var(--footer-accent);
-          text-shadow: 0 0 12px rgba(255, 30, 39, 0.4);
+          color: #BE4105;
         }
         .link-hover:hover::after {
           transform: scaleX(1);
@@ -187,12 +159,12 @@ export default function Footer() {
       `}</style>
 
       {/* Ticker Marquee Ribbon */}
-      <div className="w-full bg-[#E50914] text-white py-2 overflow-hidden border-t border-b border-[#CC0009] select-none z-30 relative">
+      <div className="w-full bg-[#BE4105] text-white py-2 overflow-hidden border-t border-b border-[#963404] select-none z-30 relative">
         <div className="flex whitespace-nowrap ticker-track">
           {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
-            <span key={idx} className="font-mono text-xs font-bold tracking-widest uppercase mx-6 flex items-center gap-4">
+            <span key={idx} className="font-mono text-[11px] sm:text-xs font-bold tracking-widest uppercase mx-5 sm:mx-8 flex items-center gap-3 sm:gap-4">
               <span>{item}</span>
-              <span className="w-1.5 h-1.5 bg-white rounded-full inline-block" />
+              <span className="w-1.5 h-1.5 bg-white/80 rounded-full inline-block" />
             </span>
           ))}
         </div>
@@ -200,38 +172,27 @@ export default function Footer() {
 
       <footer 
         ref={containerRef} 
-        className="footer-container relative w-full min-h-[70vh] flex flex-col justify-end font-sans overflow-hidden" 
+        className="footer-container relative w-full flex flex-col justify-end font-sans overflow-hidden border-t border-border/40" 
         style={themeStyle}
       >
-        
-        {/* Top Gradient Fade to blend with page above */}
-        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-background to-transparent z-10 pointer-events-none mix-blend-normal opacity-100" />
+        {/* Subtle grid background */}
+        <div className="absolute inset-0 lab-grid-bg opacity-40 pointer-events-none" />
 
-        {/* Background Layer: Large web.3_ Typography */}
-        <div 
-          className="bg-web3-text font-mono tracking-tight" 
-          style={{ 
-            transform: `translate(calc(-50% + ${mousePos.x * -30}px), calc(-50% + ${mousePos.y * -30}px))` 
-          }}
-        >
-          web.3_
-        </div>
-
-        {/* Mid Layer: Floating Geometric Cubes */}
+        {/* Ambient Geometric Cubes (Confined to Periphery to prevent text clashing) */}
         <div className="cube-scene">
           {CUBES.map((c, i) => {
-            const pX = (mousePos.x * (c.z + 800)) / 40;
-            const pY = (mousePos.y * (c.z + 800)) / 40;
+            const pX = (mousePos.x * (c.z + 600)) / 45;
+            const pY = (mousePos.y * (c.z + 600)) / 45;
             
             return (
               <div 
                 key={i} 
-                className={`cube-parallax-layer ${i > 7 ? 'hidden md:block' : ''}`}
+                className={`cube-parallax-layer ${i > 4 ? 'hidden md:block' : ''}`}
                 style={{
                   left: `${c.left}%`,
                   top: `${c.top}%`,
                   transform: `translate3d(${pX}px, ${pY}px, ${c.z}px)`,
-                  zIndex: c.z > 0 ? 10 : 1
+                  zIndex: c.z > 0 ? 5 : 1
                 }}
               >
                 <div 
@@ -261,28 +222,35 @@ export default function Footer() {
           })}
         </div>
 
-        {/* Foreground Layer: Minimal UI */}
-        <div className="relative z-20 flex flex-col justify-end w-full px-6 md:px-12 lg:px-20 pb-8 pt-16">
+        {/* Content Container */}
+        <div className="relative z-10 flex flex-col justify-end w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-12 sm:pt-16 pb-8">
           
-          {/* Top Info Bar */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-border/60 text-xs font-mono">
-            <div className="flex items-center gap-6">
-              <Link href="/contact" className="hover:text-[#E50914] transition-colors">
-                Contact
+          {/* Top Quick Links & Status Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6 pb-8 border-b border-border/60 text-xs font-mono">
+            {/* Primary Navigation */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-5 sm:gap-6">
+              <Link href="/contact" className="link-hover text-foreground/80 font-medium">
+                :: Contact
               </Link>
-              <Link href="/about" className="hover:text-[#E50914] transition-colors">
-                Manifesto
+              <Link href="/about" className="link-hover text-foreground/80 font-medium">
+                :: Manifesto
               </Link>
-              <Link href="/events" className="hover:text-[#E50914] transition-colors">
-                Incubation Program
+              <Link href="/join" className="link-hover text-foreground/80 font-medium">
+                :: Incubation
+              </Link>
+              <Link href="/events" className="link-hover text-foreground/80 font-medium">
+                :: Events
               </Link>
             </div>
 
-            <div className="text-foreground/60 text-[11px] font-mono tracking-widest uppercase">
-              © 2026 WEB.3_ — READ.WRITE.OWN
+            {/* Center Status / Copyright */}
+            <div className="text-center text-foreground/60 text-[10px] sm:text-[11px] tracking-widest uppercase">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse" />
+              STATUS: ONLINE // &copy; 2026 WEB.3_ BMSIT
             </div>
 
-            <div className="flex gap-6 items-center">
+            {/* Social Links */}
+            <div className="flex flex-wrap justify-center md:justify-end gap-5 sm:gap-6 items-center">
               {socialLinks.map((link) => (
                 <Link
                   key={link.label}
@@ -296,25 +264,48 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Giant Cyber WEB.3_ Display Block with Pixel Underscore & Corner Brackets */}
-          <div className="relative my-8 py-8 border border-border/80 bg-foreground/[0.01] rounded-xl overflow-hidden">
-            {/* 4 Red Coordinate Squares */}
-            <span className="absolute top-2 left-2 w-3 h-3 bg-[#E50914] shadow-[0_0_10px_#E50914]" />
-            <span className="absolute top-2 right-2 w-3 h-3 bg-[#E50914] shadow-[0_0_10px_#E50914]" />
-            <span className="absolute bottom-2 left-2 w-3 h-3 bg-[#E50914] shadow-[0_0_10px_#E50914]" />
-            <span className="absolute bottom-2 right-2 w-3 h-3 bg-[#E50914] shadow-[0_0_10px_#E50914]" />
+          {/* Clean, Sleek Cyber Branding Display */}
+          <div className="relative my-8 sm:my-10 py-8 sm:py-12 border border-border/60 bg-foreground/[0.015] backdrop-blur-sm rounded-2xl overflow-hidden">
+            {/* Blueprint Technical Corner Crosshairs */}
+            <span className="absolute top-3 left-3 font-mono text-xs text-[#BE4105]/80 select-none">+</span>
+            <span className="absolute top-3 right-3 font-mono text-xs text-[#BE4105]/80 select-none">+</span>
+            <span className="absolute bottom-3 left-3 font-mono text-xs text-[#BE4105]/80 select-none">+</span>
+            <span className="absolute bottom-3 right-3 font-mono text-xs text-[#BE4105]/80 select-none">+</span>
 
-            <div className="text-center select-none overflow-hidden py-4 flex flex-col items-center justify-center">
+            <div className="text-center select-none py-2 px-4 flex flex-col items-center justify-center">
+              {/* Main Clean Typography */}
               <div className="flex items-baseline justify-center">
-                <span className="text-[14vw] font-black cyber-font tracking-tight leading-none text-foreground/90 font-mono">
+                <span className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black font-mono tracking-tight leading-none text-foreground drop-shadow-sm">
                   web.3
                 </span>
-                <span className="inline-block w-[4vw] h-[2vw] bg-[#E50914] ml-2 animate-pulse align-baseline shadow-[0_0_16px_#E50914]" />
+                <span className="inline-block w-3 sm:w-5 md:w-7 h-2 sm:h-3 md:h-4 bg-[#BE4105] ml-2 sm:ml-3 animate-pulse align-baseline shadow-[0_0_12px_#BE4105]" />
               </div>
-              <span className="font-mono text-xs md:text-sm tracking-[0.4em] uppercase text-foreground/50 mt-3">
-                read . write . own
-              </span>
+
+              {/* Tagline */}
+              <div className="flex items-center gap-2 sm:gap-3 mt-4 sm:mt-5">
+                <span className="h-[1px] w-6 sm:w-12 bg-border/80" />
+                <span className="font-mono text-[10px] sm:text-xs md:text-sm tracking-[0.35em] sm:tracking-[0.45em] uppercase text-foreground/60 font-semibold">
+                  read . write . own
+                </span>
+                <span className="h-[1px] w-6 sm:w-12 bg-border/80" />
+              </div>
+
+              {/* Sub-telemetry Pill */}
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[9px] sm:text-[10px] font-mono text-foreground/50 tracking-wider">
+                <span className="px-2 py-0.5 border border-border/80 rounded bg-background/50">
+                  NODE: BMS INSTITUTE OF TECHNOLOGY
+                </span>
+                <span className="px-2 py-0.5 border border-border/80 rounded bg-background/50 text-[#BE4105]">
+                  PROTOCOL: INCUBATION // BUILDERS
+                </span>
+              </div>
             </div>
+          </div>
+
+          {/* Bottom Micro Footer */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-foreground/40 pt-2">
+            <div>BUILDING DECENTRALIZED FUTURES</div>
+            <div>ALL SYSTEMS OPERATIONAL // LATENCY: 24ms</div>
           </div>
 
         </div>

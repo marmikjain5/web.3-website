@@ -109,7 +109,7 @@ export default function IncubationSection() {
         {/* Section Header with Giant Typography & Scramble Animation */}
         <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-6 mb-12 gap-6">
           <ScrambleText
-            text="INCUBATION"
+            text="STUDENT INCUBATOR"
             as="h2"
             className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-amiga tracking-tight text-foreground"
           />

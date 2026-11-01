@@ -133,7 +133,7 @@ export default function BeyondCapital() {
         {/* Section Title with Scramble Effect & LabsAmiga font */}
         <div className="border-b border-border pb-6 mb-12">
           <ScrambleText
-            text="BEYOND CAPITAL"
+            text="BEYOND THE CLASSROOM"
             as="h2"
             className="text-3xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-amiga tracking-tight text-foreground block break-words"
           />
@@ -147,7 +147,7 @@ export default function BeyondCapital() {
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 bg-foreground" />
               <h3 className="font-mono text-lg md:text-xl font-bold uppercase tracking-wider text-foreground">
-                Supercharging Web3 Builders
+                Building for the Decentralized Web
               </h3>
             </div>
 
@@ -220,17 +220,17 @@ export default function BeyondCapital() {
             </div>
           </div>
 
-          {/* RIGHT — Smart Capital cards */}
+          {/* RIGHT — Builder Acceleration cards */}
           <div ref={rightRef} className="lg:col-span-4 space-y-6">
             <div>
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-foreground" />
                 <h3 className="font-mono text-lg md:text-xl font-bold uppercase tracking-wider text-foreground">
-                  Smart Capital
+                  Builder Acceleration
                 </h3>
               </div>
               <p className="font-mono text-xs text-foreground/50 mt-1">
-                Our ecosystem support & advisory
+                Real-world dApps, bounties & fellowships
               </p>
             </div>
 
@@ -256,10 +256,10 @@ export default function BeyondCapital() {
                 </div>
 
                 <h4 className="font-mono font-bold text-base text-foreground mb-1">
-                  Incubation & Acceleration Program
+                  Campus Project Accelerator
                 </h4>
                 <p className="font-mono text-xs text-foreground/60">
-                  Comprehensive 12-week intensive accelerator taking teams from prototype to mainnet launch.
+                  Semester-long technical mentorship taking student teams from classroom concept to hackathon demo day.
                 </p>
               </motion.div>
 
@@ -284,10 +284,10 @@ export default function BeyondCapital() {
                 </div>
 
                 <h4 className="font-mono font-bold text-base text-foreground mb-1">
-                  Investment & Funding
+                  Grants & Ecosystem Fellowships
                 </h4>
                 <p className="font-mono text-xs text-foreground/60">
-                  Direct seed and private round investments, treasury backing, and Tier 1 co-investment syndicates.
+                  Guidance for student developer grants from Polygon Village, Solana Foundation, and Arbitrum.
                 </p>
               </motion.div>
             </div>
