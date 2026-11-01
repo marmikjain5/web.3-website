@@ -14,26 +14,26 @@ gsap.registerPlugin(ScrollTrigger);
 const SUPPORT_CARDS = [
   {
     num: "01",
-    title: "Product & Architecture",
-    desc: "Zero-knowledge proofs, smart contract architecture reviews, and audits by elite Web3 security auditors.",
+    title: "Smart Contract Architecture",
+    desc: "Gas optimization, security best practices, and Solidity/Rust peer reviews by senior student engineers.",
     icon: ShieldCheck,
   },
   {
     num: "02",
-    title: "Treasury Building",
-    desc: "Institutional tokenomics modeling, liquidity provision, market making strategies, and runway planning.",
+    title: "Hackathons & Grants",
+    desc: "Structuring winning proposals for Polygon Village, Solana Foundation, and Arbitrum student developer grants.",
     icon: Coins,
   },
   {
     num: "03",
-    title: "Strategic Partnerships",
-    desc: "Curated matchmaking with Tier 1 exchanges, top validator networks, and liquidity providers worldwide.",
+    title: "Industry Masterclasses",
+    desc: "AMAs and live code-alongs with Web3 protocol engineers, dev advocates, and BMSIT alumni.",
     icon: Handshake,
   },
   {
     num: "04",
-    title: "Growth & GTM Acceleration",
-    desc: "Global hacker house sponsorships, developer advocate programs, and community token launchpad syndicates.",
+    title: "Campus Demo Days",
+    desc: "Live exhibitions of student dApps in front of faculty, peers, and Bengaluru Web3 startup founders.",
     icon: Zap,
   },
 ];
@@ -43,6 +43,7 @@ export default function IncubationSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const leftColRef = useRef<HTMLDivElement>(null);
+  const centerColRef = useRef<HTMLDivElement>(null);
   const rightColRef = useRef<HTMLDivElement>(null);
 
   const prevCard = () => {
@@ -74,7 +75,20 @@ export default function IncubationSection() {
 
       if (leftColRef.current) {
         gsap.from(leftColRef.current, {
-          x: -40,
+          x: -30,
+          opacity: 0,
+          duration: 0.9,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 70%",
+          },
+        });
+      }
+
+      if (centerColRef.current) {
+        gsap.from(centerColRef.current, {
+          scale: 0.92,
           opacity: 0,
           duration: 0.9,
           ease: "power3.out",
@@ -87,7 +101,7 @@ export default function IncubationSection() {
 
       if (rightColRef.current) {
         gsap.from(rightColRef.current, {
-          x: 40,
+          x: 30,
           opacity: 0,
           duration: 0.9,
           ease: "power3.out",
@@ -107,68 +121,70 @@ export default function IncubationSection() {
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         
         {/* Section Header with Giant Typography & Scramble Animation */}
-        <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-6 mb-12 gap-6">
+        <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-6 mb-12 gap-4">
           <ScrambleText
             text="STUDENT INCUBATOR"
             as="h2"
             className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-amiga tracking-tight text-foreground"
           />
 
-          <div className="flex items-center gap-2 text-xs font-mono text-foreground/50">
+          <div className="flex items-center gap-2 text-xs font-mono text-foreground/60 shrink-0">
             <span className="w-2 h-2 rounded-full bg-[#E50914] animate-pulse shadow-[0_0_8px_#E50914]" />
-            <span>FULL_CYCLE_VENTURE_STUDIO</span>
+            <span>BMSIT_INCUBATION_COHORT_2026</span>
           </div>
         </div>
 
-        {/* 3-Column Layout: Support Cards | Center Energy Conduit | Unique Approach */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        {/* 3-Column Balanced Layout: 4 cols Cards | 4 cols Center Robot Stage | 4 cols Narrative */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
-          {/* Left Column: End-End Support & Carousel */}
-          <div ref={leftColRef} className="lg:col-span-5 space-y-6">
+          {/* Left Column: End-End Support & Carousel (4 cols) */}
+          <div ref={leftColRef} className="lg:col-span-4 space-y-6">
             <div>
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-foreground" />
                 <h3 className="font-mono text-lg md:text-xl font-bold uppercase tracking-wider text-foreground">
-                  End-end Support
+                  End-to-End Support
                 </h3>
               </div>
               <p className="font-mono text-xs text-foreground/50 mt-1">
-                From pre-seed funding to global GTM
+                From idea validation to hackathon demo day
               </p>
             </div>
 
             {/* Support Cards Grid with AnimatePresence */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-h-[240px]">
+            <div className="space-y-3.5 min-h-[260px]">
               <AnimatePresence mode="popLayout">
                 {visibleCards.map((card) => {
                   const IconComponent = card.icon;
                   return (
                     <motion.div
                       key={card.num}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      transition={{ duration: 0.3 }}
-                      whileHover={{ y: -4, borderColor: "rgba(229,9,20,0.5)" }}
-                      className="bg-card border border-border p-5 rounded-xl relative group transition-colors shadow-sm flex flex-col justify-between min-h-[220px]"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.25 }}
+                      whileHover={{ y: -3, borderColor: "rgba(229,9,20,0.5)" }}
+                      className="bg-card border border-border p-4.5 rounded-xl relative group transition-colors shadow-sm flex flex-col justify-between"
                     >
                       <span className="tech-bracket-tl" />
                       <span className="tech-bracket-tr" />
 
                       <div>
-                        <div className="flex justify-between items-center text-xs font-mono text-foreground/40 mb-3">
+                        <div className="flex justify-between items-center text-xs font-mono text-foreground/40 mb-2.5">
                           <span className="w-1.5 h-1.5 bg-[#E50914]" />
                           <span className="font-bold text-[#E50914]">{card.num}</span>
                         </div>
 
-                        <div className="w-12 h-12 rounded-lg bg-foreground/[0.04] border border-border flex items-center justify-center text-foreground/70 mb-3 group-hover:text-[#E50914] group-hover:scale-105 transition-all">
-                          <IconComponent className="w-6 h-6" />
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-9 h-9 rounded-lg bg-foreground/[0.04] border border-border flex items-center justify-center text-foreground/70 shrink-0 group-hover:text-[#E50914] group-hover:scale-105 transition-all">
+                            <IconComponent className="w-4.5 h-4.5" />
+                          </div>
+                          <h4 className="font-mono font-bold text-sm text-foreground group-hover:text-[#E50914] transition-colors leading-tight">
+                            {card.title}
+                          </h4>
                         </div>
 
-                        <h4 className="font-mono font-bold text-sm text-foreground mb-1 group-hover:text-[#E50914] transition-colors">
-                          {card.title}
-                        </h4>
-                        <p className="font-mono text-[11px] text-foreground/60 leading-relaxed">
+                        <p className="font-mono text-[11px] text-foreground/60 leading-relaxed pl-1">
                           {card.desc}
                         </p>
                       </div>
@@ -179,17 +195,17 @@ export default function IncubationSection() {
             </div>
 
             {/* Navigation Arrows */}
-            <div className="flex items-center gap-2 pt-2">
+            <div className="flex items-center gap-2 pt-1">
               <button
                 onClick={prevCard}
-                className="w-9 h-9 rounded-lg border border-border bg-card flex items-center justify-center hover:text-[#E50914] hover:border-[#E50914] transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-lg border border-border bg-card flex items-center justify-center hover:text-[#E50914] hover:border-[#E50914] transition-colors cursor-pointer"
                 aria-label="Previous support items"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={nextCard}
-                className="w-9 h-9 rounded-lg border border-border bg-card flex items-center justify-center hover:text-[#E50914] hover:border-[#E50914] transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-lg border border-border bg-card flex items-center justify-center hover:text-[#E50914] hover:border-[#E50914] transition-colors cursor-pointer"
                 aria-label="Next support items"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -200,16 +216,19 @@ export default function IncubationSection() {
             </div>
           </div>
 
-          {/* Center Column: 3D Transparent Robot Animation from labs.chaingpt.org */}
-          <div className="lg:col-span-2 flex flex-col items-center justify-center relative py-4 lg:py-0 order-2 lg:order-2">
-            <div className="w-full max-w-[220px] aspect-[800/1024] relative flex items-center justify-center">
+          {/* Center Column: 3D Transparent Robot Stage (4 cols - Perfectly Centered & Never Clipped) */}
+          <div ref={centerColRef} className="lg:col-span-4 flex flex-col items-center justify-center relative py-4 lg:py-0">
+            <div className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-[4/5] rounded-2xl overflow-visible flex items-center justify-center">
+              {/* Subtle ambient radiant glow behind the robot */}
+              <div className="absolute inset-0 bg-[#E50914]/[0.08] blur-3xl rounded-full pointer-events-none" />
+              
               <video
                 autoPlay
                 loop
                 muted
                 playsInline
                 preload="auto"
-                className="w-full h-full object-contain pointer-events-none drop-shadow-[0_12px_32px_rgba(229,9,20,0.2)]"
+                className="w-full h-full object-contain pointer-events-none drop-shadow-[0_16px_36px_rgba(229,9,20,0.22)]"
               >
                 <source
                   src="/chaingpt-assets/LABS_robot_SAFARI_HEVC.mp4"
@@ -221,19 +240,23 @@ export default function IncubationSection() {
                 />
               </video>
             </div>
+            
+            <div className="font-mono text-[10px] text-foreground/40 tracking-widest uppercase mt-2">
+              :: AUTONOMOUS INCUBATION AGENT // BMSIT
+            </div>
           </div>
 
-          {/* Right Column: Unique Approach & Narrative */}
-          <div ref={rightColRef} className="lg:col-span-5 space-y-6">
+          {/* Right Column: Unique Approach & Narrative (4 cols) */}
+          <div ref={rightColRef} className="lg:col-span-4 space-y-6">
             <div>
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-foreground" />
                 <h3 className="font-mono text-lg md:text-xl font-bold uppercase tracking-wider text-foreground">
-                  Unique Approach
+                  Our Approach
                 </h3>
               </div>
               <p className="font-mono text-xs text-foreground/50 mt-1">
-                Beyond Capital
+                From Lab Projects to Mainnet
               </p>
             </div>
 
@@ -243,23 +266,23 @@ export default function IncubationSection() {
               <span className="tech-bracket-bl" />
               <span className="tech-bracket-br" />
 
-              <p className="font-mono text-sm md:text-base text-foreground/80 leading-relaxed">
-                We do the impossible. In web3, it takes an entire ecosystem to transform ideas into industry leaders. With strategic funding, GTM support, and top-tier partnerships — we set you up for unparalleled growth.
+              <p className="font-mono text-xs sm:text-sm text-foreground/80 leading-relaxed">
+                At BMSIT&M Web.3 Club, we bridge the gap between classroom theory and decentralized production. Through peer-to-peer co-building, grant structuring, and hackathon sprints, we empower student teams to build, ship, and scale real protocols.
               </p>
 
-              <div className="mt-8 pt-6 border-t border-border flex items-center justify-between">
+              <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
                 <MagneticButton strength={0.25}>
                   <Link
-                    href="/events"
-                    className="cyber-btn px-6 py-3 bg-[#E50914] hover:bg-[#e0151e] text-white font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_16px_rgba(255,30,39,0.3)] transition-all flex items-center gap-2"
+                    href="/join"
+                    className="cyber-btn px-5 py-2.5 bg-[#E50914] hover:bg-[#e0151e] text-white font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_16px_rgba(255,30,39,0.3)] transition-all flex items-center gap-2"
                   >
-                    <span>JOIN OUR PROGRAM</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <span>SUBMIT YOUR IDEA</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </MagneticButton>
                 
-                <span className="font-mono text-[11px] text-foreground/40 uppercase">
-                  BATCH 2026 LIVE
+                <span className="font-mono text-[10px] text-foreground/50 uppercase">
+                  COHORT 2026 OPEN
                 </span>
               </div>
             </div>
