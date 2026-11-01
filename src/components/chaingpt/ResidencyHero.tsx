@@ -48,23 +48,14 @@ export default function ResidencyHero() {
     <section
       ref={sectionRef}
       id="residency"
-      className="relative w-full min-h-screen py-24 sm:py-28 lg:py-32 flex items-center justify-center text-white overflow-hidden"
+      className="relative w-full min-h-screen py-20 sm:py-24 lg:py-32 flex flex-col items-center justify-center text-white overflow-hidden"
       style={{
         backgroundColor: "#BE4105",
         backgroundImage:
           "radial-gradient(ellipse at 50% 38%, #F26305 0%, #D84D05 45%, #BE4105 85%, #9E3202 100%)",
       }}
     >
-      {/* ── Centerpiece Cursor-Driven Face Tracking Canvas (HeroFrameScrubber) ── */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 overflow-hidden flex items-center justify-center">
-        <HeroFrameScrubber
-          frameCount={85}
-          framePath="/hero-mouse-frames/frame_"
-          className="w-full h-full flex items-center justify-center"
-        />
-      </div>
-
-      {/* Blueprint Grid Lines & Corner Accents */}
+      {/* ── Background Blueprint Grid & Coordinate Accents ── */}
       <div className="absolute inset-0 pointer-events-none z-10">
         <div
           className="w-full h-full opacity-15"
@@ -75,31 +66,48 @@ export default function ResidencyHero() {
           }}
         />
 
-        {/* Technical vertical division lines */}
+        {/* Technical vertical division lines (desktop) */}
         <div className="hidden lg:block absolute top-20 bottom-10 left-[36%] w-px bg-white/20" />
         <div className="hidden lg:block absolute top-20 bottom-10 right-[36%] w-px bg-white/20" />
 
-        {/* Corner Crosshairs & L Brackets */}
-        <span className="absolute top-24 left-6 sm:left-10 text-white/60 font-mono text-sm">┌</span>
-        <span className="absolute top-24 right-6 sm:right-10 text-white/60 font-mono text-sm">┐</span>
-        <span className="absolute bottom-6 left-6 sm:left-10 text-white/60 font-mono text-sm">└</span>
-        <span className="absolute bottom-6 right-6 sm:right-10 text-white/60 font-mono text-sm">┘</span>
+        {/* Corner Crosshairs */}
+        <span className="absolute top-24 left-4 sm:left-10 text-white/60 font-mono text-sm">┌</span>
+        <span className="absolute top-24 right-4 sm:right-10 text-white/60 font-mono text-sm">┐</span>
+        <span className="absolute bottom-6 left-4 sm:left-10 text-white/60 font-mono text-sm">└</span>
+        <span className="absolute bottom-6 right-4 sm:right-10 text-white/60 font-mono text-sm">┘</span>
 
         {/* Coordinate markers */}
-        <span className="absolute top-28 left-12 sm:left-16 font-mono text-[10px] text-white/60 tracking-widest uppercase">
+        <span className="absolute top-28 left-8 sm:left-16 font-mono text-[10px] text-white/60 tracking-widest uppercase">
           SYS:RESIDENCY_V2.4 // LATENCY: 0.14MS
         </span>
-        <span className="absolute bottom-8 left-12 sm:left-16 font-mono text-[10px] text-white/60 tracking-widest uppercase">
+        <span className="hidden sm:block absolute bottom-8 left-8 sm:left-16 font-mono text-[10px] text-white/60 tracking-widest uppercase">
           PROTOCOL: CAPITAL + ADVISORY
         </span>
       </div>
 
-      {/* ── Content Grid Overlaid on Full Screen Video ── */}
-      <div className="max-w-[1440px] mx-auto px-6 sm:px-8 lg:px-12 w-full relative z-20 my-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center min-h-[65vh]">
+      {/* ═════════════════════════════════════════════════════════════════════
+          DESKTOP VIEWPORT (lg: 1024px+):
+          Full-bleed background character canvas flanked by left & right telemetry
+      ═════════════════════════════════════════════════════════════════════ */}
+      <div className="hidden lg:flex absolute inset-0 w-full h-full z-0 overflow-hidden items-center justify-center">
+        <HeroFrameScrubber
+          frameCount={85}
+          framePath="/hero-mouse-frames/frame_"
+          className="w-full h-full flex items-center justify-center"
+          showTouchHint={false}
+        />
+      </div>
+
+      {/* ═════════════════════════════════════════════════════════════════════
+          MAIN CONTENT CONTAINER (Responsive for Desktop & Mobile)
+      ═════════════════════════════════════════════════════════════════════ */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 w-full relative z-20 my-auto">
+        
+        {/* ── DESKTOP GRID LAYOUT (lg: 1024px+) ── */}
+        <div className="hidden lg:grid grid-cols-12 gap-8 items-center min-h-[65vh]">
           
-          {/* ════════ LEFT COLUMN: Headline & Chamfered CTAs (Col 5) ════════ */}
-          <div ref={headlineRef} className="lg:col-span-5 space-y-5 lg:pr-2">
+          {/* LEFT COLUMN: Headline & Chamfered CTAs (Col 5) */}
+          <div ref={headlineRef} className="col-span-5 space-y-5 pr-2">
             
             {/* Pill Tag */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/30 border border-white/30 backdrop-blur-md text-white font-mono text-[11px] font-bold tracking-widest uppercase shadow-sm">
@@ -107,12 +115,12 @@ export default function ResidencyHero() {
               <span>INCUBATION RESIDENCY 2026</span>
             </div>
 
-            {/* Headline with No Text Clipping & High-Fidelity Typography */}
+            {/* Headline */}
             <div className="space-y-1">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[3.6rem] xl:text-[4.2rem] font-black font-sans tracking-tight leading-[0.92] text-white select-none whitespace-nowrap drop-shadow-md">
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.6rem] xl:text-[4.2rem] font-black font-sans tracking-tight leading-[0.92] text-white select-none whitespace-nowrap drop-shadow-md">
                 WE BACK
               </h1>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[3.6rem] xl:text-[4.2rem] font-black font-amiga tracking-wider leading-[0.92] text-white select-none whitespace-nowrap drop-shadow-md">
+              <h1 className="text-4xl sm:text-5xl lg:text-[3.6rem] xl:text-[4.2rem] font-black font-amiga tracking-wider leading-[0.92] text-white select-none whitespace-nowrap drop-shadow-md">
                 BUILDERS
               </h1>
             </div>
@@ -121,7 +129,7 @@ export default function ResidencyHero() {
               A CURATED, HIGH-TOUCH RESIDENCY DESIGNED TO TAKE WEB3 TEAMS FROM EARLY TRACTION TO FULLY LAUNCH-READY, WITH HANDS-ON SUPPORT ACROSS PRODUCT, TOKENOMICS, FUNDRAISING, AND GO-TO-MARKET.
             </p>
 
-            {/* Proof Points & High-Trust Metrics */}
+            {/* Proof Points */}
             <div className="grid grid-cols-3 gap-3 pt-3 max-w-md border-t border-white/20">
               <div>
                 <div className="font-mono font-black text-xl sm:text-2xl text-white tracking-tight drop-shadow-sm">$40M+</div>
@@ -160,13 +168,12 @@ export default function ResidencyHero() {
             </div>
           </div>
 
-          {/* ════════ CENTER COLUMN: Spacer for Character Centerpiece (Col 3) ════════ */}
-          <div className="hidden lg:block lg:col-span-3 min-h-[420px] pointer-events-none" />
+          {/* CENTER COLUMN: Spacer for Fullscreen Character Centerpiece (Col 3) */}
+          <div className="col-span-3 min-h-[440px] pointer-events-none" />
 
-          {/* ════════ RIGHT COLUMN: Telemetry Cards & Node Widget (Col 4) ════════ */}
-          <div ref={featuresRef} className="lg:col-span-4 space-y-3.5 lg:pl-3 lg:pr-4">
+          {/* RIGHT COLUMN: Telemetry Cards & Node Widget (Col 4) */}
+          <div ref={featuresRef} className="col-span-4 space-y-3.5 pl-3 pr-2">
             
-            {/* 3 Sleek Telemetry Cards */}
             <div className="space-y-2.5">
               {[
                 {
@@ -207,12 +214,10 @@ export default function ResidencyHero() {
               ))}
             </div>
 
-            {/* Bottom Support Tagline */}
             <div className="text-xs font-mono text-white/95 leading-relaxed pt-1 drop-shadow-sm">
               Strategy, capital, and launch support, working alongside your team from day one.
             </div>
 
-            {/* Bottom-right bracketed widget with 3D isometric node */}
             <div className="border border-white/30 px-4 py-2.5 flex items-center justify-between font-mono text-xs text-white/95 bg-black/30 backdrop-blur-md rounded-xl shadow-sm">
               <div className="flex items-center gap-3">
                 <div className="w-5 h-5 relative shrink-0">
@@ -230,6 +235,133 @@ export default function ResidencyHero() {
             </div>
           </div>
         </div>
+
+        {/* ═════════════════════════════════════════════════════════════════════
+            MOBILE & TABLET VIEWPORT (< lg: 1024px):
+            Clean, intentional vertical stack with dedicated character centerpiece
+        ═════════════════════════════════════════════════════════════════════ */}
+        <div className="lg:hidden flex flex-col items-center space-y-6 pt-2 pb-6">
+          
+          {/* 1. Header Tag & Title */}
+          <div className="w-full text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/30 border border-white/30 backdrop-blur-md text-white font-mono text-[10px] font-bold tracking-widest uppercase shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+              <span>INCUBATION RESIDENCY 2026</span>
+            </div>
+
+            <div className="space-y-0.5">
+              <h1 className="text-3xl sm:text-5xl font-black font-sans tracking-tight text-white leading-tight uppercase drop-shadow-md">
+                WE BACK
+              </h1>
+              <h1 className="text-3xl sm:text-5xl font-black font-amiga tracking-wider text-white leading-tight uppercase drop-shadow-md">
+                BUILDERS
+              </h1>
+            </div>
+          </div>
+
+          {/* 2. DEDICATED MOBILE CHARACTER CENTERPIECE STAGE (Interactive Touch & Drag!) */}
+          <div className="w-full max-w-sm sm:max-w-md h-[340px] sm:h-[420px] relative rounded-2xl overflow-hidden border border-white/25 bg-black/15 backdrop-blur-sm shadow-xl flex items-center justify-center my-1">
+            <HeroFrameScrubber
+              frameCount={85}
+              framePath="/hero-mouse-frames/frame_"
+              className="w-full h-full"
+              showTouchHint={true}
+            />
+            {/* Tech Corner Brackets on the mobile interactive frame */}
+            <span className="tech-bracket-tl text-white/60" />
+            <span className="tech-bracket-tr text-white/60" />
+            <span className="tech-bracket-bl text-white/60" />
+            <span className="tech-bracket-br text-white/60" />
+          </div>
+
+          {/* 3. Pitch Description & Metrics */}
+          <div className="w-full max-w-md text-center space-y-4">
+            <p className="font-mono text-xs text-white/90 leading-relaxed uppercase tracking-wider px-2">
+              A curated, high-touch residency designed to take web3 teams from early traction to fully launch-ready.
+            </p>
+
+            {/* Proof Points Strip */}
+            <div className="grid grid-cols-3 gap-2 py-3 border-y border-white/20 bg-black/15 rounded-xl px-2">
+              <div>
+                <div className="font-mono font-black text-lg text-white">$40M+</div>
+                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Raised</div>
+              </div>
+              <div className="border-x border-white/15">
+                <div className="font-mono font-black text-lg text-white">14+</div>
+                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Incubations</div>
+              </div>
+              <div>
+                <div className="font-mono font-black text-lg text-white">100%</div>
+                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Hands-On</div>
+              </div>
+            </div>
+
+            {/* Mobile Chamfered Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">
+              <Link
+                href="/join"
+                className="cyber-btn w-full sm:w-auto px-6 py-3.5 !bg-white !text-[#BE4105] hover:!bg-white/95 font-mono font-black text-xs uppercase tracking-widest shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>APPLY FOR RESIDENCY</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+
+              <Link
+                href="/#incubation-hub"
+                className="cyber-btn w-full sm:w-auto px-6 py-3 bg-black/25 text-white font-mono font-bold text-xs uppercase tracking-widest border border-white/40 flex items-center justify-center cursor-pointer"
+              >
+                LEARN MORE
+              </Link>
+            </div>
+          </div>
+
+          {/* 4. Telemetry Cards (Mobile Stack) */}
+          <div className="w-full max-w-md space-y-2.5 pt-2">
+            {[
+              {
+                code: "01",
+                title: "CAPITAL & GRANTS",
+                desc: "Up to $250k initial check, syndicate co-investment, and non-dilutive grant backing.",
+              },
+              {
+                code: "02",
+                title: "TECHNICAL CO-BUILDING",
+                desc: "Direct pairing with senior cryptography, smart contract, and tokenomics engineers.",
+              },
+              {
+                code: "03",
+                title: "INSTITUTIONAL ACCESS",
+                desc: "Immediate introductions to tier-1 market makers, audited launchpads, and exchanges.",
+              },
+            ].map((item) => (
+              <div
+                key={item.code}
+                className="relative p-3.5 rounded-xl border border-white/25 bg-black/20 backdrop-blur-md"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <h4 className="font-mono font-bold text-xs text-white uppercase flex items-center gap-1.5">
+                    <span className="text-[#FFE600] font-bold">›</span>
+                    {item.title}
+                  </h4>
+                  <span className="font-mono text-[10px] text-white/70 font-bold">{item.code}</span>
+                </div>
+                <p className="font-mono text-[11px] text-white/85 leading-relaxed pl-3">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+
+            {/* Mobile ISO Node Status */}
+            <div className="border border-white/25 px-3.5 py-2 flex items-center justify-between font-mono text-[11px] text-white/95 bg-black/25 backdrop-blur-md rounded-xl mt-3">
+              <span className="tracking-widest uppercase font-bold text-[10px]">ISO_NODE // ACTIVE</span>
+              <span className="text-[10px] text-emerald-300 font-bold tracking-wider">
+                ● 100% SYNCED
+              </span>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </section>
   );

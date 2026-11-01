@@ -155,7 +155,7 @@ export default function JoinUsClient() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-amiga tracking-wider uppercase text-[#1A1A1A] leading-[1.08] mb-4"
+            className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-amiga tracking-wider uppercase text-[#1A1A1A] leading-[1.1] mb-4 break-words"
           >
             UNLOCK EXPONENTIAL GROWTH
           </motion.h1>
