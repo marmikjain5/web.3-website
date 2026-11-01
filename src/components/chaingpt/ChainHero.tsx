@@ -188,7 +188,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
             ref={centerColRef}
             className="lg:col-span-5 flex flex-col items-center justify-center py-2 px-1 select-none"
           >
-            <div className="relative w-full max-w-[540px] aspect-[490/594] overflow-hidden flex items-center justify-center">
+            <div className="relative w-full max-w-[320px] sm:max-w-[420px] lg:max-w-[540px] aspect-[490/594] overflow-hidden flex items-center justify-center">
               <video
                 src="/chaingpt-assets/mechanical-core-loop.mp4"
                 autoPlay

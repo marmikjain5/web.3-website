@@ -201,7 +201,7 @@ export default function IncubationSection() {
           </div>
 
           {/* Center Column: 3D Transparent Robot Animation from labs.chaingpt.org */}
-          <div className="lg:col-span-2 hidden lg:flex flex-col items-center justify-center relative">
+          <div className="lg:col-span-2 flex flex-col items-center justify-center relative py-4 lg:py-0 order-2 lg:order-2">
             <div className="w-full max-w-[220px] aspect-[800/1024] relative flex items-center justify-center">
               <video
                 autoPlay

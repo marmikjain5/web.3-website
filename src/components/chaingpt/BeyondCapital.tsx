@@ -135,7 +135,7 @@ export default function BeyondCapital() {
           <ScrambleText
             text="BEYOND CAPITAL"
             as="h2"
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-amiga tracking-tight text-foreground block"
+            className="text-3xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-amiga tracking-tight text-foreground block break-words"
           />
         </div>
 
