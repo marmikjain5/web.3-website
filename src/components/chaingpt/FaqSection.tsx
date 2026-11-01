@@ -1,0 +1,244 @@
+"use client";
+
+import Image from "next/image";
+
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Minus } from "lucide-react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ScrambleText from "./ScrambleText";
+
+gsap.registerPlugin(ScrollTrigger);
+
+interface FaqItem {
+  question: string;
+  answer: string;
+  category?: string;
+}
+
+interface FaqSectionProps {
+  faqs?: FaqItem[];
+}
+
+const DEFAULT_FAQS: FaqItem[] = [
+  {
+    question: "What is the Web3 Club Incubation Program?",
+    answer:
+      "We are an end-to-end Web3 incubator and venture studio backing early-stage visionary founders across AI, DeFi, DePIN, and Layer 1/2 infrastructure with capital, engineering, marketing, and institutional exchange listings.",
+    category: "Incubation",
+  },
+  {
+    question: "How do teams get selected for incubation?",
+    answer:
+      "Our investment committee reviews applications on a rolling basis. We evaluate team technical capability, product-market fit, tokenomics design, and long-term ecosystem alignment.",
+    category: "Selection",
+  },
+  {
+    question: "What support does Web3 Labs provide beyond funding?",
+    answer:
+      "We provide hands-on tokenomics design, smart contract security audits, go-to-market advisory, top-tier exchange listings, and direct access to Tier 1 VC partners.",
+    category: "Support",
+  },
+  {
+    question: "Can student projects or hackathon winners apply?",
+    answer:
+      "Absolutely! Many of our most successful incubations started at university hackathons. We provide customized fast-track grants for standout builder teams.",
+    category: "Eligibility",
+  },
+  {
+    question: "What are the tokenomics and equity terms?",
+    answer:
+      "Our terms are founder-friendly and customized based on project stage. We typically combine strategic advisory tokens with seed or private allocation guarantees.",
+    category: "Investment",
+  },
+];
+
+export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const sectionRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const widgetRef = useRef<HTMLDivElement>(null);
+
+  const list = faqs.length > 0 ? faqs : DEFAULT_FAQS;
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        headingRef.current,
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.0,
+          ease: "expo.out",
+          scrollTrigger: { trigger: headingRef.current, start: "top 85%", once: true },
+        }
+      );
+
+      gsap.fromTo(
+        widgetRef.current,
+        { scale: 0.9, opacity: 0, rotate: -5 },
+        {
+          scale: 1,
+          opacity: 1,
+          rotate: 0,
+          duration: 0.85,
+          ease: "back.out(1.5)",
+          scrollTrigger: { trigger: widgetRef.current, start: "top 82%", once: true },
+        }
+      );
+
+      gsap.fromTo(
+        listRef.current?.children ?? [],
+        { y: 24, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: listRef.current, start: "top 80%", once: true },
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative w-full py-20 border-b border-border lab-grid-bg overflow-hidden"
+    >
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+
+          {/* LEFT — Heading + 3D widget */}
+          <div className="lg:col-span-4 space-y-8">
+            <ScrambleText
+              text="FAQ"
+              as="h2"
+              className="text-6xl sm:text-7xl md:text-8xl font-black font-amiga tracking-tight text-foreground block"
+            />
+
+            {/* 3D Connector Widget */}
+            <div
+              ref={widgetRef}
+              className="relative w-48 h-48 bg-card border border-border rounded-2xl p-4 flex flex-col justify-between items-center shadow-sm group hover:border-[#E50914]/50 transition-colors opacity-0"
+            >
+              <span className="tech-bracket-tl" />
+              <span className="tech-bracket-tr" />
+              <span className="tech-bracket-bl" />
+              <span className="tech-bracket-br" />
+
+              <div className="w-full flex justify-between text-[10px] font-mono text-foreground/40">
+                <span>QUERY_ENGINE</span>
+                <span>SEC_V4</span>
+              </div>
+
+                            {/* 3D Glass Orb Engine (Official ChainGPT 3D Element) */}
+              <motion.div
+                className="relative w-24 h-24 flex items-center justify-center"
+                animate={{ y: [-4, 4, -4], rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Image
+                  src="/chaingpt-assets/3d-glass-orb.png"
+                  alt="Query Engine 3D Glass Orb"
+                  width={96}
+                  height={96}
+                  className="w-20 h-20 object-contain drop-shadow-xl"
+                />
+              </motion.div>
+
+              <div className="flex items-center gap-2 text-[10px] font-mono text-[#E50914]">
+                <motion.span
+                  className="w-1.5 h-1.5 rounded-full bg-[#E50914]"
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ duration: 1.4, repeat: Infinity }}
+                />
+                <span>KNOWLEDGE_BASE_ONLINE</span>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT — FAQ Accordion */}
+          <div className="lg:col-span-8 space-y-6">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 bg-foreground" />
+                <h3 className="font-mono text-lg md:text-xl font-bold uppercase tracking-wider text-foreground">
+                  Most Common Questions
+                </h3>
+              </div>
+              <p className="font-mono text-xs text-foreground/50 mt-1">
+                No worries — here you can find all the answers
+              </p>
+            </div>
+
+            <div ref={listRef} className="space-y-3">
+              {list.map((item, idx) => {
+                const isOpen = openIndex === idx;
+                return (
+                  <div
+                    key={idx}
+                    className={`rounded-xl border transition-colors duration-200 overflow-hidden ${
+                      isOpen
+                        ? "bg-card border-[#E50914] shadow-[0_4px_20px_rgba(255,30,39,0.1)]"
+                        : "bg-card/50 border-border hover:border-foreground/20"
+                    }`}
+                  >
+                    <button
+                      onClick={() => setOpenIndex(isOpen ? null : idx)}
+                      className="w-full text-left p-5 flex items-center justify-between gap-4 cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-xs font-bold text-[#E50914] shrink-0">
+                          {String(idx + 1).padStart(2, "0")}
+                        </span>
+                        <span className="font-mono text-sm md:text-base font-bold text-foreground">
+                          {item.question}
+                        </span>
+                      </div>
+                      <motion.div
+                        className="w-7 h-7 rounded-lg bg-foreground/[0.04] border border-border flex items-center justify-center text-foreground/70 shrink-0"
+                        animate={{ rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.25 }}
+                      >
+                        {isOpen ? (
+                          <Minus className="w-4 h-4 text-[#E50914]" />
+                        ) : (
+                          <Plus className="w-4 h-4" />
+                        )}
+                      </motion.div>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          key="content"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                        >
+                          <div className="px-5 pb-5 pt-1 border-t border-border/50 font-mono text-xs md:text-sm text-foreground/70 leading-relaxed">
+                            {item.answer}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -1,32 +1,16 @@
-import { createClient } from '@/utils/supabase/server'
-import { redirect } from 'next/navigation'
+import { checkAdminSession } from '@/app/actions/admin'
 import AdminDashboard from './AdminDashboard'
+import AdminGate from './AdminGate'
 
 export default async function AdminPage() {
-  const supabase = await createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) {
-    redirect('/')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  if (profile?.role !== 'admin') {
-    redirect('/')
-  }
+  const isAuthenticated = await checkAdminSession();
 
   return (
-    <main className="min-h-screen bg-background text-foreground pt-24 px-6 md:px-12 pb-16 relative overflow-hidden">
+    <main className="min-h-screen bg-background text-foreground pt-24 px-6 md:px-12 pb-16 relative overflow-hidden lab-grid-bg">
       {/* background glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(34,197,94,0.05),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,85,0,0.06),transparent_50%)] pointer-events-none" />
 
-      <AdminDashboard />
+      {isAuthenticated ? <AdminDashboard /> : <AdminGate />}
     </main>
-  )
+  );
 }

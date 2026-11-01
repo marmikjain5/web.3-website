@@ -1,21 +1,26 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { User, Session, AuthChangeEvent } from "@supabase/supabase-js";
-import { LogIn, LogOut, User as UserIcon, ShieldAlert, Loader2, Sun, Moon } from "lucide-react";
+import { LogIn, LogOut, Loader2, ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
+import MagneticButton from "@/components/MagneticButton";
+import ScrambleText from "@/components/chaingpt/ScrambleText";
 
 // ─────────────────────────────────────────────────────────────
-// NAV TABS (Contact added here)
+// NAV TABS (Matching labs.chaingpt.org navigation)
 // ─────────────────────────────────────────────────────────────
 const NAV_TABS = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
+  { label: "Programs", href: "/events" },
+  { label: "Portfolio", href: "/#portfolio" },
+  { label: "Residency", href: "/#residency" },
   { label: "Team", href: "/team" },
-  { label: "Events", href: "/events" },
+  { label: "FAQ", href: "/#faq" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -24,7 +29,6 @@ export default function Navbar() {
   const [active, setWithActive] = useState("Home");
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -37,36 +41,19 @@ export default function Navbar() {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
 
-    // ... (supabase auth logic remains same)
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       setUser(user);
-      if (user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("role")
-          .eq("id", user.id)
-          .single();
-        setIsAdmin(profile?.role === "admin");
-      }
     };
     getUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(
       async (_: AuthChangeEvent, session: Session | null) => {
-        const currentUser = session?.user ?? null;
-        setUser(currentUser);
-
-        if (currentUser) {
-          const { data: profile } = await supabase
-            .from("profiles")
-            .select("role")
-            .eq("id", currentUser.id)
-            .single();
-          setIsAdmin(profile?.role == "admin");
-        } else {
-          setIsAdmin(false);
-        }
+        setUser(session?.user ?? null);
       }
     );
 
@@ -74,15 +61,14 @@ export default function Navbar() {
       window.removeEventListener("scroll", onScroll);
       subscription.unsubscribe();
     };
-  }, []);
+  }, [supabase]);
 
   useEffect(() => {
     if (pathname === "/") setWithActive("Home");
     else if (pathname.startsWith("/about")) setWithActive("About");
     else if (pathname.startsWith("/team")) setWithActive("Team");
-    else if (pathname.startsWith("/events")) setWithActive("Events");
+    else if (pathname.startsWith("/events")) setWithActive("Our Programs");
     else if (pathname.startsWith("/contact")) setWithActive("Contact");
-    else if (pathname.startsWith("/admin")) setWithActive("Admin");
   }, [pathname]);
 
   if (!mounted) return null;
@@ -105,187 +91,143 @@ export default function Navbar() {
     window.location.href = "/";
   };
 
-  const isHero = pathname === "/" && !scrolled;
-
   return (
     <>
       <nav
-        className={`fixed top-4 left-0 right-0 z-[9999] transition-all duration-500 transform ${scrolled ? "translate-y-0" : "translate-y-2"
-          }`}
+        className={`fixed top-0 left-0 right-0 z-[9999] transition-all duration-300 ${
+          scrolled
+            ? "bg-[#ECEBE8]/95 backdrop-blur-md border-b border-black/10 shadow-sm py-2.5"
+            : "bg-[#ECEBE8]/90 backdrop-blur-md border-b border-black/10 py-3.5"
+        }`}
       >
-        <div
-          className={`mx-auto transition-all duration-500 ease-out flex items-center justify-center gap-6 px-6 py-2 rounded-full border shadow-2xl backdrop-blur-xl ${scrolled
-            ? "max-w-4xl bg-nav-surface border-nav-border"
-            : "max-w-5xl bg-black/10 border-white/10"
-            }`}
-        >
-          {/* Desktop tabs */}
-          <ul className="hidden md:flex items-center gap-1 list-none m-0 p-0">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between gap-4">
+          
+          {/* Brand Logo — web.3_ pixel logo */}
+          <Link href="/" className="flex items-center gap-3 select-none group shrink-0">
+            <Image
+              src="/logos/web3-official-logo-transparent.png"
+              alt="web.3_ read.write.own"
+              width={140}
+              height={50}
+              priority
+              className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+            />
+          </Link>
+
+          {/* Center Navigation Links (labs.chaingpt.org layout) */}
+          <ul className="hidden lg:flex items-center gap-6 list-none m-0 p-0 font-mono text-xs font-semibold">
             {NAV_TABS.map((tab) => (
               <li key={tab.label}>
                 <Link
                   href={tab.href}
                   onClick={() => setWithActive(tab.label)}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 ${active === tab.label
-                    ? isHero || resolvedTheme === "dark"
-                      ? "text-white bg-white/10"
-                      : "text-black bg-black/10"
-                    : isHero || resolvedTheme === "dark"
-                      ? "text-white/60 hover:text-white hover:bg-white/5"
-                      : "text-black/60 hover:text-black hover:bg-black/5"
-                    }`}
+                  className={`transition-colors duration-150 ${
+                    active === tab.label
+                      ? "text-[#E50914] font-bold"
+                      : "text-foreground/75 hover:text-[#E50914]"
+                  }`}
                 >
-                  {tab.label}
+                  <ScrambleText
+                    text={tab.label}
+                    triggerOnScroll={false}
+                    triggerOnHover={true}
+                  />
                 </Link>
               </li>
             ))}
-
-            {isAdmin && (
-              <li>
-                <Link
-                  href="/admin"
-                  onClick={() => setWithActive("Admin")}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold transition-all duration-300 flex items-center gap-2 ${active === "Admin"
-                    ? isHero || resolvedTheme === "dark"
-                      ? "text-white bg-white/10"
-                      : "text-black bg-black/10"
-                    : isHero || resolvedTheme === "dark"
-                      ? "text-white/60 hover:text-white hover:bg-white/5"
-                      : "text-black/60 hover:text-black hover:bg-black/5"
-                    }`}
-                >
-                  <ShieldAlert className="w-3.5 h-3.5" />
-                  Admin
-                </Link>
-              </li>
-            )}
           </ul>
 
-          <div className="flex items-center gap-3">
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-full transition-all duration-300 ${isHero || resolvedTheme === "dark" ? "text-white/70 hover:text-white hover:bg-white/10" : "text-black/70 hover:text-black hover:bg-black/10"
-                }`}
-              aria-label="Toggle Theme"
+          {/* Right Action Bar */}
+          <div className="flex items-center gap-4 shrink-0">
+            
+            {/* ":: Our Ecosystem" indicator from Screenshot 1 */}
+            <Link
+              href="/#portfolio"
+              className="hidden xl:flex items-center gap-1.5 font-mono text-xs font-semibold text-foreground/70 hover:text-[#E50914] transition-colors"
             >
-              {resolvedTheme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
+              <span className="text-[#E50914] font-bold">::</span>
+              <span>Our Ecosystem</span>
+            </Link>
 
-            {/* Auth State (Desktop) */}
-            <div className="hidden md:flex items-center gap-3 border-l border-white/10 pl-3 ml-1">
+            {/* Auth State */}
+            <div className="hidden sm:flex items-center border-l border-border pl-3">
               {user ? (
                 <div className="flex items-center gap-2">
                   <div className="flex flex-col items-end">
-                    <span className={`text-[9px] font-mono uppercase tracking-tighter ${isHero || resolvedTheme === 'dark' ? 'text-white/40' : 'text-black/40'}`}>Auth</span>
-                    <span className={`text-[10px] font-semibold max-w-[100px] truncate ${isHero || resolvedTheme === 'dark' ? 'text-white/70' : 'text-black/70'}`}>{user.email}</span>
+                    <span className="text-[9px] font-mono text-foreground/40 uppercase">Signed in</span>
+                    <span className="text-[10px] font-mono font-semibold max-w-[90px] truncate text-foreground/80">
+                      {user.email}
+                    </span>
                   </div>
                   <button
                     onClick={handleLogout}
                     disabled={isLoggingOut}
-                    className={`p-2 rounded-full transition-all group disabled:opacity-50 disabled:cursor-not-allowed ${isHero || resolvedTheme === 'dark' ? 'text-white/40 hover:text-red-400 hover:bg-white/10' : 'text-black/40 hover:text-red-400 hover:bg-black/10'}`}
-                    title="Logout"
+                    className="p-1.5 rounded-lg text-foreground/40 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                    title="Sign Out"
                   >
-                    {isLoggingOut ? <Loader2 className="w-3.5 h-3.5 animate-spin text-red-400" /> : <LogOut className="w-3.5 h-3.5" />}
+                    {isLoggingOut ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LogOut className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               ) : (
                 <button
                   onClick={handleLogin}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all border ${isHero || resolvedTheme === 'dark'
-                    ? "bg-white/10 border-white/20 text-white/90 hover:bg-white/20"
-                    : "bg-black/5 border-black/10 text-black/80 hover:bg-black/10"
-                    }`}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-foreground/80 hover:text-[#E50914] hover:bg-foreground/[0.05] transition-all cursor-pointer"
                 >
                   <LogIn className="w-3.5 h-3.5" />
-                  Login
+                  <span>Login</span>
                 </button>
               )}
             </div>
 
-            {/* Hamburger */}
+            {/* Chamfered Brand Orange CTA: APPLY NOW */}
+            <MagneticButton strength={0.25}>
+              <Link
+                href="/join"
+                className="cyber-btn px-5 py-2.5 bg-[#E50914] hover:bg-[#e02e14] text-white font-mono text-xs font-black uppercase tracking-wider shadow-[0_4px_16px_rgba(229,9,20,0.35)] transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <span>APPLY NOW</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </MagneticButton>
+
+            {/* Mobile Hamburger */}
             <button
-              className="md:hidden flex flex-col gap-1.5 p-1 bg-transparent border-none cursor-pointer"
+              className="lg:hidden flex flex-col gap-1 p-2 bg-transparent border-none cursor-pointer text-foreground"
               onClick={() => setMenuOpen((v) => !v)}
               aria-label="Toggle menu"
             >
-              <span className={`block w-5 h-0.5 bg-accent rounded transition-all duration-300 ${menuOpen ? "translate-y-2 rotate-45" : ""}`} />
-              <span className={`block w-5 h-0.5 bg-accent rounded transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
-              <span className={`block w-5 h-0.5 bg-accent rounded transition-all duration-300 ${menuOpen ? "-translate-y-2 -rotate-45" : ""}`} />
+              <span className={`block w-5 h-0.5 bg-[#E50914] rounded transition-all duration-300 ${menuOpen ? "translate-y-1.5 rotate-45" : ""}`} />
+              <span className={`block w-5 h-0.5 bg-[#E50914] rounded transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+              <span className={`block w-5 h-0.5 bg-[#E50914] rounded transition-all duration-300 ${menuOpen ? "-translate-y-1.5 -rotate-45" : ""}`} />
             </button>
           </div>
         </div>
-      </nav>
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div className="md:hidden fixed top-16 left-0 right-0 z-40 bg-background/95 backdrop-blur-md border-b border-accent/10 flex flex-col px-6 py-6 gap-3">
-          {NAV_TABS.map((tab) => (
-            <Link
-              key={tab.label}
-              href={tab.href}
-              onClick={() => { setWithActive(tab.label); setMenuOpen(false); }}
-              className={`py-2 text-sm font-semibold border-b transition-colors ${resolvedTheme === 'dark' ? 'border-white/5' : 'border-black/5'} ${active === tab.label ? (resolvedTheme === 'dark' ? "text-white" : "text-black") : resolvedTheme === 'dark' ? "text-white/50 hover:text-white" : "text-black/50 hover:text-black"
-                }`}
-            >
-              {tab.label}
-            </Link>
-          ))}
-
-          {isAdmin && (
-            <Link
-              href="/admin"
-              onClick={() => { setWithActive("Admin"); setMenuOpen(false); }}
-              className={`py-2 text-sm font-semibold border-b flex items-center gap-2 transition-colors ${resolvedTheme === 'dark' ? 'border-white/5' : 'border-black/5'} ${active === "Admin" ? (resolvedTheme === 'dark' ? "text-white" : "text-black") : resolvedTheme === 'dark' ? "text-white/50 hover:text-white" : "text-black/50 hover:text-black"}`}
-            >
-              <ShieldAlert className="w-4 h-4" />
-              Admin Dashboard
-            </Link>
-          )}
-
-          <div className={`mt-4 pt-4 border-t ${resolvedTheme === 'dark' ? 'border-white/5' : 'border-black/5'}`}>
-            {user ? (
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center">
-                    <UserIcon className="w-4 h-4 text-accent" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className={`text-[10px] uppercase font-mono ${resolvedTheme === 'dark' ? 'text-white/30' : 'text-black/30'}`}>Profile</span>
-                    <span className={`text-xs truncate max-w-[200px] ${resolvedTheme === 'dark' ? 'text-white/70' : 'text-black/70'}`}>{user.email}</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleLogout}
-                  disabled={isLoggingOut}
-                  className="flex items-center justify-center gap-2 w-full py-3 bg-red-500/10 text-red-400 rounded-md text-xs font-bold border border-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isLoggingOut ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Signing Out...
-                    </>
-                  ) : (
-                    <>
-                      <LogOut className="w-4 h-4" />
-                      Sign Out
-                    </>
-                  )}
-                </button>
-              </div>
-            ) : (
-              <button
-                onClick={handleLogin}
-                className="flex items-center justify-center gap-2 w-full py-3 bg-accent text-black rounded-md text-xs font-bold"
+        {/* Mobile Menu Dropdown */}
+        {menuOpen && (
+          <div className="lg:hidden border-t border-border bg-card px-6 py-4 space-y-3 font-mono text-sm shadow-xl">
+            {NAV_TABS.map((tab) => (
+              <Link
+                key={tab.label}
+                href={tab.href}
+                onClick={() => setMenuOpen(false)}
+                className="block py-2 text-foreground/80 hover:text-[#E50914] transition-colors"
               >
-                <LogIn className="w-4 h-4" />
-                Login with Google
-              </button>
-            )}
+                {tab.label}
+              </Link>
+            ))}
+            <div className="pt-2 border-t border-border flex justify-between items-center">
+              <Link
+                href="/events"
+                onClick={() => setMenuOpen(false)}
+                className="cyber-btn px-4 py-2 bg-[#E50914] text-white font-bold text-xs uppercase"
+              >
+                APPLY NOW
+              </Link>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </nav>
     </>
   );
 }

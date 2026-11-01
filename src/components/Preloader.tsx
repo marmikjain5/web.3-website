@@ -3,8 +3,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ACCENT = "#CDEF33";
-const DURATION = 2800;
+const ACCENT = "#E50914";
+const DURATION = 600;
 
 export default function Preloader({ onComplete }: { onComplete: () => void }) {
   const [progress, setProgress] = useState(0);
@@ -16,17 +16,18 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
     if (!startRef.current) startRef.current = now;
     const elapsed = now - startRef.current;
     const pct = Math.min(elapsed / DURATION, 1);
-    // Ease-out cubic — satisfying slow-down at the end
     const eased = 1 - Math.pow(1 - pct, 3);
     setProgress(Math.round(eased * 100));
 
     if (pct < 1) {
       rafRef.current = requestAnimationFrame(tick);
     } else {
-      // Hold at 100% (fully filled) briefly, then exit
-      setTimeout(() => setShow(false), 500);
+      setTimeout(() => {
+        setShow(false);
+        onComplete();
+      }, 150);
     }
-  }, []);
+  }, [onComplete]);
 
   useEffect(() => {
     rafRef.current = requestAnimationFrame(tick);
@@ -35,12 +36,9 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
     };
   }, [tick]);
 
-  // SVG coordinate space: 800 × 220
-  // Fill rises from y=220 (empty) → y=0 (full) as progress goes 0→100
   const SVG_H = 220;
-  const fillY = SVG_H - (progress / 100) * SVG_H; // top of the fill rect
-  const waveAmp = 12; // wave amplitude (px in SVG coords)
-  // The wave group sits just above the fill rect; translate it so wave peak ≈ fillY
+  const fillY = SVG_H - (progress / 100) * SVG_H;
+  const waveAmp = 12;
   const waveTopY = fillY - waveAmp;
 
   return (
@@ -49,72 +47,59 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
         <motion.div
           key="preloader"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.04 }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#08080c]"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#ECEBE8]"
         >
-          {/* ─── Liquid-fill text via SVG clipPath ─── */}
-          <div className="select-none w-[85vw] max-w-2xl" aria-hidden>
+          {/* Liquid-fill text via SVG clipPath */}
+          <div className="select-none w-[88vw] max-w-2xl" aria-hidden>
             <svg
-              viewBox={`0 0 800 ${SVG_H}`}
+              viewBox={`0 0 840 ${SVG_H}`}
               xmlns="http://www.w3.org/2000/svg"
               className="w-full h-auto overflow-visible"
             >
               <defs>
-                {/*
-                  The text shape is used as a clip mask.
-                  Everything rendered inside <g clipPath="url(#tc)"> is
-                  pixel-perfectly confined to the letter outlines.
-                */}
                 <clipPath id="tc">
                   <text
-                    x="400"
-                    y="185"
+                    x="420"
+                    y="180"
                     textAnchor="middle"
-                    fontFamily="'Arial Black', 'Impact', system-ui"
+                    fontFamily="'Courier New', monospace, system-ui"
                     fontWeight="900"
-                    fontSize="195"
-                    letterSpacing="-6"
+                    fontSize="180"
+                    letterSpacing="-4"
                   >
-                    WEB3
+                    web.3_
                   </text>
                 </clipPath>
               </defs>
 
-              {/* Ghost outline — visible through unfilled area */}
+              {/* Ghost outline */}
               <text
-                x="400"
-                y="185"
+                x="420"
+                y="180"
                 textAnchor="middle"
-                fontFamily="'Arial Black', 'Impact', system-ui"
+                fontFamily="'Courier New', monospace, system-ui"
                 fontWeight="900"
-                fontSize="195"
-                letterSpacing="-6"
+                fontSize="180"
+                letterSpacing="-4"
                 fill="none"
-                stroke="rgba(255,255,255,0.10)"
-                strokeWidth="1.5"
+                stroke="rgba(0,0,0,0.15)"
+                strokeWidth="2"
               >
-                WEB3
+                web.3_
               </text>
 
-              {/* ── All fill content clipped to letter shapes ── */}
+              {/* All fill content clipped to letter shapes */}
               <g clipPath="url(#tc)">
-                {/* Solid fill rectangle — rises from bottom */}
                 <rect
                   x="0"
                   y={fillY + waveAmp}
-                  width="800"
+                  width="840"
                   height={SVG_H}
                   fill={ACCENT}
                 />
 
-                {/*
-                  Animated wave sitting right at the fill boundary.
-                  The <g> is translated so the wave crest lands at fillY.
-                  The path itself always starts at y=waveAmp (the crest line)
-                  and fills downward — the clipPath hides everything outside
-                  the letters.
-                */}
                 <g transform={`translate(0, ${waveTopY})`}>
                   <path fill={ACCENT}>
                     <animate
@@ -124,9 +109,9 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
                       calcMode="spline"
                       keySplines="0.45 0 0.55 1; 0.45 0 0.55 1"
                       values={`
-                        M0,${waveAmp} Q100,0 200,${waveAmp} T400,${waveAmp} T600,${waveAmp} T800,${waveAmp} V${SVG_H + waveAmp * 2} H0 Z;
-                        M0,${waveAmp} Q100,${waveAmp * 2} 200,${waveAmp} T400,${waveAmp} T600,${waveAmp} T800,${waveAmp} V${SVG_H + waveAmp * 2} H0 Z;
-                        M0,${waveAmp} Q100,0 200,${waveAmp} T400,${waveAmp} T600,${waveAmp} T800,${waveAmp} V${SVG_H + waveAmp * 2} H0 Z
+                        M0,${waveAmp} Q105,0 210,${waveAmp} T420,${waveAmp} T630,${waveAmp} T840,${waveAmp} V${SVG_H + waveAmp * 2} H0 Z;
+                        M0,${waveAmp} Q105,${waveAmp * 2} 210,${waveAmp} T420,${waveAmp} T630,${waveAmp} T840,${waveAmp} V${SVG_H + waveAmp * 2} H0 Z;
+                        M0,${waveAmp} Q105,0 210,${waveAmp} T420,${waveAmp} T630,${waveAmp} T840,${waveAmp} V${SVG_H + waveAmp * 2} H0 Z
                       `}
                     />
                   </path>
@@ -135,27 +120,32 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
             </svg>
           </div>
 
-          {/* ─── Counter + progress bar ─── */}
-          <div className="mt-6 flex flex-col items-center gap-3 w-52">
-            <span className="font-mono text-sm text-white/40 tracking-widest">
-              loading...{" "}
-              <span style={{ color: ACCENT }}>{progress}%</span>
+          {/* Counter + progress bar */}
+          <div className="mt-6 flex flex-col items-center gap-3 w-56">
+            <span className="font-mono text-xs text-foreground/60 tracking-widest uppercase">
+              INITIALIZING //{" "}
+              <span style={{ color: ACCENT }} className="font-bold">{progress}%</span>
             </span>
 
-            <div className="w-full h-px bg-white/10 rounded-full overflow-hidden">
+            <div className="w-full h-1 bg-foreground/10 rounded-full overflow-hidden">
               <motion.div
                 className="h-full rounded-full"
-                style={{ width: `${progress}%`, backgroundColor: ACCENT, opacity: 0.7 }}
+                style={{ width: `${progress}%`, backgroundColor: ACCENT }}
                 transition={{ duration: 0.08 }}
               />
             </div>
+
+            <span className="font-mono text-[10px] text-foreground/40 tracking-[0.3em] uppercase">
+              read . write . own
+            </span>
           </div>
 
-          {/* ─── Corner branding ─── */}
-          <span className="absolute bottom-6 left-6 font-mono text-[10px] text-white/15 tracking-widest uppercase">
-            Web3 BMSIT
+          {/* Corner branding */}
+          <span className="absolute bottom-6 left-6 font-mono text-[10px] text-foreground/30 tracking-widest uppercase flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-[#E50914]" />
+            web.3_ ecosystem
           </span>
-          <span className="absolute bottom-6 right-6 font-mono text-[10px] text-white/15 tracking-widest uppercase">
+          <span className="absolute bottom-6 right-6 font-mono text-[10px] text-foreground/30 tracking-widest uppercase">
             Est. 2024
           </span>
         </motion.div>

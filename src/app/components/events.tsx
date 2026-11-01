@@ -102,40 +102,39 @@ export default function Events() {
       <section
         id="events"
         ref={sectionRef}
-        className="relative max-w-5xl mx-auto px-5 sm:px-6 py-24"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(0deg, transparent, transparent 49px, rgba(74,222,128,0.03) 49px, rgba(74,222,128,0.03) 50px), repeating-linear-gradient(90deg, transparent, transparent 49px, rgba(74,222,128,0.03) 49px, rgba(74,222,128,0.03) 50px)",
-        }}
+        className="relative max-w-5xl mx-auto px-5 sm:px-6 py-24 lab-grid-bg"
       >
         {/* ── Section header ─────────────────────────────────── */}
-        <p className="font-mono text-[11px] font-bold uppercase tracking-widest text-green-400/60 mb-3">
-          // events &amp; competitions
-        </p>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-foreground mb-3 leading-[1.1] tracking-tight">
-          What&apos;s happening{" "}
-          <span className="text-accent">on-chain</span>
+        <div className="flex items-center gap-2 mb-2">
+          <span className="w-2.5 h-2.5 bg-[#FF5500] shadow-[0_0_8px_#FF5500]" />
+          <p className="font-mono text-xs font-bold uppercase tracking-widest text-[#FF5500]">
+            INCUBATION_TRACKS &amp; COMPETITIONS
+          </p>
+        </div>
+
+        <h2 className="text-3xl sm:text-5xl md:text-6xl font-black cyber-font text-foreground mb-3 leading-[1.1] tracking-tight">
+          WHAT&apos;S HAPPENING{" "}
+          <span className="text-[#FF5500]">ON-CHAIN</span>
         </h2>
-        <p className="text-sm sm:text-base text-foreground/35 max-w-lg leading-relaxed mb-10">
-          Hackathons, workshops, and challenges — built for students who ship
-          on-chain. Expand a card for details, then register from the terminal.
+        <p className="font-mono text-sm sm:text-base text-foreground/60 max-w-xl leading-relaxed mb-10">
+          Hackathons, incubator sprints, and build-weeks — built for visionaries who ship on-chain. Expand a card for details, then register directly.
         </p>
 
         {/* ── Tab bar (Upcoming / Past) ──────────────────────── */}
-        <div className="flex gap-1 p-1 rounded-lg bg-foreground/[0.04] border border-foreground/[0.06] w-fit mb-14">
+        <div className="flex gap-1 p-1 rounded-xl bg-card border border-border w-fit mb-14 font-mono shadow-sm">
           {(["upcoming", "past"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`font-mono text-xs font-semibold px-4 py-2 rounded-md transition-all duration-200 cursor-pointer ${
+              className={`text-xs font-bold px-5 py-2 rounded-lg transition-all duration-200 cursor-pointer ${
                 activeTab === tab
-                  ? "bg-green-400/[0.12] text-green-400 border border-green-400/20"
-                  : "text-foreground/30 hover:text-foreground/50 border border-transparent"
+                  ? "bg-[#FF5500]/15 text-[#FF5500] border border-[#FF5500]/40 shadow-[0_0_12px_rgba(255,85,0,0.15)]"
+                  : "text-foreground/50 hover:text-foreground border border-transparent"
               }`}
             >
               {tab === "upcoming"
-                ? `Upcoming (${upcoming.length})`
-                : `Past (${past.length})`}
+                ? `UPCOMING (${upcoming.length})`
+                : `ARCHIVE (${past.length})`}
             </button>
           ))}
         </div>
@@ -154,14 +153,14 @@ export default function Events() {
               {/* Background track */}
               <path
                 d={`M 1 0 L 1 ${chainHeight}`}
-                stroke="rgba(74,222,128,0.08)"
+                stroke="rgba(255,85,0,0.12)"
                 strokeWidth="2"
                 fill="none"
               />
               {/* Scroll-animated fill */}
               <motion.path
                 d={`M 1 0 L 1 ${chainHeight}`}
-                stroke="rgba(74,222,128,0.3)"
+                stroke="rgba(255,85,0,0.5)"
                 strokeWidth="2"
                 fill="none"
                 style={{ pathLength }}
@@ -172,7 +171,7 @@ export default function Events() {
           {/* Loading state */}
           {!loaded && (
             <div className="text-center py-20">
-              <div className="inline-block w-6 h-6 border-2 border-green-400/30 border-t-green-400 rounded-full animate-spin" />
+              <div className="inline-block w-8 h-8 border-2 border-[#FF5500]/30 border-t-[#FF5500] rounded-full animate-spin" />
             </div>
           )}
 
@@ -210,18 +209,17 @@ export default function Events() {
 
                       {/* Center node — pulsing dot + connector */}
                       <div className="col-start-1 md:col-start-2 row-start-1 flex flex-col items-center relative pt-8">
-                        {/* Pulsing ring — simulates block confirmation */}
                         <span className="relative flex h-3 w-3 z-10">
-                          <span className="absolute inline-flex h-full w-full rounded-full bg-green-400/40 animate-ping" />
-                          <span className="relative inline-flex h-3 w-3 rounded-full bg-green-400/80 shadow-[0_0_8px_rgba(74,222,128,0.5)]" />
+                          <span className="absolute inline-flex h-full w-full rounded-full bg-[#FF5500]/40 animate-ping" />
+                          <span className="relative inline-flex h-3 w-3 rounded-full bg-[#FF5500] shadow-[0_0_8px_rgba(255,85,0,0.8)]" />
                         </span>
 
                         {/* Horizontal connector — desktop only */}
                         <div
                           className={`hidden md:block absolute top-[38px] h-px ${
                             i % 2 === 0
-                              ? "right-[50%] left-[-8px] bg-gradient-to-r from-transparent to-green-400/25"
-                              : "left-[50%] right-[-8px] bg-gradient-to-l from-transparent to-green-400/25"
+                              ? "right-[50%] left-[-8px] bg-gradient-to-r from-transparent to-[#FF5500]/30"
+                              : "left-[50%] right-[-8px] bg-gradient-to-l from-transparent to-[#FF5500]/30"
                           }`}
                         />
                       </div>
@@ -229,8 +227,8 @@ export default function Events() {
                   ))
                 ) : (
                   <div className="text-center py-20">
-                    <p className="font-mono text-sm text-foreground/20">
-                      No {activeTab} events.
+                    <p className="font-mono text-sm text-foreground/40">
+                      No {activeTab} events registered.
                     </p>
                   </div>
                 )}

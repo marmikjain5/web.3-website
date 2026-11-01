@@ -12,16 +12,21 @@ import {
   createTeamMember,
   updateTeamMember,
   deleteTeamMember,
+  logoutAdmin,
+  getSiteConfig,
+  updateSiteConfig,
   type EventRow,
   type RegistrationFieldRow,
   type TeamMemberRow,
+  type SiteConfig,
 } from "@/app/actions/admin";
+import { Lock, LogOut } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────────────────────
 
-type Tab = "events" | "team";
+type Tab = "events" | "team" | "customization";
 type FieldDraft = {
   field_name: string;
   prompt: string;
@@ -38,40 +43,62 @@ type FieldDraft = {
 export default function AdminDashboard() {
   const [tab, setTab] = useState<Tab>("events");
 
+  const handleLogout = async () => {
+    await logoutAdmin();
+    window.location.reload();
+  };
+
   return (
     <div className="max-w-7xl mx-auto relative z-10">
       {/* Header */}
-      <header className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-          <span className="text-[10px] font-mono text-accent uppercase tracking-widest">
-            secure_admin_session_active
-          </span>
+      <header className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-2 h-2 rounded-full bg-accent animate-pulse shadow-[0_0_8px_var(--accent)]" />
+            <span className="text-[10px] font-mono text-accent uppercase tracking-widest font-bold">
+              secure_admin_session_active
+            </span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold font-mono">
+            <span className="text-accent">ADMIN</span>_CONTROL_CENTER
+          </h1>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bold font-mono">
-          <span className="text-accent">ADMIN</span>_CONTROL_CENTER
-        </h1>
+
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground/[0.05] hover:bg-red-500/10 border border-border hover:border-red-500/30 text-xs font-mono text-foreground/60 hover:text-red-500 transition-all cursor-pointer w-fit"
+          title="Lock Admin Console"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          <span>LOCK CONSOLE</span>
+        </button>
       </header>
 
       {/* Tab bar */}
-      <div className="flex gap-1 p-1 rounded-lg bg-foreground/[0.04] border border-foreground/[0.06] w-fit mb-8">
-        {(["events", "team"] as const).map((t) => (
+      <div className="flex flex-wrap gap-1 p-1 rounded-lg bg-foreground/[0.04] border border-foreground/[0.06] w-fit mb-8">
+        {(["events", "team", "customization"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
             className={`font-mono text-xs font-semibold px-5 py-2.5 rounded-md transition-all duration-200 cursor-pointer ${
               tab === t
                 ? "bg-accent/[0.12] text-accent border border-accent/20"
-                : "text-foreground/30 hover:text-foreground/50 border border-transparent"
+                : "text-foreground/40 hover:text-foreground/70 border border-transparent"
             }`}
           >
-            {t === "events" ? "⚡ Events" : "👥 Team"}
+            {t === "events" ? "⚡ Events" : t === "team" ? "👥 Team Members" : "⚙️ Site Customization"}
           </button>
         ))}
       </div>
 
       {/* Tab content */}
-      {tab === "events" ? <EventsPanel /> : <TeamPanel />}
+      {tab === "events" ? (
+        <EventsPanel />
+      ) : tab === "team" ? (
+        <TeamPanel />
+      ) : (
+        <CustomizationPanel />
+      )}
     </div>
   );
 }
@@ -1085,3 +1112,185 @@ function FormField({
     </div>
   );
 }
+
+// ═══════════════════════════════════════════════════════════════
+// SITE CUSTOMIZATION PANEL
+// ═══════════════════════════════════════════════════════════════
+
+function CustomizationPanel() {
+  const [config, setConfig] = useState<SiteConfig | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  useEffect(() => {
+    getSiteConfig().then((data) => {
+      setConfig(data);
+      setLoading(false);
+    });
+  }, []);
+
+  const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!config) return;
+    setSaving(true);
+    setFeedback(null);
+
+    const formData = new FormData(e.currentTarget);
+    const updated: Partial<SiteConfig> = {
+      heroTagline: formData.get("heroTagline") as string,
+      heroHeadline: formData.get("heroHeadline") as string,
+      heroDescription: formData.get("heroDescription") as string,
+      incubationCount: parseInt(formData.get("incubationCount") as string) || 14,
+      totalFundsRaised: formData.get("totalFundsRaised") as string,
+      partnerCount: parseInt(formData.get("partnerCount") as string) || 50,
+      announcements: (formData.get("announcements") as string)
+        .split("\n")
+        .map((s) => s.trim())
+        .filter(Boolean),
+    };
+
+    const res = await updateSiteConfig(updated);
+    if (res.success) {
+      setFeedback({ type: "success", text: "Site configuration published successfully!" });
+      setConfig((prev) => (prev ? { ...prev, ...updated } : null));
+    } else {
+      setFeedback({ type: "error", text: res.error || "Failed to update configuration" });
+    }
+    setSaving(false);
+  };
+
+  if (loading || !config) {
+    return (
+      <div className="p-12 text-center font-mono text-sm text-foreground/40 animate-pulse">
+        LOADING_SITE_CONFIGURATION...
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-8">
+      {feedback && (
+        <div
+          className={`p-4 rounded-xl border font-mono text-xs ${
+            feedback.type === "success"
+              ? "bg-accent/10 border-accent/30 text-accent"
+              : "bg-red-500/10 border-red-500/30 text-red-400"
+          }`}
+        >
+          {feedback.text}
+        </div>
+      )}
+
+      <form onSubmit={handleSave} className="space-y-8">
+        {/* Section 1: Hero & Branding */}
+        <div className="p-6 rounded-2xl bg-card border border-border space-y-6">
+          <div className="flex items-center gap-2 border-b border-border pb-4">
+            <div className="w-2 h-2 rounded-full bg-accent" />
+            <h2 className="text-lg font-mono font-bold uppercase tracking-wider text-foreground">
+              Hero Section & Messaging
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <FormField
+              label="Tagline (Small Top Banner)"
+              name="heroTagline"
+              defaultValue={config.heroTagline}
+              placeholder="e.g. BACKING TOMORROW"
+              required
+            />
+            <FormField
+              label="Main Cyber Headline"
+              name="heroHeadline"
+              defaultValue={config.heroHeadline}
+              placeholder="e.g. ROW BACKING"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-[10px] font-mono font-bold text-foreground/40 uppercase tracking-wider mb-2">
+              Hero Subhead / Narrative
+            </label>
+            <textarea
+              name="heroDescription"
+              defaultValue={config.heroDescription}
+              rows={3}
+              required
+              className="w-full bg-foreground/[0.05] border border-foreground/[0.1] text-foreground/80 text-sm font-mono rounded-lg p-3 outline-none focus:border-accent/40 transition-colors"
+            />
+          </div>
+        </div>
+
+        {/* Section 2: Key Platform Metrics */}
+        <div className="p-6 rounded-2xl bg-card border border-border space-y-6">
+          <div className="flex items-center gap-2 border-b border-border pb-4">
+            <div className="w-2 h-2 rounded-full bg-accent" />
+            <h2 className="text-lg font-mono font-bold uppercase tracking-wider text-foreground">
+              Key Metrics & Portfolio Counter
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <FormField
+              label="Incubations / Portfolio Count"
+              name="incubationCount"
+              type="number"
+              defaultValue={String(config.incubationCount)}
+              required
+            />
+            <FormField
+              label="Total Capital Raised"
+              name="totalFundsRaised"
+              defaultValue={config.totalFundsRaised}
+              placeholder="e.g. $100M+"
+              required
+            />
+            <FormField
+              label="Global Partners Count"
+              name="partnerCount"
+              type="number"
+              defaultValue={String(config.partnerCount)}
+              required
+            />
+          </div>
+        </div>
+
+        {/* Section 3: Announcements Ticker */}
+        <div className="p-6 rounded-2xl bg-card border border-border space-y-6">
+          <div className="flex items-center gap-2 border-b border-border pb-4">
+            <div className="w-2 h-2 rounded-full bg-accent" />
+            <h2 className="text-lg font-mono font-bold uppercase tracking-wider text-foreground">
+              Marquee Announcements (One per line)
+            </h2>
+          </div>
+
+          <div>
+            <textarea
+              name="announcements"
+              defaultValue={config.announcements.join("\n")}
+              rows={5}
+              className="w-full bg-foreground/[0.05] border border-foreground/[0.1] text-foreground/80 text-sm font-mono rounded-lg p-3 outline-none focus:border-accent/40 transition-colors"
+            />
+            <p className="text-[11px] font-mono text-foreground/40 mt-2">
+              Each line is displayed continuously in the top live ticker stream.
+            </p>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <div className="flex justify-end">
+          <button
+            type="submit"
+            disabled={saving}
+            className="px-8 py-3.5 rounded-xl bg-accent hover:bg-accent/90 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_var(--accent-glow)] cursor-pointer disabled:opacity-50"
+          >
+            {saving ? "SAVING CONFIGURATION..." : "PUBLISH CHANGES TO WEBSITE"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
