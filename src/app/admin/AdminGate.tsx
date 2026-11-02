@@ -1,35 +1,61 @@
 "use client";
 
-import { useState } from "react";
-import { verifyAdminPassword } from "@/app/actions/admin";
-import { Lock, ShieldAlert, KeyRound, ArrowRight, Loader2, Terminal, AlertCircle } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { Lock, ShieldAlert, LogIn, ArrowRight, Loader2, Terminal, AlertCircle } from "lucide-react";
+import Link from "next/link";
+import { createClient } from "@/utils/supabase/client";
+import { User } from "@supabase/supabase-js";
 
 export default function AdminGate() {
-  const [passcode, setPasscode] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const [supabase] = useState(() => createClient());
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [signingIn, setSigningIn] = useState(false);
 
-  const handleUnlock = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!passcode.trim()) return;
-
-    setLoading(true);
-    setError(null);
-
-    try {
-      const res = await verifyAdminPassword(passcode);
-      if (res.success) {
-        // Refresh page so server component verifies cookie and loads dashboard
-        router.refresh();
-      } else {
-        setError(res.error || "Access Denied: Invalid Security Passcode");
+  useEffect(() => {
+    async function checkUser() {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        setUser(user);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-    } catch (err: any) {
-      setError(err?.message || "Verification request failed");
-    } finally {
-      setLoading(false);
+    }
+    checkUser();
+  }, [supabase]);
+
+  const handleLogin = async () => {
+    setSigningIn(true);
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=/admin`,
+          queryParams: { prompt: "select_account" },
+        },
+      });
+    } catch {
+      setSigningIn(false);
+    }
+  };
+
+  const handleSwitchAccount = async () => {
+    setSigningIn(true);
+    try {
+      await supabase.auth.signOut();
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback?next=/admin`,
+          queryParams: { prompt: "select_account" },
+        },
+      });
+    } catch {
+      setSigningIn(false);
     }
   };
 
@@ -39,71 +65,104 @@ export default function AdminGate() {
         {/* Subtle top accent line */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FF5500] to-transparent" />
 
-        {/* Header Icon */}
+        {/* Header Icon & Title */}
         <div className="flex flex-col items-center text-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-[#FF5500]/10 border border-[#FF5500]/30 flex items-center justify-center mb-4 text-[#FF5500] shadow-[0_0_24px_rgba(255,85,0,0.25)]">
-            <Lock className="w-8 h-8" />
+            {user ? <ShieldAlert className="w-8 h-8" /> : <Lock className="w-8 h-8" />}
           </div>
           <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-[#FF5500] mb-1">
             <Terminal className="w-3.5 h-3.5" />
-            <span>RESTRICTED_ACCESS // SEC_LVL_4</span>
+            <span>{user ? "UNAUTHORIZED_ROLE // ACCESS_DENIED" : "RESTRICTED_ACCESS // SEC_LVL_4"}</span>
           </div>
           <h1 className="text-2xl font-black font-mono tracking-tight text-foreground">
-            ADMIN_CONTROL_GATE
+            {user ? "ACCESS_DENIED" : "ADMIN_CONTROL_GATE"}
           </h1>
-          <p className="text-xs font-mono text-foreground/50 mt-1 max-w-xs">
-            Enter authorized master access key to decrypt administrative portal.
+          <p className="text-xs font-mono text-foreground/50 mt-2 max-w-xs leading-relaxed">
+            {user
+              ? "Your authenticated account does not possess administrator privileges (profiles.role === 'admin')."
+              : "Authentication required. Please sign in with an authorized administrator account to access the console."}
           </p>
         </div>
 
-        {/* Error notification */}
-        {error && (
-          <div className="mb-6 p-3.5 rounded-lg bg-red-500/10 border border-red-500/25 flex items-center gap-3 text-red-500 text-xs font-mono">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{error}</span>
+        {/* User state context badge if signed in */}
+        {user && (
+          <div className="mb-6 p-3.5 rounded-lg bg-red-500/10 border border-red-500/25 flex items-start gap-3 text-red-500 text-xs font-mono">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+            <div className="flex flex-col min-w-0">
+              <span className="font-bold">SIGNED IN AS:</span>
+              <span className="text-foreground/80 truncate text-[11px]">{user.email}</span>
+              <span className="text-[10px] text-foreground/40 mt-1">Status: Non-administrator role</span>
+            </div>
           </div>
         )}
 
-        {/* Passcode Form */}
-        <form onSubmit={handleUnlock} className="space-y-4">
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-foreground/40">
-              <KeyRound className="w-4 h-4" />
-            </div>
-            <input
-              type="password"
-              placeholder="ENTER PASSCODE..."
-              value={passcode}
-              onChange={(e) => setPasscode(e.target.value)}
-              required
-              autoFocus
-              className="w-full pl-10 pr-4 py-3 bg-foreground/[0.03] border border-border rounded-xl text-sm font-mono text-foreground focus:outline-none focus:border-[#FF5500] focus:ring-1 focus:ring-[#FF5500] transition-all"
-            />
-          </div>
+        {/* Action Controls */}
+        <div className="space-y-3">
+          {user ? (
+            <>
+              <button
+                type="button"
+                onClick={handleSwitchAccount}
+                disabled={signingIn}
+                className="w-full py-3.5 px-6 rounded-xl bg-[#FF5500] hover:bg-[#FF6611] active:scale-[0.99] text-white font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,85,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                {signingIn ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>AUTHENTICATING...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="w-4 h-4" />
+                    <span>SWITCH TO ADMIN ACCOUNT</span>
+                  </>
+                )}
+              </button>
 
-          <button
-            type="submit"
-            disabled={loading || !passcode.trim()}
-            className="w-full py-3.5 px-6 rounded-xl bg-[#FF5500] hover:bg-[#FF6611] active:scale-[0.99] text-white font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,85,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-          >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>DECRYPTING CREDENTIALS...</span>
-              </>
-            ) : (
-              <>
-                <span>UNLOCK CONSOLE</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
-        </form>
+              <Link
+                href="/"
+                className="w-full py-3 px-6 rounded-xl border border-border hover:bg-foreground/[0.05] text-foreground/70 hover:text-foreground font-mono text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <span>RETURN TO HOMEPAGE</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={handleLogin}
+                disabled={loading || signingIn}
+                className="w-full py-3.5 px-6 rounded-xl bg-[#FF5500] hover:bg-[#FF6611] active:scale-[0.99] text-white font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,85,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+              >
+                {signingIn ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>INITIALIZING AUTHENTICATION...</span>
+                  </>
+                ) : (
+                  <>
+                    <LogIn className="w-4 h-4" />
+                    <span>SIGN IN WITH GOOGLE</span>
+                  </>
+                )}
+              </button>
 
-        {/* Footer info */}
+              <Link
+                href="/"
+                className="w-full py-3 px-6 rounded-xl border border-border hover:bg-foreground/[0.05] text-foreground/70 hover:text-foreground font-mono text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+              >
+                <span>RETURN TO HOMEPAGE</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </>
+          )}
+        </div>
+
+        {/* Footer info - NO credentials, NO hardcoded passwords */}
         <div className="mt-8 pt-4 border-t border-border/60 flex items-center justify-between text-[10px] font-mono text-foreground/40">
           <span>PORTAL_VER: 2.6.4</span>
-          <span>DEFAULT_KEY: web3labs2026</span>
+          <span>AUTH: SUPABASE_RBAC</span>
         </div>
       </div>
     </div>

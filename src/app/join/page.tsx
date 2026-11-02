@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 import JoinUsClient from "./JoinUsClient";
+import { getPublicSubmissionPortalSettings } from "@/app/actions/submissions";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Join Us | Web3 Club Incubation & Residency",
+  title: "Submissions Portal | WEB.3 BMSIT&M",
   description:
-    "Unlock exponential growth. For builders, dreamers and pioneers shaping the next era of Web3.",
+    "Official dynamic submission portal for project proposals, builder squads, campus events, and hackathons at WEB.3 BMSIT&M.",
 };
 
-export default function JoinPage() {
-  return <JoinUsClient />;
+export default async function JoinPage() {
+  const result = await getPublicSubmissionPortalSettings();
+  return <JoinUsClient initialSettings={result.data} />;
 }
-

@@ -10,15 +10,15 @@ import { LogIn, LogOut, Loader2, ArrowRight } from "lucide-react";
 import { useTheme } from "next-themes";
 import MagneticButton from "@/components/MagneticButton";
 import ScrambleText from "@/components/chaingpt/ScrambleText";
+import { SOCIAL_URLS } from "@/lib/socials";
 
 // ─────────────────────────────────────────────────────────────
-// NAV TABS (Matching labs.chaingpt.org navigation)
+// NAV TABS
 // ─────────────────────────────────────────────────────────────
 const NAV_TABS = [
   { label: "Events", href: "/events" },
   { label: "Projects", href: "/#portfolio" },
-  { label: "Incubator", href: "/#incubation-hub" },
-  { label: "3D Lab", href: "/laboratory" },
+  { label: "Registrations", href: "/#incubation-hub" },
   { label: "Team", href: "/team" },
   { label: "FAQ", href: "/#faq" },
   { label: "About", href: "/about" },
@@ -30,12 +30,34 @@ export default function Navbar() {
   const [active, setWithActive] = useState("Home");
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   const { theme, setTheme, resolvedTheme } = useTheme();
   const pathname = usePathname();
   const [supabase] = useState(() => createClient());
+
+  const checkUserRole = async (currentUser: User | null) => {
+    if (!currentUser) {
+      setIsAdmin(false);
+      return;
+    }
+    try {
+      const { data: profile, error } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", currentUser.id)
+        .single();
+      if (!error && profile?.role === "admin") {
+        setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
+      }
+    } catch {
+      setIsAdmin(false);
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -47,6 +69,7 @@ export default function Navbar() {
         data: { user },
       } = await supabase.auth.getUser();
       setUser(user);
+      await checkUserRole(user);
     };
     getUser();
 
@@ -54,7 +77,9 @@ export default function Navbar() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       async (_: AuthChangeEvent, session: Session | null) => {
-        setUser(session?.user ?? null);
+        const currentUser = session?.user ?? null;
+        setUser(currentUser);
+        await checkUserRole(currentUser);
       }
     );
 
@@ -68,13 +93,23 @@ export default function Navbar() {
     if (pathname === "/") setWithActive("Home");
     else if (pathname.startsWith("/about")) setWithActive("About");
     else if (pathname.startsWith("/team")) setWithActive("Team");
-    else if (pathname.startsWith("/events")) setWithActive("Our Programs");
+    else if (pathname.startsWith("/events")) setWithActive("Events");
+    else if (pathname.startsWith("/laboratory")) setWithActive("Resources");
     else if (pathname.startsWith("/contact")) setWithActive("Contact");
+    else if (pathname.startsWith("/admin")) setWithActive("Admin Portal");
   }, [pathname]);
 
   if (!mounted) return null;
 
   const toggleTheme = () => setTheme(resolvedTheme === "dark" ? "light" : "dark");
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    setMenuOpen(false);
+  };
 
   const handleLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -88,6 +123,8 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
+    setIsAdmin(false);
+    setUser(null);
     await supabase.auth.signOut();
     window.location.href = "/";
   };
@@ -104,7 +141,11 @@ export default function Navbar() {
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between gap-4">
           
           {/* Brand Logo — web.3_ pixel logo */}
-          <Link href="/" className="flex items-center gap-3 select-none group shrink-0">
+          <Link
+            href="/"
+            onClick={handleLogoClick}
+            className="flex items-center gap-3 select-none group shrink-0"
+          >
             <Image
               src="/logos/web3-official-logo-transparent.png"
               alt="web.3_ read.write.own"
@@ -141,14 +182,16 @@ export default function Navbar() {
           {/* Right Action Bar */}
           <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             
-            {/* ":: BMSIT&M Chapter" indicator */}
-            <Link
-              href="/#portfolio"
-              className="hidden xl:flex items-center gap-1.5 font-mono text-xs font-semibold text-foreground/70 hover:text-[#E50914] transition-colors"
-            >
-              <span className="text-[#E50914] font-bold">::</span>
-              <span>Our Ecosystem</span>
-            </Link>
+            {/* Admin Portal indicator (visible ONLY to authorized administrators) */}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="hidden xl:flex items-center gap-1.5 font-mono text-xs font-semibold text-foreground/70 hover:text-[#E50914] transition-colors"
+              >
+                <span className="text-[#E50914] font-bold">::</span>
+                <span>Admin Portal</span>
+              </Link>
+            )}
 
             {/* Desktop Auth State */}
             <div className="hidden sm:flex items-center border-l border-border pl-3">
@@ -163,7 +206,7 @@ export default function Navbar() {
                   <button
                     onClick={handleLogout}
                     disabled={isLoggingOut}
-                    className="p-1.5 rounded-lg text-foreground/40 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                    className="p-1.5 rounded-lg text-foreground/40 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
                     title="Sign Out"
                   >
                     {isLoggingOut ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LogOut className="w-3.5 h-3.5" />}
@@ -179,17 +222,6 @@ export default function Navbar() {
                 </button>
               )}
             </div>
-
-            {/* Chamfered Brand Orange CTA: APPLY NOW */}
-            <MagneticButton strength={0.25}>
-              <Link
-                href="/join"
-                className="cyber-btn px-4 sm:px-5 py-2 sm:py-2.5 bg-[#E50914] hover:bg-[#e02e14] text-white font-mono text-[11px] sm:text-xs font-black uppercase tracking-wider shadow-[0_4px_16px_rgba(229,9,20,0.35)] transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
-              >
-                <span>APPLY NOW</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </MagneticButton>
 
             {/* Mobile Hamburger */}
             <button
@@ -232,15 +264,17 @@ export default function Navbar() {
               })}
             </div>
 
-            {/* Ecosystem link */}
-            <Link
-              href="/#portfolio"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-2 py-2 px-3 rounded-lg text-xs font-bold text-foreground/70 hover:text-[#E50914]"
-            >
-              <span className="text-[#E50914]">::</span>
-              <span>Our Ecosystem & Incubations</span>
-            </Link>
+            {/* Admin Portal link (visible ONLY to authorized administrators) */}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-2 py-2 px-3 rounded-lg text-xs font-bold text-[#E50914] hover:bg-foreground/[0.03]"
+              >
+                <span className="text-[#E50914]">::</span>
+                <span>Admin Portal</span>
+              </Link>
+            )}
 
             {/* Mobile Auth Button */}
             <div className="pt-3 border-t border-border flex items-center justify-between">
@@ -253,7 +287,7 @@ export default function Navbar() {
                   <button
                     onClick={handleLogout}
                     disabled={isLoggingOut}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/30 text-red-500 text-xs font-bold"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/30 text-red-500 text-xs font-bold cursor-pointer"
                   >
                     <LogOut className="w-3.5 h-3.5" />
                     <span>Logout</span>
@@ -262,7 +296,7 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground/[0.05] text-xs font-bold text-foreground hover:text-[#E50914] w-full justify-center"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground/[0.05] text-xs font-bold text-foreground hover:text-[#E50914] w-full justify-center cursor-pointer"
                 >
                   <LogIn className="w-4 h-4" />
                   <span>Login with Google</span>
@@ -270,59 +304,52 @@ export default function Navbar() {
               )}
             </div>
 
-            {/* Primary Action Button: Apply Now */}
-            <div className="pt-2">
-              <Link
-                href="/join"
-                onClick={() => setMenuOpen(false)}
-                className="cyber-btn w-full py-3 bg-[#E50914] text-white font-black text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-lg cursor-pointer"
-              >
-                <span>JOIN BMSIT WEB.3 CLUB</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-
             {/* Social Communities Dock */}
             <div className="pt-4 border-t border-border flex items-center justify-center gap-6 text-foreground/60">
               <Link
-                href="https://twitter.com"
+                href={SOCIAL_URLS.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 hover:text-[#E50914] transition-colors"
-                title="Twitter / X"
+                title="Instagram"
               >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
                 </svg>
               </Link>
               <Link
-                href="https://t.me"
+                href={SOCIAL_URLS.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 hover:text-[#E50914] transition-colors"
-                title="Telegram"
+                title="WhatsApp Community"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                  <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 15 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M8.53 7.33C8.37 7.33 8.1 7.39 7.87 7.64C7.65 7.89 7.02 8.48 7.02 9.68C7.02 10.88 7.89 12.04 8.02 12.21C8.14 12.38 9.73 14.83 12.16 15.88C12.74 16.13 13.19 16.28 13.54 16.39C14.12 16.57 14.65 16.55 15.07 16.49C15.54 16.42 16.51 15.9 16.71 15.33C16.92 14.76 16.92 14.28 16.86 14.17C16.79 14.07 16.63 14.01 16.39 13.89C16.14 13.77 14.92 13.17 14.69 13.09C14.47 13.01 14.3 12.97 14.14 13.21C13.97 13.46 13.51 14.01 13.37 14.17C13.23 14.33 13.09 14.35 12.85 14.23C12.6 14.11 11.81 13.85 10.87 13.02C10.14 12.37 9.65 11.57 9.51 11.32C9.37 11.08 9.49 10.95 9.62 10.83C9.73 10.72 9.87 10.54 10 10.39C10.12 10.23 10.16 10.11 10.24 9.95C10.32 9.78 10.28 9.64 10.22 9.52C10.16 9.4 9.69 8.24 9.49 7.77C9.3 7.3 9.11 7.37 8.96 7.36C8.82 7.35 8.68 7.33 8.53 7.33Z" />
                 </svg>
               </Link>
               <Link
-                href="https://medium.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-2 hover:text-[#E50914] transition-colors font-serif font-black text-sm"
-                title="Medium"
+                href={SOCIAL_URLS.contact}
+                className="p-2 hover:text-[#E50914] transition-colors"
+                title="Contact"
               >
-                M
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect width="20" height="16" x="2" y="4" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
               </Link>
               <Link
-                href="https://linkedin.com"
+                href={SOCIAL_URLS.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 hover:text-[#E50914] transition-colors font-mono font-bold text-xs"
                 title="LinkedIn"
               >
-                in
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                </svg>
               </Link>
             </div>
           </div>
