@@ -71,14 +71,6 @@ export default function ResidencyHero() {
         <span className="absolute top-24 right-4 sm:right-10 text-white/60 font-mono text-sm">┐</span>
         <span className="absolute bottom-6 left-4 sm:left-10 text-white/60 font-mono text-sm">└</span>
         <span className="absolute bottom-6 right-4 sm:right-10 text-white/60 font-mono text-sm">┘</span>
-
-        {/* Coordinate markers */}
-        <span className="absolute top-28 left-8 sm:left-16 font-mono text-[10px] text-white/60 tracking-widest uppercase">
-          SYS:BMSIT_NODE_V2.4 // BANGALORE
-        </span>
-        <span className="hidden sm:block absolute bottom-8 left-8 sm:left-16 font-mono text-[10px] text-white/60 tracking-widest uppercase">
-          PROTOCOL: READ.WRITE.OWN // STUDENT LAB
-        </span>
       </div>
 
       {/* ═════════════════════════════════════════════════════════════════════
@@ -108,7 +100,7 @@ export default function ResidencyHero() {
             {/* Pill Tag */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/30 border border-white/30 backdrop-blur-md text-white font-mono text-[11px] font-bold tracking-widest uppercase shadow-sm">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span>BMSIT&M // WEB.3_ STUDENT INNOVATION LAB</span>
+              <span>BMSIT&M WEB3 CLUB</span>
             </div>
 
             {/* Headline */}
@@ -213,22 +205,6 @@ export default function ResidencyHero() {
             <div className="text-xs font-mono text-white/95 leading-relaxed pt-1 drop-shadow-sm">
               Workshops, peer review, and campus demo days—building the decentralized web right from BMSIT&M.
             </div>
-
-            <div className="border border-white/30 px-4 py-2.5 flex items-center justify-between font-mono text-xs text-white/95 bg-black/30 backdrop-blur-md rounded-xl shadow-sm">
-              <div className="flex items-center gap-3">
-                <div className="w-5 h-5 relative shrink-0">
-                  <div className="absolute inset-0 border border-white/70 rotate-45 scale-75" />
-                  <div className="absolute inset-0 border border-white/50 rotate-12 scale-90" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 bg-white rounded-sm shadow-[0_0_8px_white]" />
-                  </div>
-                </div>
-                <span className="tracking-widest uppercase font-bold text-[11px]">BMSIT_NODE // BANGALORE</span>
-              </div>
-              <span className="text-[10px] text-emerald-300 font-bold tracking-wider">
-                ● 100% ONLINE
-              </span>
-            </div>
           </div>
         </div>
 
@@ -242,7 +218,7 @@ export default function ResidencyHero() {
           <div className="w-full text-center space-y-3">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/30 border border-white/30 backdrop-blur-md text-white font-mono text-[10px] font-bold tracking-widest uppercase shadow-sm">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
-              <span>BMSIT&M // WEB.3_ STUDENT LAB</span>
+              <span>BMSIT&M WEB3 CLUB</span>
             </div>
 
             <div className="space-y-0.5">
@@ -346,14 +322,6 @@ export default function ResidencyHero() {
                 </p>
               </div>
             ))}
-
-            {/* Mobile ISO Node Status */}
-            <div className="border border-white/25 px-3.5 py-2 flex items-center justify-between font-mono text-[11px] text-white/95 bg-black/25 backdrop-blur-md rounded-xl mt-3">
-              <span className="tracking-widest uppercase font-bold text-[10px]">BMSIT_NODE // BANGALORE</span>
-              <span className="text-[10px] text-emerald-300 font-bold tracking-wider">
-                ● 100% ONLINE
-              </span>
-            </div>
           </div>
 
         </div>
