@@ -18,6 +18,7 @@ const NAV_TABS = [
   { label: "Events", href: "/events" },
   { label: "Projects", href: "/#portfolio" },
   { label: "Incubator", href: "/#incubation-hub" },
+  { label: "3D Lab", href: "/laboratory" },
   { label: "Team", href: "/team" },
   { label: "FAQ", href: "/#faq" },
   { label: "About", href: "/about" },

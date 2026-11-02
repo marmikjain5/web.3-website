@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Coins, Handshake, ArrowRight, ShieldCheck, Zap } from "lucide-react";
+import { ChevronLeft, ChevronRight, Coins, Handshake, ArrowRight, ShieldCheck, Zap, Bot, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -40,11 +40,15 @@ const SUPPORT_CARDS = [
 
 export default function IncubationSection() {
   const [startIndex, setStartIndex] = useState(0);
+  const [activeModel, setActiveModel] = useState<"coin" | "robot">("coin");
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const leftColRef = useRef<HTMLDivElement>(null);
   const centerColRef = useRef<HTMLDivElement>(null);
   const rightColRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const prevCard = () => {
     setStartIndex((prev) => (prev === 0 ? SUPPORT_CARDS.length - 2 : prev - 1));
@@ -54,6 +58,25 @@ export default function IncubationSection() {
   };
 
   const visibleCards = SUPPORT_CARDS.slice(startIndex, startIndex + 2);
+
+  // Parallax tilt on mouse hover
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+    setMousePos({ x, y });
+  };
+
+  const handleMouseLeave = () => setMousePos({ x: 0, y: 0 });
+
+  // Ensure video plays smoothly on model change
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [activeModel]);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -134,7 +157,7 @@ export default function IncubationSection() {
           </div>
         </div>
 
-        {/* 3-Column Balanced Layout: 4 cols Cards | 4 cols Center Robot Stage | 4 cols Narrative */}
+        {/* 3-Column Balanced Layout: 4 cols Cards | 4 cols Center 3D Stage | 4 cols Narrative */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           {/* Left Column: End-End Support & Carousel (4 cols) */}
@@ -216,38 +239,100 @@ export default function IncubationSection() {
             </div>
           </div>
 
-          {/* Center Column: 3D Autonomous Robot Stage */}
+          {/* Center Column: 3D Protocol Coin & Autonomous Robot Stage */}
           <div ref={centerColRef} className="lg:col-span-4 flex flex-col items-center justify-center relative py-4 lg:py-0">
-            <div className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-[4/5] rounded-2xl overflow-visible flex items-center justify-center">
-              {/* Subtle ambient radiant glow behind the robot */}
-              <div className="absolute inset-0 bg-[#E50914]/[0.08] blur-3xl rounded-full pointer-events-none" />
-              
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                className="w-full h-full object-contain pointer-events-none drop-shadow-[0_16px_36px_rgba(229,9,20,0.22)]"
-              >
-                <source
-                  src="/chaingpt-assets/LABS_robot_SAFARI_HEVC.mp4"
-                  type='video/mp4; codecs="hvc1"'
-                />
-                <source
-                  src="/chaingpt-assets/LABS_robot_CHROME_VP9.webm"
-                  type="video/webm"
-                />
-              </video>
-            </div>
             
-            <Link
-              href="/laboratory"
-              className="mt-3 inline-flex items-center gap-1.5 font-mono text-[10px] text-foreground/50 hover:text-[#E50914] tracking-widest uppercase transition-colors group cursor-pointer"
+            {/* Interactive Switcher: 3D Protocol Coin | AI Agent */}
+            <div className="flex items-center gap-1.5 p-1 rounded-xl bg-card border border-border mb-3 shadow-sm select-none z-20">
+              <button
+                onClick={() => setActiveModel("coin")}
+                className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  activeModel === "coin"
+                    ? "bg-[#E50914] text-white shadow-[0_0_12px_rgba(229,9,20,0.4)]"
+                    : "text-foreground/60 hover:text-foreground hover:bg-foreground/[0.04]"
+                }`}
+              >
+                <Coins className="w-3.5 h-3.5" />
+                <span>3D PROTOCOL COIN</span>
+              </button>
+              <button
+                onClick={() => setActiveModel("robot")}
+                className={`px-3 py-1.5 rounded-lg font-mono text-[11px] font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                  activeModel === "robot"
+                    ? "bg-[#E50914] text-white shadow-[0_0_12px_rgba(229,9,20,0.4)]"
+                    : "text-foreground/60 hover:text-foreground hover:bg-foreground/[0.04]"
+                }`}
+              >
+                <Bot className="w-3.5 h-3.5" />
+                <span>AI AGENT</span>
+              </button>
+            </div>
+
+            {/* 3D Interactive Stage with Mouse Parallax */}
+            <motion.div
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              animate={{
+                rotateY: mousePos.x * 14,
+                rotateX: -mousePos.y * 14,
+              }}
+              transition={{ type: "spring", damping: 20, stiffness: 150 }}
+              style={{ transformStyle: "preserve-3d" }}
+              className="relative w-full max-w-[280px] sm:max-w-[320px] aspect-square rounded-2xl overflow-visible flex items-center justify-center cursor-grab active:cursor-grabbing"
             >
-              <span>:: AUTONOMOUS AI AGENT // LAUNCH 3D LAB</span>
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+              {/* Subtle ambient radiant glow behind the model */}
+              <div
+                className={`absolute inset-0 blur-3xl rounded-full pointer-events-none transition-colors duration-500 ${
+                  activeModel === "coin" ? "bg-[rgb(255,122,0)]/15" : "bg-[#E50914]/15"
+                }`}
+              />
+              
+              {activeModel === "coin" ? (
+                <video
+                  ref={videoRef}
+                  key="main_coin_video"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  className="w-full h-full object-contain pointer-events-none filter drop-shadow-[0_20px_40px_rgba(255,122,0,0.45)]"
+                >
+                  <source src="/chaingpt-assets/LABS_coin_CHROME_VP9.webm" type="video/webm" />
+                  <source src="/chaingpt-assets/LABS_coin_SAFARI_HEVC.mp4" type="video/mp4" />
+                </video>
+              ) : (
+                <video
+                  ref={videoRef}
+                  key="main_robot_video"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
+                  className="w-full h-full object-contain pointer-events-none filter drop-shadow-[0_20px_40px_rgba(229,9,20,0.3)]"
+                >
+                  <source src="/chaingpt-assets/LABS_robot_CHROME_VP9.webm" type="video/webm" />
+                  <source src="/chaingpt-assets/LABS_robot_SAFARI_HEVC.mp4" type="video/mp4" />
+                </video>
+              )}
+            </motion.div>
+            
+            {/* Status Subtitle and Link */}
+            <div className="mt-2 text-center space-y-1">
+              <span className="font-mono text-[10px] text-foreground/50 uppercase tracking-wider block">
+                {activeModel === "coin"
+                  ? ":: BMSIT PROTOCOL COIN — SEAMLESS 360° ORBIT"
+                  : ":: AUTONOMOUS AI AGENT — ACTIVE TELEMETRY"}
+              </span>
+              <Link
+                href="/laboratory"
+                className="inline-flex items-center gap-1.5 font-mono text-[11px] text-foreground/70 hover:text-[#E50914] tracking-wider uppercase transition-colors group cursor-pointer"
+              >
+                <span>OPEN 3D LAB &amp; AI CO-PILOT</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform text-[#E50914]" />
+              </Link>
+            </div>
           </div>
 
           {/* Right Column: Unique Approach & Narrative (4 cols) */}
@@ -271,7 +356,7 @@ export default function IncubationSection() {
               <span className="tech-bracket-br" />
 
               <p className="font-mono text-xs sm:text-sm text-foreground/80 leading-relaxed">
-                At BMSIT&M Web.3 Club, we bridge the gap between classroom theory and decentralized production. Through peer-to-peer co-building, grant structuring, and hackathon sprints, we empower student teams to build, ship, and scale real protocols.
+                At BMSIT&amp;M Web.3 Club, we bridge the gap between classroom theory and decentralized production. Through peer-to-peer co-building, grant structuring, and hackathon sprints, we empower student teams to build, ship, and scale real protocols.
               </p>
 
               <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
