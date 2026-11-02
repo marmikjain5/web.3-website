@@ -7,7 +7,7 @@ import { motion, useSpring, useMotionValue } from "framer-motion";
 import ScrambleText from "@/components/chaingpt/ScrambleText";
 
 export default function LaboratoryPage() {
-  const [activeTab, setActiveTab] = useState<"agent" | "coin">("agent");
+  const [activeTab, setActiveTab] = useState<"agent" | "coin">("coin");
   const [messages, setMessages] = useState<Array<{ role: "system" | "agent" | "user"; text: string }>>([
     {
       role: "system",
@@ -157,8 +157,8 @@ export default function LaboratoryPage() {
                   playsInline
                   className="w-full h-full object-contain filter drop-shadow-[0_20px_40px_rgba(229,9,20,0.3)]"
                 >
-                  <source src="/chaingpt-assets/LABS_robot_SAFARI_HEVC.mp4" type='video/mp4; codecs="hvc1"' />
                   <source src="/chaingpt-assets/LABS_robot_CHROME_VP9.webm" type="video/webm" />
+                  <source src="/chaingpt-assets/LABS_robot_SAFARI_HEVC.mp4" type="video/mp4" />
                 </video>
               ) : (
                 <video
@@ -169,8 +169,8 @@ export default function LaboratoryPage() {
                   playsInline
                   className="w-full h-full object-contain filter drop-shadow-[0_20px_40px_rgba(255,122,0,0.4)]"
                 >
-                  <source src="/chaingpt-assets/LABS_coin_SAFARI_HEVC.mp4" type='video/mp4; codecs="hvc1"' />
                   <source src="/chaingpt-assets/LABS_coin_CHROME_VP9.webm" type="video/webm" />
+                  <source src="/chaingpt-assets/LABS_coin_SAFARI_HEVC.mp4" type="video/mp4" />
                 </video>
               )}
             </motion.div>
