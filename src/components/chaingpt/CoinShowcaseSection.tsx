@@ -98,7 +98,7 @@ export default function CoinShowcaseSection() {
           <ScrambleText
             text="PROTOCOL COIN"
             as="h2"
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-amiga tracking-tight text-foreground"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-amiga tracking-tight text-foreground"
           />
           <div className="flex items-center gap-2 text-xs font-mono text-foreground/60 shrink-0">
             <Sparkles className="w-3.5 h-3.5 text-[rgb(255,122,0)]" />
@@ -205,3 +205,4 @@ export default function CoinShowcaseSection() {
     </section>
   );
 }
+

@@ -136,13 +136,8 @@ export default function IncubationSection() {
           <ScrambleText
             text="STUDENT INCUBATOR"
             as="h2"
-            className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-amiga tracking-tight text-foreground"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-amiga tracking-tight text-foreground"
           />
-
-          <div className="flex items-center gap-2 text-xs font-mono text-foreground/60 shrink-0">
-            <span className="w-2 h-2 rounded-full bg-[#E50914] animate-pulse shadow-[0_0_8px_#E50914]" />
-            <span>BMSIT_INCUBATION_COHORT_2026</span>
-          </div>
         </div>
 
         {/* 3-Column Balanced Layout: 4 cols Cards | 4 cols Center Robot | 4 cols Narrative */}
