@@ -2,11 +2,10 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Coins, Handshake, ArrowRight, ShieldCheck, Zap } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, Code2, Trophy, Rocket, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import MagneticButton from "@/components/MagneticButton";
 import ScrambleText from "./ScrambleText";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -14,27 +13,27 @@ gsap.registerPlugin(ScrollTrigger);
 const SUPPORT_CARDS = [
   {
     num: "01",
-    title: "Smart Contract Architecture",
-    desc: "Gas optimization, security best practices, and Solidity/Rust peer reviews by senior student engineers.",
-    icon: ShieldCheck,
+    title: "Learn & Explore",
+    desc: "Master blockchain fundamentals, smart contract development, and decentralized architectures through student-led workshops and bootcamps.",
+    icon: BookOpen,
   },
   {
     num: "02",
-    title: "Hackathons & Grants",
-    desc: "Structuring winning proposals for Polygon Village, Solana Foundation, and Arbitrum student developer grants.",
-    icon: Coins,
+    title: "Build Projects",
+    desc: "Turn technical concepts into production dApps, open-source developer tooling, and decentralized protocols alongside senior student peers.",
+    icon: Code2,
   },
   {
     num: "03",
-    title: "Industry Masterclasses",
-    desc: "AMAs and live code-alongs with Web3 protocol engineers, dev advocates, and BMSIT alumni.",
-    icon: Handshake,
+    title: "Compete & Collaborate",
+    desc: "Form multidisciplinary builder squads, compete in leading national and global Web3 hackathons, and tackle ecosystem bounties.",
+    icon: Trophy,
   },
   {
     num: "04",
-    title: "Campus Demo Days",
-    desc: "Live exhibitions of student dApps in front of faculty, peers, and Bengaluru Web3 startup founders.",
-    icon: Zap,
+    title: "Showcase & Grow",
+    desc: "Exhibit your working code at campus demo days, connect with foundation grants, and accelerate your engineering journey.",
+    icon: Rocket,
   },
 ];
 
@@ -86,7 +85,7 @@ export default function IncubationSection() {
 
       if (leftColRef.current) {
         gsap.from(leftColRef.current, {
-          x: -30,
+          y: 30,
           opacity: 0,
           duration: 0.9,
           ease: "power3.out",
@@ -129,19 +128,19 @@ export default function IncubationSection() {
 
   return (
     <section ref={sectionRef} className="relative w-full py-20 border-b border-border lab-grid-bg overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header with Giant Typography & Scramble Animation */}
-        <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-6 mb-12 gap-4">
+        <div ref={headerRef} className="flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-6 mb-12 gap-4 overflow-visible">
           <ScrambleText
-            text="STUDENT INCUBATOR"
+            text="THE BUILDER ECOSYSTEM"
             as="h2"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-amiga tracking-tight text-foreground"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black font-amiga tracking-tight text-foreground block max-w-full break-words pl-0.5"
           />
         </div>
 
         {/* 3-Column Balanced Layout: 4 cols Cards | 4 cols Center Robot | 4 cols Narrative */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:items-center">
           
           {/* Left Column: End-End Support & Carousel (4 cols) */}
           <div ref={leftColRef} className="lg:col-span-4 space-y-6">
@@ -158,7 +157,7 @@ export default function IncubationSection() {
             </div>
 
             {/* Support Cards Grid with AnimatePresence */}
-            <div className="space-y-3.5 min-h-[260px]">
+            <div className="space-y-3.5 min-h-[290px]">
               <AnimatePresence mode="wait">
                 {visibleCards.map((card) => {
                   const IconComponent = card.icon;
@@ -170,18 +169,18 @@ export default function IncubationSection() {
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.25 }}
                       whileHover={{ y: -3, borderColor: "rgba(229,9,20,0.5)" }}
-                      className="bg-card border border-border p-5 rounded-xl relative group transition-colors shadow-sm flex flex-col justify-between"
+                      className="bg-card border border-border p-4 sm:p-5 rounded-xl relative group transition-colors shadow-sm flex flex-col justify-between min-h-[135px] w-full"
                     >
                       <span className="tech-bracket-tl" />
                       <span className="tech-bracket-tr" />
 
                       <div>
-                        <div className="flex justify-between items-center text-xs font-mono text-foreground/40 mb-2.5">
+                        <div className="flex justify-between items-center text-xs font-mono text-foreground/40 mb-2">
                           <span className="w-1.5 h-1.5 bg-[#E50914] ml-1.5" />
                           <span className="font-bold text-[#E50914] mr-2 text-sm">{card.num}</span>
                         </div>
 
-                        <div className="flex items-center gap-3 mb-2">
+                        <div className="flex items-center gap-3 mb-1.5">
                           <div className="w-9 h-9 rounded-lg bg-foreground/[0.04] border border-border flex items-center justify-center text-foreground/70 shrink-0 group-hover:text-[#E50914] group-hover:scale-105 transition-all">
                             <IconComponent className="w-4.5 h-4.5" />
                           </div>
@@ -216,7 +215,7 @@ export default function IncubationSection() {
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
-              <span className="font-mono text-xs text-foreground/40 ml-2">
+              <span className="font-mono text-xs text-foreground/50 ml-2">
                 0{startIndex + 1} - 0{Math.min(startIndex + 2, SUPPORT_CARDS.length)} / 0{SUPPORT_CARDS.length}
               </span>
             </div>
@@ -245,29 +244,29 @@ export default function IncubationSection() {
             {/* Status line */}
             <div className="mt-3 text-center space-y-1.5">
               <span className="font-mono text-[10px] text-foreground/45 uppercase tracking-wider block">
-                :: AUTONOMOUS AI AGENT — ACTIVE TELEMETRY
+                :: PROTO_AI_AGENT // ACTIVE TELEMETRY
               </span>
               <Link
-                href="/laboratory"
+                href="/proto"
                 className="inline-flex items-center gap-1.5 font-mono text-[11px] text-foreground/70 hover:text-[#E50914] tracking-wider uppercase transition-colors group cursor-pointer"
               >
-                <span>OPEN AI CO-PILOT LAB</span>
+                <span>EXPLORE WITH PROTO</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform text-[#E50914]" />
               </Link>
             </div>
           </div>
 
-          {/* Right Column: Unique Approach & Narrative (4 cols) */}
+          {/* Right Column: Philosophy (4 cols) */}
           <div ref={rightColRef} className="lg:col-span-4 space-y-6">
             <div>
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-foreground" />
                 <h3 className="font-mono text-lg md:text-xl font-bold uppercase tracking-wider text-foreground">
-                  Our Approach
+                  Our Philosophy
                 </h3>
               </div>
               <p className="font-mono text-xs text-foreground/50 mt-1">
-                From Lab Projects to Mainnet
+                Learn by Building, Ship to Mainnet
               </p>
             </div>
 
@@ -278,22 +277,18 @@ export default function IncubationSection() {
               <span className="tech-bracket-br" />
 
               <p className="font-mono text-xs sm:text-sm text-foreground/80 leading-relaxed">
-                At BMSIT&amp;M Web.3 Club, we bridge the gap between classroom theory and decentralized production. Through peer-to-peer co-building, grant structuring, and hackathon sprints, we empower student teams to build, ship, and scale real protocols.
+                At BMSIT&amp;M Web.3 Club, we believe the best way to master decentralized technologies is through hands-on building. We foster an open, collaborative environment where curious students transform into sovereign engineers, shipping production code and competing on the global stage.
               </p>
 
-              <div className="mt-6 pt-5 border-t border-border flex items-center justify-between">
-                <MagneticButton strength={0.25}>
-                  <Link
-                    href="/join"
-                    className="cyber-btn px-5 py-2.5 bg-[#E50914] hover:bg-[#e0151e] text-white font-mono font-bold text-xs uppercase tracking-wider shadow-[0_0_16px_rgba(255,30,39,0.3)] transition-all flex items-center gap-2"
-                  >
-                    <span>SUBMIT YOUR IDEA</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </MagneticButton>
-                
-                <span className="font-mono text-[10px] text-foreground/50 uppercase">
-                  COHORT 2026 OPEN
+              <div className="mt-6 pt-4 border-t border-border/70 flex items-center justify-between text-xs font-mono text-foreground/50">
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#E50914] animate-pulse" />
+                  <span className="text-[10px] uppercase tracking-wider font-bold text-foreground/70">
+                    BMSIT&amp;M BUILDER SQUADS
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-foreground/40 uppercase">
+                  CAMPUS_INITIATIVE
                 </span>
               </div>
             </div>

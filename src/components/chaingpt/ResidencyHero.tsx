@@ -117,21 +117,6 @@ export default function ResidencyHero() {
               THE PREMIER STUDENT-LED BLOCKCHAIN & WEB3 TECHNICAL CLUB AT BMS INSTITUTE OF TECHNOLOGY AND MANAGEMENT, BENGALURU. EMPOWERING STUDENTS TO BUILD, SHIP, AND SCALE DECENTRALIZED PROTOCOLS.
             </p>
 
-            {/* Proof Points */}
-            <div className="grid grid-cols-3 gap-3 pt-3 max-w-md border-t border-white/20">
-              <div>
-                <div className="font-mono font-black text-xl sm:text-2xl text-white tracking-tight drop-shadow-sm">500+</div>
-                <div className="font-mono text-[10px] text-white/80 uppercase tracking-wider">Club Builders</div>
-              </div>
-              <div>
-                <div className="font-mono font-black text-xl sm:text-2xl text-white tracking-tight drop-shadow-sm">15+</div>
-                <div className="font-mono text-[10px] text-white/80 uppercase tracking-wider">DApps & Wins</div>
-              </div>
-              <div>
-                <div className="font-mono text-xl sm:text-2xl font-black text-white tracking-tight drop-shadow-sm">10+</div>
-                <div className="font-mono text-[10px] text-white/80 uppercase tracking-wider">Bootcamps</div>
-              </div>
-            </div>
 
             {/* Chamfered Brand Action Buttons */}
             <div className="flex flex-wrap items-center gap-3.5 pt-2">
@@ -252,21 +237,6 @@ export default function ResidencyHero() {
               The premier student-led blockchain & Web3 technical club at BMS Institute of Technology and Management, Bengaluru.
             </p>
 
-            {/* Proof Points Strip */}
-            <div className="grid grid-cols-3 gap-2 py-3 border-y border-white/20 bg-black/15 rounded-xl px-2">
-              <div>
-                <div className="font-mono font-black text-lg text-white">500+</div>
-                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Builders</div>
-              </div>
-              <div className="border-x border-white/15">
-                <div className="font-mono font-black text-lg text-white">15+</div>
-                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">DApps & Wins</div>
-              </div>
-              <div>
-                <div className="font-mono font-black text-lg text-white">10+</div>
-                <div className="font-mono text-[9px] text-white/75 uppercase tracking-wider">Bootcamps</div>
-              </div>
-            </div>
 
             {/* Mobile Chamfered Action Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-1">

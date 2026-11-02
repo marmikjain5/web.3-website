@@ -1,4 +1,5 @@
-import { getSiteConfig, getTeamMembers } from "@/app/actions/admin";
+import { getTeamMembers } from "@/app/actions/admin";
+import { getPublicSubmissionPortalSettings } from "@/app/actions/submissions";
 import TeamGrid from "@/components/TeamGrid";
 import ResidencyHero from "@/components/chaingpt/ResidencyHero";
 import ChainHero from "@/components/chaingpt/ChainHero";
@@ -11,8 +12,8 @@ import UpcomingEventHome from "@/components/UpcomingEventHome";
 import DecryptoUpdates from "@/components/DecryptoUpdates";
 
 export default async function Home() {
-  const config = await getSiteConfig();
   const members = await getTeamMembers();
+  const portalSettingsResult = await getPublicSubmissionPortalSettings();
 
   return (
     <main className="min-h-screen bg-background text-foreground relative overflow-hidden lab-grid-bg">
@@ -24,7 +25,7 @@ export default async function Home() {
 
       {/* ── Supercharging Student Builders: Interactive Mechanical AI Core ── */}
       <div id="incubation-hub">
-        <ChainHero config={config} />
+        <ChainHero portalSettings={portalSettingsResult.data} />
       </div>
 
       {/* ── Protocol Coin: 3D Interactive Coin Showcase ── */}
@@ -35,7 +36,7 @@ export default async function Home() {
 
       {/* ── Student Initiatives & Ecosystem Tracks ── */}
       <div id="portfolio">
-        <PortfolioSection incubationCount={config.incubationCount} />
+        <PortfolioSection />
       </div>
 
       {/* ── Flagship Events from Supabase ── */}
@@ -53,7 +54,7 @@ export default async function Home() {
 
       {/* ── Frequently Asked Questions for Students ── */}
       <div id="faq">
-        <FaqSection faqs={config.faqs} />
+        <FaqSection />
       </div>
     </main>
   );

@@ -6,7 +6,7 @@ import { Check, ArrowRight, X } from "lucide-react";
 import { motion, useSpring } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import type { SiteConfig } from "@/app/actions/admin";
+import type { PublicSubmissionPortalSettings } from "@/lib/submissions";
 import MagneticButton from "@/components/MagneticButton";
 import CapsuleScrollAnimation from "./CapsuleScrollAnimation";
 import ScrambleText from "./ScrambleText";
@@ -14,7 +14,7 @@ import ScrambleText from "./ScrambleText";
 gsap.registerPlugin(ScrollTrigger);
 
 interface ChainHeroProps {
-  config?: SiteConfig;
+  portalSettings?: PublicSubmissionPortalSettings;
   onApplyClick?: () => void;
 }
 
@@ -25,8 +25,19 @@ const CATEGORIES = [
   { id: "l1l2", label: "L1/L2", desc: "High-Throughput Rollups & Zero-Knowledge Verification" },
 ];
 
-export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
-  const [selectedCategory, setSelectedCategory] = useState("ai");
+export default function ChainHero({ portalSettings, onApplyClick }: ChainHeroProps) {
+  const [selectedCategory, setSelectedCategory] = useState("0");
+
+  const checklistItems = [
+    portalSettings?.checklist_label_1,
+    portalSettings?.checklist_label_2,
+    portalSettings?.checklist_label_3,
+    portalSettings?.checklist_label_4,
+  ].filter(Boolean) as string[];
+
+  const activeChecklist = checklistItems.length > 0
+    ? checklistItems.map((label, idx) => ({ id: String(idx), label }))
+    : CATEGORIES;
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [showCookies, setShowCookies] = useState(false);
 
@@ -144,7 +155,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
 
               {/* 4 Category Pill Cards with Checkmarks and Corner L Brackets */}
               <div className="space-y-3.5">
-                {CATEGORIES.map((cat) => {
+                {activeChecklist.map((cat) => {
                   const isSelected = selectedCategory === cat.id;
                   return (
                     <div
@@ -192,7 +203,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
                   onClick={onApplyClick}
                   className="cyber-btn px-6 py-3.5 bg-[#E50914] hover:bg-[#e05500] text-white font-mono font-black text-xs uppercase tracking-widest shadow-[0_8px_24px_rgba(229,9,20,0.35)] transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
                 >
-                  <span>SUBMIT PROJECT / IDEA</span>
+                  <span>{portalSettings?.cta_label || "SUBMIT PROJECT PROPOSAL"}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               </MagneticButton>
@@ -227,13 +238,13 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
                 <div className="flex items-center gap-2.5">
                   <span className="w-2.5 h-2.5 bg-foreground inline-block shrink-0" />
                   <ScrambleText
-                    text="CAMPUS INCUBATOR"
+                    text={portalSettings?.join_heading || "BUILD & SHIP YOUR WEB3 PROJECT"}
                     as="h3"
                     className="text-xl sm:text-2xl font-black cyber-font tracking-tight text-foreground uppercase block"
                   />
                 </div>
-                <p className="font-mono text-xs text-foreground/50 tracking-wider pl-5">
-                  Student mentorship & grant guidance
+                <p className="font-mono text-xs text-foreground/50 tracking-wider pl-5 line-clamp-2">
+                  {portalSettings?.join_subtitle || "Official student developer portal for technical architectures & ecosystem tooling"}
                 </p>
               </div>
 
@@ -274,7 +285,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
                   </div>
 
                   <h4 className="font-mono font-bold text-xs sm:text-sm text-foreground uppercase tracking-tight group-hover:text-[#E50914] transition-colors leading-snug">
-                    Project Incubation & Mentorship
+                    {portalSettings?.card1_heading || "Technical Mentorship & Review"}
                   </h4>
                 </div>
 
@@ -305,7 +316,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
                   </div>
 
                   <h4 className="font-mono font-bold text-xs sm:text-sm text-foreground uppercase tracking-tight group-hover:text-[#E50914] transition-colors leading-snug">
-                    Grants & Hackathon Bounties
+                    {portalSettings?.card2_heading || "Ecosystem Showcases & Demo Days"}
                   </h4>
                 </div>
 

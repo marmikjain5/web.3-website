@@ -1,83 +1,65 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
+
+
 import fs, { mkdir, writeFile } from "fs/promises";
 import path from "path";
 
-const ADMIN_SECRET = process.env.ADMIN_PASSWORD || "web3labs2026";
-
-// ─────────────────────────────────────────────────────────────
+// -------------------------------------------------------------
 // Admin Auth Helpers
-// ─────────────────────────────────────────────────────────────
-
-export async function verifyAdminPassword(passcode: string): Promise<{ success: boolean; error?: string }> {
-  if (passcode.trim() === ADMIN_SECRET) {
-    const cookieStore = await cookies();
-    cookieStore.set("admin_session", ADMIN_SECRET, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
-      path: "/",
-    });
-    return { success: true };
-  }
-  return { success: false, error: "Access denied: Invalid admin key" };
-}
-
-export async function logoutAdmin(): Promise<{ success: boolean }> {
-  const cookieStore = await cookies();
-  cookieStore.delete("admin_session");
-  return { success: true };
-}
+// -------------------------------------------------------------
 
 export async function checkAdminSession(): Promise<boolean> {
   try {
-    const cookieStore = await cookies();
-    const session = cookieStore.get("admin_session")?.value;
-    if (session && session === ADMIN_SECRET) return true;
-
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (user) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
-      if (profile?.role === "admin") return true;
-    }
-  } catch (err) {
-    // ignore
-  }
-  return false;
-}
+    if (!user) return false;
 
-async function requireAdmin() {
-  const cookieStore = await cookies();
-  const session = cookieStore.get("admin_session")?.value;
-  const supabase = await createClient();
-
-  if (session && session === ADMIN_SECRET) {
-    return supabase;
-  }
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (user) {
     const { data: profile } = await supabase
       .from("profiles")
       .select("role")
       .eq("id", user.id)
       .single();
 
-    if (profile?.role === "admin") return supabase;
+    return profile?.role === "admin";
+  } catch {
+    return false;
+  }
+}
+
+async function requireAdmin() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Not authenticated");
   }
 
-  throw new Error("Not authorized: admin session or role required");
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (profile?.role !== "admin") {
+    throw new Error("Not authorized: admin role required");
+  }
+
+  return supabase;
 }
+
+export async function logoutAdmin(): Promise<{ success: boolean }> {
+  try {
+    const supabase = await createClient();
+    await supabase.auth.signOut();
+    return { success: true };
+  } catch {
+    return { success: true };
+  }
+}
+
 
 // ─────────────────────────────────────────────────────────────
 // EVENTS
@@ -496,83 +478,3 @@ export async function deleteTeamMember(
     return { success: false, error: err.message };
   }
 }
-
-// ─────────────────────────────────────────────────────────────
-// SITE CONFIGURATION & CONTENT CUSTOMIZATION
-// ─────────────────────────────────────────────────────────────
-
-export type SiteConfig = {
-  heroTagline: string;
-  heroHeadline: string;
-  heroDescription: string;
-  incubationCount: number;
-  totalFundsRaised: string;
-  partnerCount: number;
-  announcements: string[];
-  faqs: { question: string; answer: string; category?: string }[];
-};
-
-const DEFAULT_CONFIG: SiteConfig = {
-  heroTagline: "BACKING TOMORROW",
-  heroHeadline: "ROW BACKING",
-  heroDescription: "Backing the very best web3 builders — transforming visionary ideas into real-world growth.",
-  incubationCount: 14,
-  totalFundsRaised: "$100M+",
-  partnerCount: 50,
-  announcements: [
-    "ChainGPT Labs Incubation Batch #3 Applications Open",
-    "Over $100M+ Raised Across Portfolio Projects",
-    "Join our Global Mentorship & Grant Program",
-    "Decrypto Hackathon 2026 Registration Live"
-  ],
-  faqs: [
-    {
-      question: "What is ChainGPT / Web3 Labs Incubation?",
-      answer: "We are an end-to-end Web3 incubator and venture studio backing early-stage visionary founders across AI, DeFi, DePIN, and Layer 1/2 infrastructure with capital, engineering, marketing, and institutional exchange listings.",
-      category: "Incubation"
-    },
-    {
-      question: "How do teams get selected for incubation?",
-      answer: "Our investment committee reviews applications on a rolling basis. We evaluate team technical capability, product-market fit, tokenomics design, and long-term ecosystem alignment.",
-      category: "Selection"
-    },
-    {
-      question: "What support does Web3 Labs provide beyond funding?",
-      answer: "We provide hands-on tokenomics design, smart contract security audits, go-to-market advisory, top-tier exchange listings, and direct access to Tier 1 VC partners.",
-      category: "Support"
-    },
-    {
-      question: "Can student projects or hackathon winners apply?",
-      answer: "Absolutely! Many of our most successful incubations started at university hackathons. We provide customized fast-track grants for standout builder teams.",
-      category: "Eligibility"
-    }
-  ]
-};
-
-const CONFIG_FILE_PATH = path.join(process.cwd(), "src", "data", "siteConfig.json");
-
-export async function getSiteConfig(): Promise<SiteConfig> {
-  try {
-    const raw = await fs.readFile(CONFIG_FILE_PATH, "utf-8");
-    return { ...DEFAULT_CONFIG, ...JSON.parse(raw) };
-  } catch {
-    return DEFAULT_CONFIG;
-  }
-}
-
-export async function updateSiteConfig(newConfig: Partial<SiteConfig>): Promise<{ success: boolean; error?: string }> {
-  try {
-    await requireAdmin();
-    const current = await getSiteConfig();
-    const merged = { ...current, ...newConfig };
-    
-    // Ensure dir exists
-    const dir = path.dirname(CONFIG_FILE_PATH);
-    await fs.mkdir(dir, { recursive: true });
-    await fs.writeFile(CONFIG_FILE_PATH, JSON.stringify(merged, null, 2), "utf-8");
-    return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err.message };
-  }
-}
-

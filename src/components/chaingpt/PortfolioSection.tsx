@@ -12,7 +12,7 @@ import ScrambleText from "./ScrambleText";
 gsap.registerPlugin(ScrollTrigger);
 
 interface PortfolioSectionProps {
-  incubationCount?: number;
+  projectCount?: number;
 }
 
 const PROJECTS = [
@@ -78,7 +78,7 @@ const PROJECTS = [
   },
 ];
 
-export default function PortfolioSection({ incubationCount = 14 }: PortfolioSectionProps) {
+export default function PortfolioSection({ projectCount = PROJECTS.length }: PortfolioSectionProps = {}) {
   const [page, setPage] = useState(0);
   const pageSize = 3;
   const maxPage = Math.ceil(PROJECTS.length / pageSize) - 1;
@@ -136,7 +136,7 @@ export default function PortfolioSection({ incubationCount = 14 }: PortfolioSect
             <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 bg-foreground" />
               <span className="font-mono text-xs md:text-sm font-bold uppercase tracking-widest text-foreground/70">
-                Our Incubations
+                Our Projects
               </span>
             </div>
             <ScrambleText
@@ -159,7 +159,7 @@ export default function PortfolioSection({ incubationCount = 14 }: PortfolioSect
                   All Projects
                 </span>
                 <span className="font-mono text-4xl md:text-5xl font-black text-foreground">
-                  {incubationCount}
+                  {projectCount}
                 </span>
               </div>
 

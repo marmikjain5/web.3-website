@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowRight, Gem, Trophy, Vote, Sparkles } from "lucide-react";
+import { ArrowRight, Blocks, Trophy, BrainCircuit, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,19 +12,19 @@ gsap.registerPlugin(ScrollTrigger);
 
 const COIN_FEATURES = [
   {
-    icon: Gem,
-    title: "Builder Reputation",
-    desc: "On-chain proof of your Web3 contributions, skills, and project milestones.",
+    icon: Blocks,
+    title: "01 — WEB3 & BLOCKCHAIN",
+    desc: "Explore blockchain fundamentals, smart contracts, decentralized applications and the technologies shaping Web3.",
   },
   {
     icon: Trophy,
-    title: "Hackathon Bounties",
-    desc: "Earn protocol coins by winning hackathons, completing bounties, and shipping dApps.",
+    title: "02 — PROJECTS & HACKATHONS",
+    desc: "Discover student projects, collaborative building opportunities, technical competitions and upcoming hackathons.",
   },
   {
-    icon: Vote,
-    title: "DAO Governance",
-    desc: "Vote on club proposals, treasury allocation, and curriculum direction.",
+    icon: BrainCircuit,
+    title: "03 — AI & EMERGING TECHNOLOGY",
+    desc: "Explore artificial intelligence, developer tools, new technologies and innovative ideas through our community.",
   },
 ];
 
@@ -96,13 +96,13 @@ export default function CoinShowcaseSection() {
         {/* Section Header */}
         <div className="coin-title-anim flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-6 mb-14 gap-4">
           <ScrambleText
-            text="PROTOCOL COIN"
+            text="WEB.3 COMMUNITY"
             as="h2"
             className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-amiga tracking-tight text-foreground"
           />
           <div className="flex items-center gap-2 text-xs font-mono text-foreground/60 shrink-0">
             <Sparkles className="w-3.5 h-3.5 text-[rgb(255,122,0)]" />
-            <span>BMSIT_BUILDER_TOKEN</span>
+            <span>BUILDING THE FUTURE TOGETHER</span>
           </div>
         </div>
 
@@ -154,13 +154,14 @@ export default function CoinShowcaseSection() {
           <div className="coin-right-anim space-y-8">
             <div>
               <h3 className="font-mono text-xl md:text-2xl font-bold uppercase tracking-wider text-foreground mb-3">
-                Builder Reputation Token
+                EXPLORE. BUILD. INNOVATE.
               </h3>
               <p className="font-mono text-sm text-foreground/70 leading-relaxed max-w-lg">
-                The BMSIT Protocol Coin is your on-chain identity within the
-                Web.3 ecosystem. Earn it through hackathons, bounties, and
-                peer-reviewed contributions. Use it to vote on proposals, unlock
-                advanced resources, and prove your builder credentials.
+                Welcome to BMSIT&M WEB.3 Club — a community of curious minds,
+                developers and innovators exploring the future of technology. From
+                blockchain and Web3 to artificial intelligence and emerging
+                innovations, we learn together, build projects, participate in
+                hackathons and turn ideas into reality.
               </p>
             </div>
 
@@ -192,17 +193,22 @@ export default function CoinShowcaseSection() {
             </div>
 
             {/* CTA */}
-            <Link
-              href="/laboratory"
-              className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-foreground/70 hover:text-[rgb(255,122,0)] transition-colors group"
-            >
-              <span>EXPLORE IN 3D LAB</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[rgb(255,122,0)]" />
-            </Link>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
+              <Link
+                href="/proto"
+                className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-foreground/70 hover:text-[rgb(255,122,0)] transition-colors group cursor-pointer"
+              >
+                <span>KNOW MORE WITH PROTO</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[rgb(255,122,0)]" />
+              </Link>
+              <div className="inline-flex items-center gap-1.5 text-[10px] font-mono text-foreground/50 tracking-wider uppercase">
+                <span className="w-1.5 h-1.5 rounded-full bg-[rgb(255,122,0)] animate-pulse" />
+                <span>AI COMPANION // IN DEVELOPMENT</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
   );
 }
-
