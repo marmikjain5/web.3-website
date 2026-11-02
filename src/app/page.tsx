@@ -3,6 +3,7 @@ import TeamGrid from "@/components/TeamGrid";
 import ResidencyHero from "@/components/chaingpt/ResidencyHero";
 import ChainHero from "@/components/chaingpt/ChainHero";
 import IncubationSection from "@/components/chaingpt/IncubationSection";
+import CoinShowcaseSection from "@/components/chaingpt/CoinShowcaseSection";
 import PortfolioSection from "@/components/chaingpt/PortfolioSection";
 import FaqSection from "@/components/chaingpt/FaqSection";
 import CyberSidebar from "@/components/chaingpt/CyberSidebar";
@@ -26,7 +27,10 @@ export default async function Home() {
         <ChainHero config={config} />
       </div>
 
-      {/* ── Student Incubation: 3D Robot & 4-Stage Acceleration Roadmap ── */}
+      {/* ── Protocol Coin: 3D Interactive Coin Showcase ── */}
+      <CoinShowcaseSection />
+
+      {/* ── Student Incubation: AI Robot & 4-Stage Acceleration Roadmap ── */}
       <IncubationSection />
 
       {/* ── Student Initiatives & Ecosystem Tracks ── */}
