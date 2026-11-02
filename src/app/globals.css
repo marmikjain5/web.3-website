@@ -102,23 +102,25 @@ body {
 /* ── Technical Corner Bracket Markers ── */
 .tech-bracket-tl {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  width: 7px;
-  height: 7px;
-  border-top: 2px solid currentColor;
-  border-left: 2px solid currentColor;
-  opacity: 0.6;
+  top: 6px;
+  left: 6px;
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+  opacity: 0.35;
+  pointer-events: none;
 }
 .tech-bracket-tr {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 7px;
-  height: 7px;
-  border-top: 2px solid currentColor;
-  border-right: 2px solid currentColor;
-  opacity: 0.6;
+  top: 6px;
+  right: 6px;
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  opacity: 0.35;
+  pointer-events: none;
 }
 .tech-bracket-bl {
   position: absolute;

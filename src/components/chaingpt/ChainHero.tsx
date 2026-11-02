@@ -28,7 +28,23 @@ const CATEGORIES = [
 export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
   const [selectedCategory, setSelectedCategory] = useState("ai");
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [showCookies, setShowCookies] = useState(true);
+  const [showCookies, setShowCookies] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const consent = localStorage.getItem("chaingpt_cookie_consent");
+      if (consent === "accepted") {
+        setShowCookies(false);
+      }
+    }
+  }, []);
+
+  const handleDismissCookies = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("chaingpt_cookie_consent", "accepted");
+    }
+    setShowCookies(false);
+  };
 
   const heroRef = useRef<HTMLElement>(null);
   const leftColRef = useRef<HTMLDivElement>(null);
@@ -308,7 +324,7 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
       {showCookies && (
         <div className="fixed bottom-4 right-4 z-50 max-w-sm bg-[#1A1A1A] text-white p-5 rounded-xl border border-white/10 shadow-2xl font-mono text-xs animate-in fade-in slide-in-from-bottom-4 duration-300">
           <button
-            onClick={() => setShowCookies(false)}
+            onClick={handleDismissCookies}
             className="absolute top-2.5 right-2.5 text-white/40 hover:text-white transition-colors"
             aria-label="Close notice"
           >
@@ -319,13 +335,13 @@ export default function ChainHero({ config, onApplyClick }: ChainHeroProps) {
           </p>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setShowCookies(false)}
+              onClick={handleDismissCookies}
               className="flex-1 py-2 px-3 bg-white text-black font-bold rounded-lg text-center hover:bg-white/90 transition-colors cursor-pointer text-[10px] uppercase tracking-wider"
             >
               ACCEPT
             </button>
             <button
-              onClick={() => setShowCookies(false)}
+              onClick={handleDismissCookies}
               className="flex-1 py-2 px-3 bg-transparent border border-white/20 text-white font-bold rounded-lg text-center hover:bg-white/10 transition-colors cursor-pointer text-[10px] uppercase tracking-wider"
             >
               REJECT
