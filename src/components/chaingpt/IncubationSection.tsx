@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ScrambleText from "./ScrambleText";
+import Robot3DCanvas from "./Robot3DCanvas";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -45,7 +46,6 @@ export default function IncubationSection() {
   const leftColRef = useRef<HTMLDivElement>(null);
   const centerColRef = useRef<HTMLDivElement>(null);
   const rightColRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   const prevCard = () => {
     setStartIndex((prev) => (prev === 0 ? SUPPORT_CARDS.length - 2 : prev - 1));
@@ -56,14 +56,7 @@ export default function IncubationSection() {
 
   const visibleCards = SUPPORT_CARDS.slice(startIndex, startIndex + 2);
 
-  // Ensure video plays
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.defaultMuted = true;
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(() => {});
-    }
-  }, []);
+
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -139,11 +132,37 @@ export default function IncubationSection() {
           />
         </div>
 
-        {/* 3-Column Balanced Layout: 4 cols Cards | 4 cols Center Robot | 4 cols Narrative */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:items-center">
+        {/* Interactive Cards Area with 3D Robot & Constellation Stage */}
+        <div className="relative w-full">
+          {/* Full-width 3D Robot Stage & Soft Halo centered behind cards */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-7xl h-[580px] sm:h-[650px] lg:h-[720px] pointer-events-none flex items-center justify-center z-0 overflow-visible">
+            {/* Soft, light ambient halo positioned directly behind the robot */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 flex items-center justify-center">
+              <div
+                className="w-[360px] sm:w-[440px] h-[360px] sm:h-[440px] rounded-full pointer-events-none"
+                style={{
+                  background: "radial-gradient(circle, rgba(229, 9, 20, 0.28) 0%, rgba(229, 9, 20, 0.12) 45%, rgba(229, 9, 20, 0) 70%)",
+                  filter: "blur(40px)",
+                }}
+              />
+              <div
+                className="absolute w-[200px] sm:w-[260px] h-[200px] sm:h-[260px] rounded-full pointer-events-none"
+                style={{
+                  background: "radial-gradient(circle, rgba(229, 9, 20, 0.38) 0%, rgba(229, 9, 20, 0.16) 50%, rgba(229, 9, 20, 0) 75%)",
+                  filter: "blur(25px)",
+                }}
+              />
+            </div>
+
+            {/* Real 3D Robot Model & Constellation spanning the section */}
+            <Robot3DCanvas className="w-full h-full pointer-events-auto" />
+          </div>
+
+          {/* 3-Column Balanced Layout: Cards sit in front of the constellation */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start lg:items-center relative z-10 pointer-events-none">
           
           {/* Left Column: End-End Support & Carousel (4 cols) */}
-          <div ref={leftColRef} className="lg:col-span-4 space-y-6">
+          <div ref={leftColRef} className="lg:col-span-4 space-y-6 pointer-events-auto">
             <div>
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-foreground" />
@@ -221,28 +240,12 @@ export default function IncubationSection() {
             </div>
           </div>
 
-          {/* Center Column: AI Robot (NO toggle — dedicated robot display) */}
-          <div ref={centerColRef} className="lg:col-span-4 flex flex-col items-center justify-center relative py-4 lg:py-0">
-            <div className="relative w-full max-w-[300px] sm:max-w-[340px] aspect-square rounded-2xl overflow-visible flex items-center justify-center">
-              {/* Subtle red ambient glow */}
-              <div className="absolute inset-8 blur-3xl rounded-full bg-[#E50914]/15 pointer-events-none" />
-
-              <video
-                ref={videoRef}
-                autoPlay
-                loop
-                muted
-                playsInline
-                preload="auto"
-                className="w-full h-full object-contain pointer-events-none filter drop-shadow-[0_20px_40px_rgba(229,9,20,0.3)]"
-              >
-                <source src="/chaingpt-assets/LABS_robot_CHROME_VP9.webm" type="video/webm" />
-                <source src="/chaingpt-assets/LABS_robot_SAFARI_HEVC.mp4" type="video/mp4" />
-              </video>
-            </div>
+          {/* Center Column: AI Robot (center spacer & status telemetry) */}
+          <div ref={centerColRef} className="lg:col-span-4 flex flex-col items-center justify-center relative py-4 lg:py-0 pointer-events-none">
+            <div className="relative w-full max-w-[300px] sm:max-w-[340px] aspect-square rounded-2xl overflow-visible flex items-center justify-center" />
 
             {/* Status line */}
-            <div className="mt-3 text-center space-y-1.5">
+            <div className="mt-3 text-center space-y-1.5 pointer-events-auto">
               <span className="font-mono text-[10px] text-foreground/45 uppercase tracking-wider block">
                 :: PROTO_AI_AGENT // ACTIVE TELEMETRY
               </span>
@@ -257,7 +260,7 @@ export default function IncubationSection() {
           </div>
 
           {/* Right Column: Philosophy (4 cols) */}
-          <div ref={rightColRef} className="lg:col-span-4 space-y-6">
+          <div ref={rightColRef} className="lg:col-span-4 space-y-6 pointer-events-auto">
             <div>
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-foreground" />
@@ -294,6 +297,7 @@ export default function IncubationSection() {
             </div>
           </div>
 
+          </div>
         </div>
 
       </div>
