@@ -64,26 +64,42 @@ export default function Navbar() {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll);
 
+    let isMounted = true;
+
+    const updateUserState = (currentUser: User | null) => {
+      if (!isMounted) return;
+      setUser(currentUser);
+      // Defer secondary database role query to next event loop tick to prevent deadlocks
+      setTimeout(() => {
+        if (isMounted) {
+          checkUserRole(currentUser);
+        }
+      }, 0);
+    };
+
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      await checkUserRole(user);
+      try {
+        const { data, error } = await supabase.auth.getUser();
+        if (!error && data?.user && isMounted) {
+          updateUserState(data.user);
+        }
+      } catch {
+        // Silently catch in case of race condition or network interruption
+      }
     };
     getUser();
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
-      async (_: AuthChangeEvent, session: Session | null) => {
+      (_: AuthChangeEvent, session: Session | null) => {
         const currentUser = session?.user ?? null;
-        setUser(currentUser);
-        await checkUserRole(currentUser);
+        updateUserState(currentUser);
       }
     );
 
     return () => {
+      isMounted = false;
       window.removeEventListener("scroll", onScroll);
       subscription.unsubscribe();
     };
@@ -94,7 +110,6 @@ export default function Navbar() {
     else if (pathname.startsWith("/about")) setWithActive("About");
     else if (pathname.startsWith("/team")) setWithActive("Team");
     else if (pathname.startsWith("/events")) setWithActive("Events");
-    else if (pathname.startsWith("/laboratory")) setWithActive("Resources");
     else if (pathname.startsWith("/contact")) setWithActive("Contact");
     else if (pathname.startsWith("/admin")) setWithActive("Admin Portal");
   }, [pathname]);

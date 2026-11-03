@@ -1,19 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { HackathonEvent, EventMeta } from "@/data/events";
 import SpotlightCard from "../ui/SpotlightCard";
 import DecryptedText from "../ui/DecryptedText";
 import AnimatedCounter from "../ui/AnimatedCounter";
 import Magnet from "../ui/Magnet";
-import { Maximize2, X, ChevronDown } from "lucide-react";
+import { Maximize2, X, ChevronDown, ArrowRight } from "lucide-react";
 import { createPortal } from "react-dom";
 
 export type { HackathonEvent };
 
 type Props = {
-  event: HackathonEvent;
-  onRegister: (e: EventMeta) => void;
+  event: HackathonEvent & { slug?: string };
+  onRegister?: (e: EventMeta) => void;
   isPast?: boolean;
 };
 
@@ -43,7 +44,7 @@ const CHAIN_DOT: Record<string, string> = {
   Arbitrum: "bg-sky-500",
 };
 
-export default function HackathonCard({ event, onRegister, isPast }: Props) {
+export default function HackathonCard({ event, isPast }: Props) {
   const [expanded, setExpanded] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
@@ -54,6 +55,8 @@ export default function HackathonCard({ event, onRegister, isPast }: Props) {
   const chainDot = event.chain
     ? CHAIN_DOT[event.chain] ?? "bg-[#FF5500]"
     : null;
+
+  const eventSlug = event.slug || event.id;
 
   return (
     <SpotlightCard
@@ -228,14 +231,16 @@ export default function HackathonCard({ event, onRegister, isPast }: Props) {
             )}
 
             {/* Prize — AnimatedCounter */}
-            <div>
-              <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-foreground/40 mb-2">
-                PRIZE POOL &amp; GRANTS
-              </p>
-              <span className="inline-flex items-center gap-2 font-mono text-base font-bold px-3.5 py-1.5 rounded-lg border border-[#FF5500]/30 bg-[#FF5500]/10 text-[#FF5500]">
-                <AnimatedCounter text={event.prize} />
-              </span>
-            </div>
+            {event.prize && (
+              <div>
+                <p className="font-mono text-[10px] font-bold uppercase tracking-widest text-foreground/40 mb-2">
+                  PRIZE POOL &amp; GRANTS
+                </p>
+                <span className="inline-flex items-center gap-2 font-mono text-base font-bold px-3.5 py-1.5 rounded-lg border border-[#FF5500]/30 bg-[#FF5500]/10 text-[#FF5500]">
+                  <AnimatedCounter text={event.prize} />
+                </span>
+              </div>
+            )}
 
             {/* Sponsors */}
             {event.sponsors && event.sponsors.length > 0 && (
@@ -259,7 +264,7 @@ export default function HackathonCard({ event, onRegister, isPast }: Props) {
         </div>
       </div>
 
-      {/* ── Footer ───────────────────────────────────────────── */}
+      {/* ── Footer with VIEW DETAILS → ──────────────────────── */}
       <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-t border-border bg-foreground/[0.01] gap-4">
         <span className="font-mono text-xs text-foreground/50 truncate">
           {event.chain ? `${event.chain} · ` : ""}
@@ -267,26 +272,22 @@ export default function HackathonCard({ event, onRegister, isPast }: Props) {
         </span>
 
         {isPast ? (
-          <span className="font-mono text-xs text-foreground/40 px-3 py-1 bg-foreground/[0.04] rounded-md">
-            TRACK CONCLUDED
-          </span>
+          <Link
+            href={`/events/${eventSlug}`}
+            className="px-4 py-2 border border-border bg-foreground/[0.04] hover:border-[#FF5500]/50 hover:text-[#FF5500] text-foreground/70 font-mono text-xs font-bold uppercase rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5"
+          >
+            <span>VIEW RECAP</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         ) : (
           <Magnet>
-            <button
-              disabled={event.status === "closed"}
-              onClick={(e) => {
-                e.stopPropagation();
-                onRegister({
-                  id: event.id,
-                  title: event.title,
-                  teamMin: event.teamMin,
-                  teamMax: event.teamMax,
-                });
-              }}
-              className="cyber-btn px-5 py-2 bg-[#FF5500] hover:bg-[#FF6611] text-white font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_12px_rgba(255,85,0,0.35)] transition-all disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+            <Link
+              href={`/events/${eventSlug}`}
+              className="cyber-btn px-5 py-2.5 bg-[#FF5500] hover:bg-[#FF6611] text-white font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_12px_rgba(255,85,0,0.35)] transition-all cursor-pointer inline-flex items-center gap-1.5"
             >
-              REGISTER →
-            </button>
+              <span>VIEW DETAILS</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </Magnet>
         )}
       </div>

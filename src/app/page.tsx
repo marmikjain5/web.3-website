@@ -1,5 +1,6 @@
 import { getTeamMembers } from "@/app/actions/admin";
 import { getPublicSubmissionPortalSettings } from "@/app/actions/submissions";
+import { getPublicProjects, getProjectsPageSettings } from "@/app/actions/projects";
 import TeamGrid from "@/components/TeamGrid";
 import ResidencyHero from "@/components/chaingpt/ResidencyHero";
 import ChainHero from "@/components/chaingpt/ChainHero";
@@ -9,11 +10,14 @@ import PortfolioSection from "@/components/chaingpt/PortfolioSection";
 import FaqSection from "@/components/chaingpt/FaqSection";
 import CyberSidebar from "@/components/chaingpt/CyberSidebar";
 import UpcomingEventHome from "@/components/UpcomingEventHome";
-import DecryptoUpdates from "@/components/DecryptoUpdates";
 
 export default async function Home() {
   const members = await getTeamMembers();
   const portalSettingsResult = await getPublicSubmissionPortalSettings();
+  const [projectsResult, settingsResult] = await Promise.all([
+    getPublicProjects(),
+    getProjectsPageSettings(),
+  ]);
 
   return (
     <main className="min-h-screen bg-background text-foreground relative overflow-hidden lab-grid-bg">
@@ -24,7 +28,7 @@ export default async function Home() {
       <ResidencyHero />
 
       {/* ── Supercharging Student Builders: Interactive Mechanical AI Core ── */}
-      <div id="incubation-hub">
+      <div id="incubation-hub" className="scroll-mt-28">
         <ChainHero portalSettings={portalSettingsResult.data} />
       </div>
 
@@ -36,16 +40,16 @@ export default async function Home() {
 
       {/* ── Student Initiatives & Ecosystem Tracks ── */}
       <div id="portfolio">
-        <PortfolioSection />
+        <PortfolioSection
+          initialProjects={projectsResult.data}
+          settings={settingsResult.data}
+        />
       </div>
 
       {/* ── Flagship Events from Supabase ── */}
       <div id="events">
         <UpcomingEventHome />
       </div>
-
-      {/* ── Decrypto Curriculum & Hackathon Hub ── */}
-      <DecryptoUpdates />
 
       {/* ── Core Team / Contributors Section ── */}
       <div id="team">

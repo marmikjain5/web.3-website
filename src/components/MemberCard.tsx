@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Plus, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -59,8 +60,13 @@ export default function MemberCard({
   socials = {},
 }: MemberCardProps) {
   const [showBio, setShowBio] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Close modal on Escape key
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Close modal on Escape key and handle scroll lock
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") setShowBio(false);
@@ -170,102 +176,141 @@ export default function MemberCard({
         </div>
       </motion.div>
 
-      {/* Bio Modal / Dossier with AnimatePresence */}
-      <AnimatePresence>
-        {showBio && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
-            onClick={() => setShowBio(false)}
-          >
-            <motion.div 
-              initial={{ scale: 0.95, y: 15 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 15 }}
-              transition={{ duration: 0.2 }}
-              className="relative w-full max-w-lg bg-card border border-border p-6 md:p-8 rounded-2xl shadow-2xl overflow-hidden font-mono"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <span className="tech-bracket-tl text-[#E50914]" />
-              <span className="tech-bracket-tr text-[#E50914]" />
-              <span className="tech-bracket-bl text-[#E50914]" />
-              <span className="tech-bracket-br text-[#E50914]" />
-
-              <button
+      {/* Bio Modal / Dossier Portaled to body to escape parent transform stacking contexts */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {showBio && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 z-[100000] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md"
                 onClick={() => setShowBio(false)}
-                className="absolute top-4 right-4 p-2 text-foreground/40 hover:text-foreground hover:bg-foreground/[0.05] rounded-lg transition-colors cursor-pointer"
-                aria-label="Close dossier"
               >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 rounded-xl overflow-hidden border border-border shrink-0">
-                  <img
-                    src={image || defaultAvatar}
-                    alt={name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-xl font-bold text-foreground truncate">{name}</h3>
-                  <span className="text-xs uppercase text-[#E50914] font-bold tracking-wider block mt-0.5 truncate">
-                    {role}
-                  </span>
-                </div>
-              </div>
-
-              <div className="border-t border-border pt-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-[10px] font-bold text-foreground/40 uppercase tracking-widest">
-                    EXECUTIVE_DOSSIER
-                  </h4>
-                  <div className="flex items-center gap-2 text-foreground/50">
-                    {socials?.twitter && (
-                      <a href={socials.twitter} target="_blank" rel="noreferrer" className="hover:text-[#E50914]">
-                        <TwitterIcon className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                    {socials?.linkedin && (
-                      <a href={socials.linkedin} target="_blank" rel="noreferrer" className="hover:text-[#E50914]">
-                        <LinkedinIcon className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                    {socials?.github && (
-                      <a href={socials.github} target="_blank" rel="noreferrer" className="hover:text-[#E50914]">
-                        <GithubIcon className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                    {socials?.instagram && (
-                      <a href={socials.instagram} target="_blank" rel="noreferrer" className="hover:text-[#E50914]">
-                        <InstagramIcon className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                  </div>
-                </div>
-                <p className="text-sm text-foreground/80 leading-relaxed max-h-60 overflow-y-auto pr-1">
-                  {description || "Core member of Web3 Labs driving incubator acceleration, tokenomics strategy, and partner integrations across the global decentralized ecosystem."}
-                </p>
-              </div>
-
-              <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-xs text-foreground/60">
-                <span className="flex items-center gap-1.5 font-bold">
-                  <span className="w-2 h-2 rounded-full bg-[#E50914] animate-pulse" />
-                  STATUS: ACTIVE_OPERATOR
-                </span>
-                <button
-                  onClick={() => setShowBio(false)}
-                  className="px-4 py-1.5 rounded-lg bg-foreground/[0.06] hover:bg-[#E50914] hover:text-white transition-colors cursor-pointer font-bold"
+                <motion.div
+                  initial={{ scale: 0.95, y: 15 }}
+                  animate={{ scale: 1, y: 0 }}
+                  exit={{ scale: 0.95, y: 15 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative w-full max-w-lg bg-[#0c0d0e] border border-white/15 p-6 md:p-8 rounded-2xl shadow-[0_0_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono select-text"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  Close
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
+                  <span className="tech-bracket-tl text-[#E50914]" />
+                  <span className="tech-bracket-tr text-[#E50914]" />
+                  <span className="tech-bracket-bl text-[#E50914]" />
+                  <span className="tech-bracket-br text-[#E50914]" />
+
+                  <button
+                    onClick={() => setShowBio(false)}
+                    className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white bg-white/5 hover:bg-[#E50914] rounded-lg border border-white/10 transition-colors cursor-pointer"
+                    aria-label="Close dossier"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-white/20 bg-black/50 shrink-0">
+                      <img
+                        src={image || defaultAvatar}
+                        alt={name}
+                        className="w-full h-full object-cover object-top"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#E50914] animate-pulse" />
+                        <span className="text-[10px] font-mono font-bold tracking-widest text-[#E50914] uppercase">
+                          // EXECUTIVE DOSSIER
+                        </span>
+                      </div>
+                      <h3 className="text-xl sm:text-2xl font-bold font-mono text-white truncate tracking-tight">
+                        {name}
+                      </h3>
+                      <span className="text-xs uppercase text-zinc-400 font-mono font-semibold tracking-wider block mt-0.5 truncate">
+                        {role}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-white/10 pt-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest font-mono">
+                        TRANSMISSION_DETAILS
+                      </span>
+                      <div className="flex items-center gap-2">
+                        {socials?.twitter && (
+                          <a
+                            href={socials.twitter}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-zinc-400 hover:text-[#E50914] hover:bg-white/10 p-1.5 rounded transition-colors"
+                            title="Twitter / X"
+                          >
+                            <TwitterIcon className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        {socials?.linkedin && (
+                          <a
+                            href={socials.linkedin}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-zinc-400 hover:text-[#E50914] hover:bg-white/10 p-1.5 rounded transition-colors"
+                            title="LinkedIn"
+                          >
+                            <LinkedinIcon className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        {socials?.github && (
+                          <a
+                            href={socials.github}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-zinc-400 hover:text-[#E50914] hover:bg-white/10 p-1.5 rounded transition-colors"
+                            title="GitHub"
+                          >
+                            <GithubIcon className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        {socials?.instagram && (
+                          <a
+                            href={socials.instagram}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-zinc-400 hover:text-[#E50914] hover:bg-white/10 p-1.5 rounded transition-colors"
+                            title="Instagram"
+                          >
+                            <InstagramIcon className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                    <div className="max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                      <p className="text-sm text-zinc-200 leading-relaxed font-sans whitespace-pre-line">
+                        {description ||
+                          "Core member of Web3 Labs driving incubator acceleration, tokenomics strategy, and partner integrations across the global decentralized ecosystem."}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-zinc-400">
+                    <span className="flex items-center gap-2 font-bold text-emerald-400">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      STATUS: ACTIVE_OPERATOR
+                    </span>
+                    <button
+                      onClick={() => setShowBio(false)}
+                      className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-[#E50914] text-white transition-colors cursor-pointer font-bold border border-white/10"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 }
