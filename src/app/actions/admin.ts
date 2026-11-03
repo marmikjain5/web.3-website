@@ -69,6 +69,7 @@ export type EventRow = {
   id: string;
   title: string;
   subtitle: string;
+  slug?: string;
   date: string;
   start_date: string;
   location: string;
@@ -77,10 +78,18 @@ export type EventRow = {
   team_min: number;
   team_max: number;
   description: string;
+  short_description?: string;
+  detailed_description?: string;
   chain: string | null;
   sponsors: string[];
   status: "open" | "soon" | "closed";
+  publication_status?: "published" | "draft";
+  event_classification?: "upcoming" | "archived";
+  event_category?: string;
   image_url: string | null;
+  banner_url?: string | null;
+  is_featured?: boolean;
+  sort_order?: number;
   created_at: string;
   updated_at: string;
 };

@@ -12,7 +12,14 @@ export function createClient() {
 
   const client = createBrowserClient(
     url || 'https://placeholder.supabase.co',
-    key || 'dummy-key'
+    key || 'dummy-key',
+    {
+      auth: {
+        lock: async (_name, _acquireTimeout, fn) => {
+          return await fn();
+        },
+      },
+    }
   )
 
   if (typeof window !== 'undefined') {

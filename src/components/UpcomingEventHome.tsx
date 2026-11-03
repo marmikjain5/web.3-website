@@ -3,15 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getPublicEvents, type EventRow } from "@/app/actions/admin";
-import RegistrationTerminal from "./RegistrationTerminal";
 import { ArrowRight, Loader2 } from "lucide-react";
 import CardSwap, { Card } from "./CardSwap";
-import { useTheme } from "next-themes";
 
 export default function UpcomingEventHome() {
-  const [showTerminal, setShowTerminal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<string>("");
-
   const [events, setEvents] = useState<EventRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -21,12 +16,6 @@ export default function UpcomingEventHome() {
       setIsLoading(false);
     });
   }, []);
-  const { resolvedTheme } = useTheme();
-
-  const handleRegister = (eventName: string) => {
-    setSelectedEvent(eventName);
-    setShowTerminal(true);
-  };
 
   return (
     <section
@@ -110,12 +99,13 @@ export default function UpcomingEventHome() {
 
                         <div className="flex flex-col gap-3 mt-6">
                           {event.status === "open" ? (
-                            <button
-                              onClick={() => handleRegister(event.title)}
+                            <Link
+                              href="/#incubation-hub"
                               className="cyber-btn px-6 py-3.5 w-full font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 group bg-[#E50914] hover:bg-[#e0151e] text-white shadow-[0_0_15px_rgba(255,30,39,0.35)] cursor-pointer"
                             >
-                              Register for event <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </button>
+                              <span>Register for event</span>
+                              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </Link>
                           ) : (
                             <button
                               disabled
@@ -158,10 +148,6 @@ export default function UpcomingEventHome() {
           )}
         </div>
       </div>
-
-      {showTerminal && (
-        <RegistrationTerminal eventName={selectedEvent} onClose={() => setShowTerminal(false)} />
-      )}
     </section>
   );
 }

@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { socialLinks } from "@/data/footerData";
 
 // Subtle ambient cubes placed along the perimeter to frame the central branding
 const CUBES = [
-  { size: 70, left: 8, top: 25, z: -150, rx: 35, ry: 45, delay: 0, duration: 18 },
-  { size: 40, left: 88, top: 15, z: -300, rx: -25, ry: 15, delay: 2, duration: 22 },
-  { size: 85, left: 14, top: 65, z: 80, rx: 15, ry: -35, delay: 1, duration: 25 },
-  { size: 30, left: 82, top: 72, z: -80, rx: 55, ry: 45, delay: 3, duration: 20 },
-  { size: 55, left: 92, top: 45, z: 40, rx: -15, ry: 25, delay: 0.5, duration: 15 },
-  { size: 45, left: 5, top: 80, z: -200, rx: 10, ry: -10, delay: 4, duration: 24 },
-  { size: 60, left: 78, top: 28, z: 120, rx: 45, ry: -25, delay: 1.2, duration: 21 },
-  { size: 40, left: 18, top: 15, z: -180, rx: -45, ry: 35, delay: 3.5, duration: 16 },
+  { size: 70, left: 8, top: 25, z: -150, rx: 35, ry: 45, delay: 0, duration: 6 },
+  { size: 40, left: 88, top: 15, z: -300, rx: -25, ry: 15, delay: 1.2, duration: 8.5 },
+  { size: 85, left: 14, top: 65, z: 80, rx: 15, ry: -35, delay: 0.5, duration: 7 },
+  { size: 30, left: 82, top: 72, z: -80, rx: 55, ry: 45, delay: 2, duration: 9 },
+  { size: 55, left: 92, top: 45, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11 },
+  { size: 45, left: 5, top: 80, z: -200, rx: 10, ry: -10, delay: 0.8, duration: 7.5 },
+  { size: 60, left: 78, top: 28, z: 120, rx: 45, ry: -25, delay: 2.5, duration: 9.5 },
+  { size: 40, left: 18, top: 15, z: -180, rx: -45, ry: 35, delay: 1.5, duration: 6.5 },
 ];
 
 const TICKER_ITEMS = [
@@ -30,33 +30,9 @@ const TICKER_ITEMS = [
 export default function Footer() {
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme } = useTheme();
-  const containerRef = useRef<HTMLElement>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     setMounted(true);
-    
-    let rafId: number;
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      
-      if (rect.top < window.innerHeight + 100) {
-        const x = (e.clientX / window.innerWidth) * 2 - 1;
-        const y = (e.clientY / window.innerHeight) * 2 - 1;
-        
-        cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(() => {
-          setMousePos({ x, y });
-        });
-      }
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      cancelAnimationFrame(rafId);
-    };
   }, []);
 
   const isDark = !mounted || resolvedTheme !== "light";
@@ -94,21 +70,47 @@ export default function Footer() {
           overflow: hidden;
         }
         
-        .cube-parallax-layer {
-          position: absolute;
-          transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        .cube-wrapper {
+        .cube-anchor {
           position: absolute;
           transform-style: preserve-3d;
-          animation: floatCube var(--duration) ease-in-out infinite alternate;
-          animation-delay: var(--delay);
+          pointer-events: none;
+        }
+
+        .cube-float-wrapper {
+          position: absolute;
+          transform-style: preserve-3d;
+          animation: floatCubeVertical var(--duration, 8s) ease-in-out infinite alternate;
+          animation-delay: var(--delay, 0s);
+          will-change: transform;
+        }
+
+        .cube-rotate-wrapper {
+          position: relative;
+          transform-style: preserve-3d;
+          animation: rotateCubeGentle var(--rot-duration, 10s) ease-in-out infinite alternate;
+          animation-delay: var(--rot-delay, 0s);
+          will-change: transform;
         }
         
-        @keyframes floatCube {
-          0% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
-          100% { transform: translateY(-70px) rotateX(15deg) rotateY(25deg); }
+        @keyframes floatCubeVertical {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-10px); }
+        }
+
+        @keyframes rotateCubeGentle {
+          0% {
+            transform: rotateX(var(--base-rx)) rotateY(var(--base-ry));
+          }
+          100% {
+            transform: rotateX(calc(var(--base-rx) + 10deg)) rotateY(calc(var(--base-ry) + 14deg));
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .cube-float-wrapper,
+          .cube-rotate-wrapper {
+            animation: none !important;
+          }
         }
         
         .cube {
@@ -171,7 +173,6 @@ export default function Footer() {
       </div>
 
       <footer 
-        ref={containerRef} 
         className="footer-container relative w-full flex flex-col justify-end font-sans overflow-hidden border-t border-border/40" 
         style={themeStyle}
       >
@@ -180,33 +181,37 @@ export default function Footer() {
 
         {/* Ambient Geometric Cubes (Confined to Periphery to prevent text clashing) */}
         <div className="cube-scene">
-          {CUBES.map((c, i) => {
-            const pX = (mousePos.x * (c.z + 600)) / 45;
-            const pY = (mousePos.y * (c.z + 600)) / 45;
-            
-            return (
+          {CUBES.map((c, i) => (
+            <div 
+              key={i} 
+              className={`cube-anchor ${i > 4 ? 'hidden md:block' : ''}`}
+              style={{
+                left: `${c.left}%`,
+                top: `${c.top}%`,
+                transform: `translate3d(0, 0, ${c.z}px)`,
+                zIndex: c.z > 0 ? 5 : 1
+              }}
+            >
               <div 
-                key={i} 
-                className={`cube-parallax-layer ${i > 4 ? 'hidden md:block' : ''}`}
-                style={{
-                  left: `${c.left}%`,
-                  top: `${c.top}%`,
-                  transform: `translate3d(${pX}px, ${pY}px, ${c.z}px)`,
-                  zIndex: c.z > 0 ? 5 : 1
-                }}
+                className="cube-float-wrapper"
+                style={{ 
+                  '--duration': `${c.duration}s`, 
+                  '--delay': `${c.delay}s` 
+                } as React.CSSProperties}
               >
                 <div 
-                  className="cube-wrapper"
+                  className="cube-rotate-wrapper"
                   style={{ 
-                    '--duration': `${c.duration}s`, 
-                    '--delay': `${c.delay}s` 
+                    '--rot-duration': `${(c.duration * 1.3).toFixed(1)}s`, 
+                    '--rot-delay': `${(c.delay * 0.7).toFixed(1)}s`,
+                    '--base-rx': `${c.rx}deg`,
+                    '--base-ry': `${c.ry}deg`,
                   } as React.CSSProperties}
                 >
                   <div 
                     className="cube"
                     style={{ 
                       '--size': `${c.size}px`,
-                      transform: `rotateX(${c.rx}deg) rotateY(${c.ry}deg)`
                     } as React.CSSProperties}
                   >
                     <div className="cube-face face-front"></div>
@@ -218,8 +223,8 @@ export default function Footer() {
                   </div>
                 </div>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
 
         {/* Content Container */}
@@ -233,10 +238,10 @@ export default function Footer() {
                 :: Contact
               </Link>
               <Link href="/about" className="link-hover text-foreground/80 font-medium">
-                :: Manifesto
+                :: About
               </Link>
-              <Link href="/join" className="link-hover text-foreground/80 font-medium">
-                :: Incubation
+              <Link href="/#incubation-hub" className="link-hover text-foreground/80 font-medium">
+                :: Registrations
               </Link>
               <Link href="/events" className="link-hover text-foreground/80 font-medium">
                 :: Events
