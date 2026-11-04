@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-
+import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,9 +11,9 @@ import ScrambleText from "./ScrambleText";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface FaqItem {
+export interface FaqItem {
   question: string;
-  answer: string;
+  answer: string | React.ReactNode;
   category?: string;
 }
 
@@ -23,34 +23,59 @@ interface FaqSectionProps {
 
 const DEFAULT_FAQS: FaqItem[] = [
   {
-    question: "What is the Web.3 Club at BMSIT&M?",
+    question: "Who can join the Web.3 Club, and is there any membership fee?",
     answer:
-      "We are the official student-led Web3 and blockchain technical community at BMS Institute of Technology and Management, Bengaluru. We bring together developers, researchers, designers, and enthusiasts to learn, build decentralized protocols, and compete in global hackathons.",
-    category: "About Club",
-  },
-  {
-    question: "Who can join the Web.3 Club, and do I need prior experience?",
-    answer:
-      "Any student at BMSIT&M—from any engineering branch and any semester—is welcome! No prior blockchain experience is required. We host beginner-friendly bootcamps covering programming fundamentals, smart contract development, and Web3 frontends from scratch.",
-    category: "Membership",
-  },
-  {
-    question: "What events and activities does the club organize?",
-    answer:
-      "We organize our flagship hackathon (Decrypto), technical hands-on workshops (Solidity, Rust on Solana, Zero-Knowledge proofs), project incubation cohorts, guest talks by Web3 founders, and team delegations to ETHIndia and global hackathons.",
-    category: "Activities",
-  },
-  {
-    question: "How does project incubation work for student teams?",
-    answer:
-      "If you have an idea or prototype for a decentralized application, our senior core team pairs you with technical mentors, assists with architecture reviews and smart contract security, connects you to ecosystem developer grants, and helps you pitch at hackathons.",
-    category: "Incubation",
-  },
-  {
-    question: "Is there any membership fee to join?",
-    answer:
-      "No! Membership is 100% free and open to all BMSIT&M students. All our workshops, bootcamps, learning roadmaps, and community sessions are open-source and free.",
+      "Membership is 100% free and open to all BMSIT&M students across every engineering branch and semester. No prior experience is needed to become a member.",
     category: "Eligibility",
+  },
+  {
+    question: "Do I need prior coding or blockchain experience to participate?",
+    answer:
+      "No prior experience is required. Our student-led workshops and bootcamps start from fundamentals, helping you build practical skills from the ground up.",
+    category: "Learning",
+  },
+  {
+    question: "What technologies and technical tracks does the club focus on?",
+    answer:
+      "We focus on Solidity, smart contracts, EVM, dApps, Rust, and ZK proofs for blockchain, alongside Next.js, TypeScript, and React for web development, as well as AI/ML applications including LLMs, generative AI, and computer vision.",
+    category: "Technologies",
+  },
+  {
+    question: "How do student projects and peer mentoring work?",
+    answer:
+      "We run three technical tracks open to all members: Blockchain, AI & Machine Learning, and Web Development. Students build dApps and open-source tooling while pairing directly with senior student developers for guidance and code reviews.",
+    category: "Projects",
+  },
+  {
+    question: "What kinds of workshops and learning sessions does the club organize?",
+    answer:
+      "We host student-led workshops, hands-on bootcamps, peer reviews, and campus demo days designed to help members learn by building real-world projects.",
+    category: "Workshops",
+  },
+  {
+    question: "Does the club participate in hackathons?",
+    answer:
+      "Yes, we organize team delegations to major hackathons and developer gatherings, including ETHIndia, Solana Renaissance, and Polygon Guilds.",
+    category: "Hackathons",
+  },
+  {
+    question: "How do I register for events or join the club?",
+    answer: (
+      <span>
+        You can join the club through our{" "}
+        <Link href="/join" className="underline text-[#E50914] hover:opacity-80">
+          Join Us page
+        </Link>{" "}
+        and register for events directly via the &ldquo;Register for event&rdquo; button on our flagship event cards.
+      </span>
+    ),
+    category: "Registration",
+  },
+  {
+    question: "What is the primary community channel for announcements and discussions?",
+    answer:
+      "Our primary communication channel is the official WEB.3 WhatsApp community linked in the navigation bar, where we share announcements, workshop schedules, and project collaborations.",
+    category: "Community",
   },
 ];
 
@@ -60,6 +85,7 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const list = faqs.length > 0 ? faqs : DEFAULT_FAQS;
 
@@ -67,43 +93,49 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        headingRef.current,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.0,
-          ease: "expo.out",
-          scrollTrigger: { trigger: headingRef.current, start: "top 85%", once: true },
-        }
-      );
+      if (headingRef.current) {
+        gsap.fromTo(
+          headingRef.current,
+          { y: 50, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1.0,
+            ease: "expo.out",
+            scrollTrigger: { trigger: headingRef.current, start: "top 85%", once: true },
+          }
+        );
+      }
 
-      gsap.fromTo(
-        widgetRef.current,
-        { scale: 0.9, opacity: 0, rotate: -5 },
-        {
-          scale: 1,
-          opacity: 1,
-          rotate: 0,
-          duration: 0.85,
-          ease: "back.out(1.5)",
-          scrollTrigger: { trigger: widgetRef.current, start: "top 82%", once: true },
-        }
-      );
+      if (widgetRef.current) {
+        gsap.fromTo(
+          widgetRef.current,
+          { scale: 0.9, opacity: 0, rotate: -5 },
+          {
+            scale: 1,
+            opacity: 1,
+            rotate: 0,
+            duration: 0.85,
+            ease: "back.out(1.5)",
+            scrollTrigger: { trigger: widgetRef.current, start: "top 82%", once: true },
+          }
+        );
+      }
 
-      gsap.fromTo(
-        listRef.current?.children ?? [],
-        { y: 24, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "power3.out",
-          scrollTrigger: { trigger: listRef.current, start: "top 80%", once: true },
-        }
-      );
+      if (listRef.current) {
+        gsap.fromTo(
+          listRef.current.children,
+          { y: 24, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power3.out",
+            scrollTrigger: { trigger: listRef.current, start: "top 80%", once: true },
+          }
+        );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -112,18 +144,21 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full py-20 border-b border-border lab-grid-bg overflow-hidden"
+      id="faq"
+      className="relative w-full py-16 sm:py-20 border-b border-border lab-grid-bg overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
 
           {/* LEFT — Heading + 3D widget */}
-          <div className="lg:col-span-4 space-y-8">
-            <ScrambleText
-              text="FAQ"
-              as="h2"
-              className="text-6xl sm:text-7xl md:text-8xl font-black font-amiga tracking-tight text-foreground block"
-            />
+          <div className="lg:col-span-4 space-y-6 sm:space-y-8">
+            <div ref={headingRef}>
+              <ScrambleText
+                text="FAQ"
+                as="h2"
+                className="text-6xl sm:text-7xl md:text-8xl font-black font-amiga tracking-tight text-foreground block"
+              />
+            </div>
 
             {/* 3D Connector Widget */}
             <div
@@ -140,10 +175,10 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
                 <span>SEC_V4</span>
               </div>
 
-                            {/* 3D Glass Orb Engine (Official ChainGPT 3D Element) */}
+              {/* 3D Glass Orb Engine (Official ChainGPT 3D Element) */}
               <motion.div
                 className="relative w-24 h-24 flex items-center justify-center"
-                animate={{ y: [-4, 4, -4], rotate: [0, 5, -5, 0] }}
+                animate={shouldReduceMotion ? undefined : { y: [-4, 4, -4], rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               >
                 <Image
@@ -158,7 +193,7 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
               <div className="flex items-center gap-2 text-[10px] font-mono text-[#E50914]">
                 <motion.span
                   className="w-1.5 h-1.5 rounded-full bg-[#E50914]"
-                  animate={{ opacity: [1, 0, 1] }}
+                  animate={shouldReduceMotion ? undefined : { opacity: [1, 0, 1] }}
                   transition={{ duration: 1.4, repeat: Infinity }}
                 />
                 <span>KNOWLEDGE_BASE_ONLINE</span>
@@ -183,6 +218,9 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
             <div ref={listRef} className="space-y-3">
               {list.map((item, idx) => {
                 const isOpen = openIndex === idx;
+                const buttonId = `faq-btn-${idx}`;
+                const panelId = `faq-panel-${idx}`;
+
                 return (
                   <div
                     key={idx}
@@ -193,26 +231,29 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
                     }`}
                   >
                     <button
+                      id={buttonId}
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
                       onClick={() => setOpenIndex(isOpen ? null : idx)}
-                      className="w-full text-left p-5 flex items-center justify-between gap-4 cursor-pointer"
+                      className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E50914] focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-xl min-h-[44px]"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
                         <span className="font-mono text-xs font-bold text-[#E50914] shrink-0">
                           {String(idx + 1).padStart(2, "0")}
                         </span>
-                        <span className="font-mono text-sm md:text-base font-bold text-foreground">
+                        <span className="font-mono text-sm md:text-base font-bold text-foreground break-words">
                           {item.question}
                         </span>
                       </div>
                       <motion.div
                         className="w-7 h-7 rounded-lg bg-foreground/[0.04] border border-border flex items-center justify-center text-foreground/70 shrink-0"
-                        animate={{ rotate: isOpen ? 180 : 0 }}
-                        transition={{ duration: 0.25 }}
+                        animate={shouldReduceMotion ? undefined : { rotate: isOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2 }}
                       >
                         {isOpen ? (
-                          <Minus className="w-4 h-4 text-[#E50914]" />
+                          <Minus className="w-4 h-4 text-[#E50914]" aria-hidden="true" />
                         ) : (
-                          <Plus className="w-4 h-4" />
+                          <Plus className="w-4 h-4" aria-hidden="true" />
                         )}
                       </motion.div>
                     </button>
@@ -220,13 +261,17 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
                     <AnimatePresence initial={false}>
                       {isOpen && (
                         <motion.div
+                          id={panelId}
+                          role="region"
+                          aria-labelledby={buttonId}
                           key="content"
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                          initial={shouldReduceMotion ? false : { height: 0, opacity: 0 }}
+                          animate={shouldReduceMotion ? { height: "auto", opacity: 1 } : { height: "auto", opacity: 1 }}
+                          exit={shouldReduceMotion ? { height: 0, opacity: 0 } : { height: 0, opacity: 0 }}
+                          transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
+                          className="overflow-hidden"
                         >
-                          <div className="px-5 pb-5 pt-1 border-t border-border/50 font-mono text-xs md:text-sm text-foreground/70 leading-relaxed">
+                          <div className="px-4 sm:px-5 pb-5 pt-1 border-t border-border/50 font-mono text-xs md:text-sm text-foreground/70 leading-relaxed break-words">
                             {item.answer}
                           </div>
                         </motion.div>
