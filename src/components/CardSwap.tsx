@@ -9,8 +9,7 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
-  useCallback
+  useState
 } from 'react';
 import gsap from 'gsap';
 
@@ -35,7 +34,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({ customClass, ...res
   <div
     ref={ref}
     {...rest}
-    className={`absolute top-1/2 left-1/2 rounded-2xl border [transform-style:preserve-3d] [will-change:transform] [backface-visibility:hidden] bg-card border-border shadow-md ${customClass ?? ''} ${rest.className ?? ''}`.trim()}
+    className={`absolute top-1/2 left-1/2 rounded-xl border backdrop-blur-lg [transform-style:preserve-3d] [will-change:transform] [backface-visibility:hidden] bg-slate-700 border-slate-600/30 dark:bg-[#0d1015]/90 dark:border-white/20 ${customClass ?? ''} ${rest.className ?? ''}`.trim()}
   />
 ));
 Card.displayName = 'Card';
@@ -46,27 +45,20 @@ interface Slot {
   y: number;
   z: number;
   zIndex: number;
-  opacity: number;
 }
 
-const makeSlot = (i: number, distX: number, distY: number, total: number): Slot => {
-  const centerOffsetX = ((total - 1) * distX) / 2;
-  const centerOffsetY = ((total - 1) * distY) / 2;
-  return {
-    x: i * distX - centerOffsetX,
-    y: -i * distY + centerOffsetY,
-    z: -i * distX * 1.5,
-    zIndex: total - i,
-    opacity: i === 0 ? 1 : Math.max(0.7, 1 - i * 0.12)
-  };
-};
+const makeSlot = (i: number, distX: number, distY: number, total: number): Slot => ({
+  x: i * distX,
+  y: -i * distY,
+  z: -i * distX * 1.5,
+  zIndex: total - i
+});
 
 const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
   gsap.set(el, {
     x: slot.x,
     y: slot.y,
     z: slot.z,
-    opacity: slot.opacity,
     xPercent: -50,
     yPercent: -50,
     skewY: skew,
@@ -76,14 +68,14 @@ const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
   });
 
 const CardSwap: React.FC<CardSwapProps> = ({
-  width = 560,
-  height = 530,
-  cardDistance = 20,
-  verticalDistance = 16,
+  width = 600,
+  height = 560,
+  cardDistance = 40,
+  verticalDistance = 40,
   delay = 2500,
   pauseOnHover = true,
   onCardClick,
-  skewAmount = 2,
+  skewAmount = 4,
   easing = 'elastic',
   children
 }) => {
@@ -92,6 +84,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const order = useRef<number[]>([]);
   const container = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState<number | null>(null);
+  const [measuredHeight, setMeasuredHeight] = useState<number | null>(null);
 
   useEffect(() => {
     order.current = Array.from({ length: childArr.length }, (_, i) => i);
@@ -115,69 +108,85 @@ const CardSwap: React.FC<CardSwapProps> = ({
   }, []);
 
   const totalCards = childArr.length;
-  const availableW = containerWidth ?? (typeof width === 'number' ? width : 560);
+  const availableW = containerWidth ?? (typeof width === 'number' ? width : 600);
   const isDesktop = availableW >= 640;
 
-  const numericWidth = typeof width === 'number' ? width : 560;
-  const numericHeight = typeof height === 'number' ? height : 530;
+  const numericWidth = typeof width === 'number' ? width : 600;
+  const numericHeight = typeof height === 'number' ? height : 560;
 
-  const maxStackShiftX = isDesktop ? 36 : 16;
-  const maxStackShiftY = isDesktop ? 24 : 14;
+  const maxStackShiftX = isDesktop ? 36 : 14;
+  const maxStackShiftY = isDesktop ? 36 : 14;
 
   const distX = Math.min(cardDistance, Math.max(6, Math.floor(maxStackShiftX / Math.max(1, totalCards - 1))));
   const distY = Math.min(verticalDistance, Math.max(6, Math.floor(maxStackShiftY / Math.max(1, totalCards - 1))));
 
-  const totalOffset = (totalCards - 1) * distX;
-  const effectiveCardWidth = Math.min(numericWidth, availableW - totalOffset - 8);
-  const effectiveCardHeight = isDesktop
-    ? numericHeight
-    : Math.min(520, Math.max(460, Math.round(effectiveCardWidth * 1.38)));
+  const totalOffsetX = (totalCards - 1) * distX;
+  const totalOffsetY = (totalCards - 1) * distY;
+
+  const effectiveCardWidth = isDesktop
+    ? Math.min(numericWidth, availableW - totalOffsetX - 32)
+    : Math.max(280, availableW - totalOffsetX);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let maxH = 0;
+      refs.forEach((r) => {
+        if (r.current) {
+          let childTotal = 0;
+          for (let i = 0; i < r.current.children.length; i++) {
+            childTotal += (r.current.children[i] as HTMLElement).offsetHeight || 0;
+          }
+          const h = Math.max(r.current.scrollHeight, childTotal);
+          if (h > maxH) maxH = h;
+        }
+      });
+      if (maxH > 200) {
+        setMeasuredHeight(maxH);
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [refs, effectiveCardWidth, childArr.length]);
+
+  const effectiveCardHeight = measuredHeight ?? numericHeight;
+
+  const config = useMemo(() => {
+    return easing === 'elastic'
+      ? {
+          ease: 'elastic.out(0.6,0.9)',
+          durDrop: 2,
+          durMove: 2,
+          durReturn: 2,
+          promoteOverlap: 0.9,
+          returnDelay: 0.05
+        }
+      : {
+          ease: 'power1.inOut',
+          durDrop: 0.8,
+          durMove: 0.8,
+          durReturn: 0.8,
+          promoteOverlap: 0.45,
+          returnDelay: 0.2
+        };
+  }, [easing]);
 
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const intervalRef = useRef<number>(0);
   const isPausedRef = useRef<boolean>(false);
 
-  const reLayout = useCallback(() => {
-    if (!order.current || order.current.length === 0) return;
-    order.current.forEach((cardIdx, slotIdx) => {
-      const el = refs[cardIdx]?.current;
-      if (el) {
-        placeNow(el, makeSlot(slotIdx, distX, distY, refs.length), skewAmount);
-      }
-    });
-  }, [distX, distY, refs, skewAmount]);
-
   useEffect(() => {
-    reLayout();
-  }, [reLayout, effectiveCardWidth, effectiveCardHeight]);
-
-  useEffect(() => {
-    if (refs.length < 2) return;
-
-    const config =
-      easing === 'elastic'
-        ? {
-            ease: 'elastic.out(0.6,0.9)',
-            durDrop: 2,
-            durMove: 2,
-            durReturn: 2,
-            promoteOverlap: 0.9,
-            returnDelay: 0.05
-          }
-        : {
-            ease: 'power1.inOut',
-            durDrop: 0.8,
-            durMove: 0.8,
-            durReturn: 0.8,
-            promoteOverlap: 0.45,
-            returnDelay: 0.2
-          };
+    if (refs.length === 0) return;
 
     const mediaQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     let prefersReducedMotion = mediaQuery ? mediaQuery.matches : false;
 
+    refs.forEach((r, i) => {
+      if (r.current) {
+        placeNow(r.current, makeSlot(i, distX, distY, refs.length), skewAmount);
+      }
+    });
+
     const swap = () => {
-      if (order.current.length < 2 || isPausedRef.current) return;
+      if (order.current.length < 2 || isPausedRef.current || prefersReducedMotion) return;
 
       const [front, ...rest] = order.current;
       const elFront = refs[front]?.current;
@@ -204,7 +213,6 @@ const CardSwap: React.FC<CardSwapProps> = ({
             x: slot.x,
             y: slot.y,
             z: slot.z,
-            opacity: slot.opacity,
             duration: config.durMove,
             ease: config.ease
           },
@@ -227,7 +235,6 @@ const CardSwap: React.FC<CardSwapProps> = ({
           x: backSlot.x,
           y: backSlot.y,
           z: backSlot.z,
-          opacity: backSlot.opacity,
           duration: config.durReturn,
           ease: config.ease
         },
@@ -296,7 +303,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
         node.removeEventListener('touchcancel', resume);
       }
     };
-  }, [distX, distY, delay, pauseOnHover, easing, refs]);
+  }, [distX, distY, delay, pauseOnHover, skewAmount, easing, refs, config]);
 
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)
@@ -321,9 +328,11 @@ const CardSwap: React.FC<CardSwapProps> = ({
   return (
     <div
       ref={container}
-      className="relative w-full max-w-[580px] perspective-[900px] overflow-visible select-none"
+      className="relative perspective-[900px] overflow-visible select-none"
       style={{
-        height: `${effectiveCardHeight + (totalCards > 1 ? distY : 0)}px`,
+        width: `${effectiveCardWidth + totalOffsetX}px`,
+        maxWidth: '100%',
+        height: `${effectiveCardHeight + totalOffsetY}px`,
         margin: '0 auto'
       }}
     >
