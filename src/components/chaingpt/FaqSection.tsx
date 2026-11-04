@@ -63,29 +63,27 @@ const DEFAULT_FAQS: FaqItem[] = [
     answer: (
       <span>
         You can join the club through our{" "}
-        <Link href="/join" className="underline text-[#E50914] hover:opacity-80">
-          Join Us page
-        </Link>{" "}
-        and register for events directly via the &ldquo;Register for event&rdquo; button on our flagship event cards.
+        <Link href="/join" className="underline">
+          Join page
+        </Link>
+        . Event registrations are announced on our official WhatsApp community and under{" "}
+        <Link href="/#incubation-hub" className="underline">
+          Registrations
+        </Link>
+        .
       </span>
     ),
-    category: "Registration",
-  },
-  {
-    question: "What is the primary community channel for announcements and discussions?",
-    answer:
-      "Our primary communication channel is the official WEB.3 WhatsApp community linked in the navigation bar, where we share announcements, workshop schedules, and project collaborations.",
-    category: "Community",
+    category: "Registrations",
   },
 ];
 
 export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const shouldReduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const widgetRef = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
 
   const list = faqs.length > 0 ? faqs : DEFAULT_FAQS;
 
@@ -93,49 +91,43 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      if (headingRef.current) {
-        gsap.fromTo(
-          headingRef.current,
-          { y: 50, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 1.0,
-            ease: "expo.out",
-            scrollTrigger: { trigger: headingRef.current, start: "top 85%", once: true },
-          }
-        );
-      }
+      gsap.fromTo(
+        headingRef.current,
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.0,
+          ease: "expo.out",
+          scrollTrigger: { trigger: headingRef.current, start: "top 85%", once: true },
+        }
+      );
 
-      if (widgetRef.current) {
-        gsap.fromTo(
-          widgetRef.current,
-          { scale: 0.9, opacity: 0, rotate: -5 },
-          {
-            scale: 1,
-            opacity: 1,
-            rotate: 0,
-            duration: 0.85,
-            ease: "back.out(1.5)",
-            scrollTrigger: { trigger: widgetRef.current, start: "top 82%", once: true },
-          }
-        );
-      }
+      gsap.fromTo(
+        widgetRef.current,
+        { scale: 0.9, opacity: 0, rotate: -5 },
+        {
+          scale: 1,
+          opacity: 1,
+          rotate: 0,
+          duration: 0.85,
+          ease: "back.out(1.5)",
+          scrollTrigger: { trigger: widgetRef.current, start: "top 82%", once: true },
+        }
+      );
 
-      if (listRef.current) {
-        gsap.fromTo(
-          listRef.current.children,
-          { y: 24, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: "power3.out",
-            scrollTrigger: { trigger: listRef.current, start: "top 80%", once: true },
-          }
-        );
-      }
+      gsap.fromTo(
+        listRef.current?.children ?? [],
+        { y: 24, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: { trigger: listRef.current, start: "top 80%", once: true },
+        }
+      );
     }, sectionRef);
 
     return () => ctx.revert();
@@ -144,14 +136,13 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
   return (
     <section
       ref={sectionRef}
-      id="faq"
       className="relative w-full py-16 sm:py-20 border-b border-border lab-grid-bg overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
 
           {/* LEFT — Heading + 3D widget */}
-          <div className="lg:col-span-4 space-y-6 sm:space-y-8">
+          <div className="lg:col-span-4 space-y-6 lg:space-y-8">
             <div ref={headingRef}>
               <ScrambleText
                 text="FAQ"
@@ -160,10 +151,10 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
               />
             </div>
 
-            {/* 3D Connector Widget */}
+            {/* 3D Connector Widget - responsive sizing, never overlapping */}
             <div
               ref={widgetRef}
-              className="relative w-48 h-48 bg-card border border-border rounded-2xl p-4 flex flex-col justify-between items-center shadow-sm group hover:border-[#E50914]/50 transition-colors opacity-0"
+              className="relative w-40 h-40 sm:w-44 sm:h-44 md:w-48 md:h-48 bg-card border border-border rounded-2xl p-4 flex flex-col justify-between items-center shadow-sm group hover:border-[#E50914]/50 transition-colors opacity-0"
             >
               <span className="tech-bracket-tl" />
               <span className="tech-bracket-tr" />
@@ -177,7 +168,7 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
 
               {/* 3D Glass Orb Engine (Official ChainGPT 3D Element) */}
               <motion.div
-                className="relative w-24 h-24 flex items-center justify-center"
+                className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center"
                 animate={shouldReduceMotion ? undefined : { y: [-4, 4, -4], rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
               >
@@ -186,7 +177,7 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
                   alt="Query Engine 3D Glass Orb"
                   width={96}
                   height={96}
-                  className="w-20 h-20 object-contain drop-shadow-xl"
+                  className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-xl"
                 />
               </motion.div>
 
@@ -202,15 +193,16 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
           </div>
 
           {/* RIGHT — FAQ Accordion */}
-          <div className="lg:col-span-8 space-y-6">
-            <div>
+          <div className="lg:col-span-8">
+            {/* Header: label lines, title and subtitle on one left edge, 16px between lines, 32-48px before list */}
+            <div className="space-y-4 mb-8 sm:mb-10">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 bg-foreground" />
                 <h3 className="font-mono text-lg md:text-xl font-bold uppercase tracking-wider text-foreground">
                   Most Common Questions
                 </h3>
               </div>
-              <p className="font-mono text-xs text-foreground/50 mt-1">
+              <p className="font-mono text-xs text-foreground/50">
                 No worries — here you can find all the answers
               </p>
             </div>
@@ -235,27 +227,27 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
                       aria-expanded={isOpen}
                       aria-controls={panelId}
                       onClick={() => setOpenIndex(isOpen ? null : idx)}
-                      className="w-full text-left p-4 sm:p-5 flex items-center justify-between gap-4 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E50914] focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-xl min-h-[44px]"
+                      className="w-full text-left p-4 sm:p-5 grid grid-cols-[1.75rem_1fr_2.75rem] items-center gap-3 sm:gap-4 cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 min-h-[44px]"
                     >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <span className="font-mono text-xs font-bold text-[#E50914] shrink-0">
-                          {String(idx + 1).padStart(2, "0")}
-                        </span>
-                        <span className="font-mono text-sm md:text-base font-bold text-foreground break-words">
-                          {item.question}
-                        </span>
+                      <span className="font-mono text-xs font-bold text-[#E50914] shrink-0 self-center">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span className="font-mono text-sm md:text-base font-bold text-foreground break-words min-w-0">
+                        {item.question}
+                      </span>
+                      <div className="w-11 h-11 flex items-center justify-end shrink-0">
+                        <motion.div
+                          className="w-7 h-7 rounded-lg bg-foreground/[0.04] border border-border flex items-center justify-center text-foreground/70"
+                          animate={shouldReduceMotion ? undefined : { rotate: isOpen ? 180 : 0 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          {isOpen ? (
+                            <Minus className="w-4 h-4 text-[#E50914]" aria-hidden="true" />
+                          ) : (
+                            <Plus className="w-4 h-4" aria-hidden="true" />
+                          )}
+                        </motion.div>
                       </div>
-                      <motion.div
-                        className="w-7 h-7 rounded-lg bg-foreground/[0.04] border border-border flex items-center justify-center text-foreground/70 shrink-0"
-                        animate={shouldReduceMotion ? undefined : { rotate: isOpen ? 180 : 0 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {isOpen ? (
-                          <Minus className="w-4 h-4 text-[#E50914]" aria-hidden="true" />
-                        ) : (
-                          <Plus className="w-4 h-4" aria-hidden="true" />
-                        )}
-                      </motion.div>
                     </button>
 
                     <AnimatePresence initial={false}>
@@ -266,12 +258,12 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
                           aria-labelledby={buttonId}
                           key="content"
                           initial={shouldReduceMotion ? false : { height: 0, opacity: 0 }}
-                          animate={shouldReduceMotion ? { height: "auto", opacity: 1 } : { height: "auto", opacity: 1 }}
+                          animate={{ height: "auto", opacity: 1 }}
                           exit={shouldReduceMotion ? { height: 0, opacity: 0 } : { height: 0, opacity: 0 }}
                           transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] }}
                           className="overflow-hidden"
                         >
-                          <div className="px-4 sm:px-5 pb-5 pt-1 border-t border-border/50 font-mono text-xs md:text-sm text-foreground/70 leading-relaxed break-words">
+                          <div className="pl-[calc(1rem+1.75rem+0.75rem)] sm:pl-[calc(1.25rem+1.75rem+1rem)] pr-4 sm:pr-5 pb-5 pt-1 border-t border-border/50 font-mono text-xs md:text-sm text-foreground/70 leading-relaxed break-words">
                             {item.answer}
                           </div>
                         </motion.div>
