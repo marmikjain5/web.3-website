@@ -10,16 +10,18 @@ import { socialLinks } from "@/data/footerData";
 // Cubes float in the two gaps between the side vertical columns and the central wordmark,
 // ensuring zero overlap with any text.
 const CUBES = [
-  // Left gap (flanking between nav links and central wordmark)
-  { size: 26, left: 21, top: 25, z: -100, rx: 35, ry: 45, delay: 0, duration: 6, floatAmp: -4, rotAmpX: 10, rotAmpY: 12 },
-  { size: 24, left: 26, top: 28, z: 60, rx: 15, ry: -35, delay: 0.5, duration: 7, floatAmp: -4, rotAmpX: 12, rotAmpY: -10 },
-  { size: 24, left: 22, top: 68, z: -150, rx: 10, ry: -10, delay: 0.8, duration: 7.5, floatAmp: -3, rotAmpX: 8, rotAmpY: -12 },
-  { size: 20, left: 27, top: 66, z: -80, rx: -45, ry: 35, delay: 1.5, duration: 6.5, floatAmp: -3, rotAmpX: -10, rotAmpY: 12 },
-  // Right gap (flanking between central wordmark and status/socials)
-  { size: 26, left: 73, top: 25, z: 80, rx: 45, ry: -25, delay: 2.5, duration: 9.5, floatAmp: -4, rotAmpX: 14, rotAmpY: -10 },
-  { size: 24, left: 78, top: 28, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11, floatAmp: -4, rotAmpX: -8, rotAmpY: 14 },
-  { size: 24, left: 72, top: 68, z: -60, rx: 55, ry: 45, delay: 2, duration: 9, floatAmp: -3, rotAmpX: 12, rotAmpY: 8 },
-  { size: 20, left: 77, top: 66, z: -180, rx: -25, ry: 15, delay: 1.2, duration: 8.5, floatAmp: -3, rotAmpX: -10, rotAmpY: 10 },
+  // Left Pair 1 (Top-left corridor between Nav links and central wordmark)
+  { size: 26, left: 19, top: 22, z: -100, rx: 35, ry: 45, delay: 0, duration: 6, floatAmp: -4, rotAmpX: 10, rotAmpY: 12 },
+  { size: 24, left: 24, top: 26, z: 60, rx: 15, ry: -35, delay: 0.5, duration: 7, floatAmp: -4, rotAmpX: 12, rotAmpY: -10 },
+  // Left Pair 2 (Bottom-left: moved down and left, >= 24px below/left of NODE pill and tagline)
+  { size: 22, left: 17, top: 72, z: -150, rx: 10, ry: -10, delay: 0.8, duration: 7.5, floatAmp: -3, rotAmpX: 8, rotAmpY: -12 },
+  { size: 20, left: 22, top: 76, z: -80, rx: -45, ry: 35, delay: 1.5, duration: 6.5, floatAmp: -3, rotAmpX: -10, rotAmpY: 12 },
+  // Right Pair 1 (Top-right: moved out of status row into empty area below status and left of Instagram/LinkedIn)
+  { size: 24, left: 74, top: 58, z: 80, rx: 45, ry: -25, delay: 2.5, duration: 9.5, floatAmp: -3, rotAmpX: 14, rotAmpY: -10 },
+  { size: 22, left: 79, top: 62, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11, floatAmp: -3, rotAmpX: -8, rotAmpY: 14 },
+  // Right Pair 2 (Bottom-right: corridor below right pair 1, clear of Tagline and LinkedIn)
+  { size: 24, left: 73, top: 78, z: -60, rx: 55, ry: 45, delay: 2, duration: 9, floatAmp: -3, rotAmpX: 12, rotAmpY: 8 },
+  { size: 20, left: 78, top: 82, z: -180, rx: -25, ry: 15, delay: 1.2, duration: 8.5, floatAmp: -3, rotAmpX: -10, rotAmpY: 10 },
 ];
 
 const TICKER_ITEMS = [
@@ -183,7 +185,14 @@ export default function Footer() {
       `}</style>
 
       {/* Ticker Marquee Ribbon */}
-      <div className="w-full bg-[#BE4105] text-white py-2 overflow-hidden border-t border-b border-[#963404] select-none z-30 relative">
+      <div 
+        className="w-full bg-[#BE4105] text-white py-2 overflow-hidden border-t border-b border-[#963404] select-none z-30 relative"
+        style={{
+          maskImage: "linear-gradient(to right, transparent 0%, black 48px, black calc(100% - 88px), transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 48px, black calc(100% - 88px), transparent 100%)",
+          paddingRight: "80px",
+        }}
+      >
         <div className="flex whitespace-nowrap ticker-track">
           {[...TICKER_ITEMS, ...TICKER_ITEMS, ...TICKER_ITEMS].map((item, idx) => (
             <span key={idx} className="font-mono text-[11px] sm:text-xs font-bold tracking-widest uppercase mx-5 sm:mx-8 flex items-center gap-3 sm:gap-4">
@@ -264,9 +273,9 @@ export default function Footer() {
             <span className="absolute bottom-3 right-3 font-mono text-xs text-[#BE4105]/80 select-none z-10">+</span>
 
             {/* Unified 3-Column Display: Nav (Left), web.3 (Center), Status/Socials (Right) on same vertical level on desktop */}
-            <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6 w-full">
+            <div className="relative z-10 flex flex-col lg:grid lg:grid-cols-[1fr_auto_1fr] items-center gap-6 w-full">
               {/* Left Flank: Primary Navigation stacked vertically on lg+, 2x2 grid on mobile/tablet */}
-              <div className="order-2 lg:order-1 grid grid-cols-2 gap-x-6 gap-y-1 lg:flex lg:flex-col lg:gap-0 items-center lg:items-start shrink-0 text-xs font-mono">
+              <div className="order-2 lg:order-1 lg:justify-self-start grid grid-cols-2 gap-x-6 gap-y-1 lg:flex lg:flex-col lg:gap-0 items-center lg:items-start shrink-0 text-xs font-mono">
                 <Link 
                   href="/contact" 
                   className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center px-1 whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -294,7 +303,7 @@ export default function Footer() {
               </div>
 
               {/* Center: Main Clean Typography & Telemetry on same vertical level */}
-              <div className="order-1 lg:order-2 text-center select-none py-1 px-2 flex flex-col items-center justify-center shrink-0">
+              <div className="order-1 lg:order-2 lg:justify-self-center text-center select-none py-1 px-2 flex flex-col items-center justify-center shrink-0">
                 {/* Main Clean Typography with responsive clamp sizing */}
                 <div className="flex items-baseline justify-center">
                   <span className="text-[clamp(2.5rem,5vw,5rem)] font-black font-mono tracking-tight leading-none text-foreground drop-shadow-sm">
@@ -324,7 +333,7 @@ export default function Footer() {
               </div>
 
               {/* Right Flank: Status and Socials stacked vertically on the right */}
-              <div className="order-3 flex flex-col items-center lg:items-end shrink-0 text-xs font-mono">
+              <div className="order-3 lg:justify-self-end flex flex-col items-center lg:items-end shrink-0 text-xs font-mono">
                 <div className="text-foreground/60 text-[10px] sm:text-[11px] tracking-widest uppercase min-h-[44px] inline-flex items-center px-1">
                   <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse" />
                   STATUS: ONLINE // &copy; 2026 WEB.3_ BMSIT
@@ -346,7 +355,7 @@ export default function Footer() {
           </div>
 
           {/* Bottom Micro Footer - stacks on mobile, splits left/right from md */}
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-foreground/40 pt-2 text-center md:text-left">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-foreground/40 pt-2 pb-8 text-center md:text-left">
             <div>BUILDING DECENTRALIZED FUTURES</div>
             <div>ALL SYSTEMS OPERATIONAL // LATENCY: 24ms</div>
           </div>
