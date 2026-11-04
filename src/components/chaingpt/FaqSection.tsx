@@ -136,7 +136,7 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full py-16 sm:py-20 border-b border-border lab-grid-bg overflow-hidden"
+      className="relative w-full py-20 border-b border-border lab-grid-bg overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">

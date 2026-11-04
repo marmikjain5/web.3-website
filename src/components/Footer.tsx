@@ -7,16 +7,16 @@ import { socialLinks } from "@/data/footerData";
 
 // Subtle ambient cubes placed along the perimeter to frame the central branding.
 // Positions and sizes clamped to prevent overflowing small mobile viewports.
-// Cubes are confined vertically around the wordmark card area.
+// Cubes are confined vertically around the wordmark card area (top: 46% - 66%).
 const CUBES = [
-  { size: 70, left: 8, top: 40, z: -150, rx: 35, ry: 45, delay: 0, duration: 6, floatAmp: -12, rotAmpX: 12, rotAmpY: 15 },
-  { size: 40, left: 78, top: 38, z: -300, rx: -25, ry: 15, delay: 1.2, duration: 8.5, floatAmp: -8, rotAmpX: -10, rotAmpY: 12 },
-  { size: 65, left: 12, top: 62, z: 80, rx: 15, ry: -35, delay: 0.5, duration: 7, floatAmp: -15, rotAmpX: 14, rotAmpY: -12 },
-  { size: 30, left: 75, top: 65, z: -80, rx: 55, ry: 45, delay: 2, duration: 9, floatAmp: -6, rotAmpX: 15, rotAmpY: 10 },
-  { size: 55, left: 72, top: 48, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11, floatAmp: -18, rotAmpX: -8, rotAmpY: 16 },
-  { size: 45, left: 6, top: 55, z: -200, rx: 10, ry: -10, delay: 0.8, duration: 7.5, floatAmp: -10, rotAmpX: 8, rotAmpY: -14 },
-  { size: 60, left: 70, top: 32, z: 120, rx: 45, ry: -25, delay: 2.5, duration: 9.5, floatAmp: -14, rotAmpX: 16, rotAmpY: -10 },
-  { size: 40, left: 16, top: 35, z: -180, rx: -45, ry: 35, delay: 1.5, duration: 6.5, floatAmp: -7, rotAmpX: -12, rotAmpY: 14 },
+  { size: 70, left: 8, top: 48, z: -150, rx: 35, ry: 45, delay: 0, duration: 6, floatAmp: -12, rotAmpX: 12, rotAmpY: 15 },
+  { size: 40, left: 78, top: 50, z: -300, rx: -25, ry: 15, delay: 1.2, duration: 8.5, floatAmp: -8, rotAmpX: -10, rotAmpY: 12 },
+  { size: 65, left: 12, top: 64, z: 80, rx: 15, ry: -35, delay: 0.5, duration: 7, floatAmp: -15, rotAmpX: 14, rotAmpY: -12 },
+  { size: 30, left: 74, top: 66, z: -80, rx: 55, ry: 45, delay: 2, duration: 9, floatAmp: -6, rotAmpX: 15, rotAmpY: 10 },
+  { size: 55, left: 72, top: 56, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11, floatAmp: -18, rotAmpX: -8, rotAmpY: 16 },
+  { size: 45, left: 6, top: 58, z: -200, rx: 10, ry: -10, delay: 0.8, duration: 7.5, floatAmp: -10, rotAmpX: 8, rotAmpY: -14 },
+  { size: 60, left: 70, top: 46, z: 120, rx: 45, ry: -25, delay: 2.5, duration: 9.5, floatAmp: -14, rotAmpX: 16, rotAmpY: -10 },
+  { size: 40, left: 14, top: 52, z: -180, rx: -45, ry: 35, delay: 1.5, duration: 6.5, floatAmp: -7, rotAmpX: -12, rotAmpY: 14 },
 ];
 
 const TICKER_ITEMS = [
@@ -255,8 +255,8 @@ export default function Footer() {
           
           {/* Top Quick Links & Status Bar */}
           <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6 pb-8 border-b border-border/60 text-xs font-mono">
-            {/* Primary Navigation - 2-column grid below md, inline flex from md */}
-            <div className="grid grid-cols-2 gap-2 w-full max-w-xs mx-auto md:max-w-none md:flex md:flex-wrap md:items-center md:justify-start md:gap-x-6 md:gap-y-2">
+            {/* Primary Navigation - 2-column grid below md, balanced 2-col on md, flex row on lg */}
+            <div className="grid grid-cols-2 gap-2 w-full max-w-xs mx-auto md:max-w-none md:grid md:grid-cols-2 md:gap-x-4 md:gap-y-1 lg:flex lg:flex-row lg:items-center lg:justify-start lg:gap-x-6">
               <Link 
                 href="/contact" 
                 className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
