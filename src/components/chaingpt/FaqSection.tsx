@@ -306,7 +306,7 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
                     key={idx}
                     className={`rounded-xl border transition-colors duration-200 overflow-hidden ${
                       isOpen
-                        ? "bg-card border-[#E50914] shadow-[0_4px_20px_rgba(255,30,39,0.1)]"
+                        ? "bg-card border-[#E50914] shadow-[0_4px_20px_rgba(255,30,39,0.1)] bg-white/60 backdrop-blur-md"
                         : "bg-card/50 border-border hover:border-foreground/20"
                     }`}
                   >
