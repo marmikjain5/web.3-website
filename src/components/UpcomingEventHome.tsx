@@ -20,7 +20,7 @@ export default function UpcomingEventHome() {
   return (
     <section
       id="events"
-      className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 flex items-center justify-center z-20 overflow-hidden transition-colors duration-500 bg-background"
+      className="relative w-full py-20 lg:py-24 px-4 sm:px-6 md:px-8 flex items-center justify-center z-20 overflow-hidden transition-colors duration-500 bg-background"
     >
       {/* Decorative glow blobs in light mode */}
       <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-green-200/30 rounded-full blur-3xl pointer-events-none dark:hidden" />
