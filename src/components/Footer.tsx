@@ -5,18 +5,18 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { socialLinks } from "@/data/footerData";
 
-// Subtle ambient cubes placed along the perimeter to frame the central branding.
+// Subtle ambient cubes placed along the perimeter inside the card to frame the central branding.
 // Positions and sizes clamped to prevent overflowing small mobile viewports.
-// Cubes are confined vertically around the wordmark card area (top: 46% - 66%).
+// Guaranteed margin >= half cube size + float amplitude from every edge of the card.
 const CUBES = [
-  { size: 70, left: 8, top: 48, z: -150, rx: 35, ry: 45, delay: 0, duration: 6, floatAmp: -12, rotAmpX: 12, rotAmpY: 15 },
-  { size: 40, left: 78, top: 50, z: -300, rx: -25, ry: 15, delay: 1.2, duration: 8.5, floatAmp: -8, rotAmpX: -10, rotAmpY: 12 },
-  { size: 65, left: 12, top: 64, z: 80, rx: 15, ry: -35, delay: 0.5, duration: 7, floatAmp: -15, rotAmpX: 14, rotAmpY: -12 },
-  { size: 30, left: 74, top: 66, z: -80, rx: 55, ry: 45, delay: 2, duration: 9, floatAmp: -6, rotAmpX: 15, rotAmpY: 10 },
-  { size: 55, left: 72, top: 56, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11, floatAmp: -18, rotAmpX: -8, rotAmpY: 16 },
-  { size: 45, left: 6, top: 58, z: -200, rx: 10, ry: -10, delay: 0.8, duration: 7.5, floatAmp: -10, rotAmpX: 8, rotAmpY: -14 },
-  { size: 60, left: 70, top: 46, z: 120, rx: 45, ry: -25, delay: 2.5, duration: 9.5, floatAmp: -14, rotAmpX: 16, rotAmpY: -10 },
-  { size: 40, left: 14, top: 52, z: -180, rx: -45, ry: 35, delay: 1.5, duration: 6.5, floatAmp: -7, rotAmpX: -12, rotAmpY: 14 },
+  { size: 44, left: 12, top: 30, z: -120, rx: 35, ry: 45, delay: 0, duration: 6, floatAmp: -7, rotAmpX: 12, rotAmpY: 15 },
+  { size: 42, left: 86, top: 30, z: 100, rx: 45, ry: -25, delay: 2.5, duration: 9.5, floatAmp: -7, rotAmpX: 16, rotAmpY: -10 },
+  { size: 36, left: 16, top: 66, z: 60, rx: 15, ry: -35, delay: 0.5, duration: 7, floatAmp: -6, rotAmpX: 14, rotAmpY: -12 },
+  { size: 38, left: 83, top: 66, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11, floatAmp: -6, rotAmpX: -8, rotAmpY: 16 },
+  { size: 32, left: 10, top: 50, z: -160, rx: 10, ry: -10, delay: 0.8, duration: 7.5, floatAmp: -5, rotAmpX: 8, rotAmpY: -14 },
+  { size: 30, left: 88, top: 50, z: -80, rx: 55, ry: 45, delay: 2, duration: 9, floatAmp: -5, rotAmpX: 15, rotAmpY: 10 },
+  { size: 40, left: 20, top: 24, z: -140, rx: -45, ry: 35, delay: 1.5, duration: 6.5, floatAmp: -6, rotAmpX: -12, rotAmpY: 14 },
+  { size: 34, left: 78, top: 24, z: -200, rx: -25, ry: 15, delay: 1.2, duration: 8.5, floatAmp: -5, rotAmpX: -10, rotAmpY: 12 },
 ];
 
 const TICKER_ITEMS = [
@@ -70,9 +70,8 @@ export default function Footer() {
           inset: 0;
           perspective: 1200px;
           pointer-events: none;
-          z-index: 1;
+          z-index: 0;
           overflow: hidden;
-          contain: paint;
         }
         
         .cube-anchor {
@@ -199,85 +198,34 @@ export default function Footer() {
         {/* Subtle grid background */}
         <div className="absolute inset-0 lab-grid-bg opacity-40 pointer-events-none" />
 
-        {/* Ambient Geometric Cubes (Confined to Periphery/Wordmark to prevent text clash) */}
-        <div className="cube-scene">
-          {CUBES.map((c, i) => (
-            <div 
-              key={i} 
-              className={`cube-anchor ${i >= 4 ? "hidden md:block" : ""}`}
-              style={{
-                left: `${c.left}%`,
-                top: `${c.top}%`,
-                transform: `translate3d(0, 0, ${c.z}px)`,
-                zIndex: c.z > 0 ? 5 : 1
-              }}
-            >
-              <div 
-                className="cube-float-wrapper"
-                style={{ 
-                  '--duration': `${c.duration}s`, 
-                  '--delay': `${c.delay}s`,
-                  '--float-amp': `${c.floatAmp}px`
-                } as React.CSSProperties}
-              >
-                <div 
-                  className="cube-rotate-wrapper"
-                  style={{ 
-                    '--rot-duration': `${(c.duration * 1.3).toFixed(1)}s`, 
-                    '--rot-delay': `${(c.delay * 0.7).toFixed(1)}s`,
-                    '--base-rx': `${c.rx}deg`,
-                    '--base-ry': `${c.ry}deg`,
-                    '--rot-amp-x': `${c.rotAmpX}deg`,
-                    '--rot-amp-y': `${c.rotAmpY}deg`,
-                  } as React.CSSProperties}
-                >
-                  <div 
-                    className="cube"
-                    style={{ 
-                      '--size': `${c.size}px`,
-                    } as React.CSSProperties}
-                  >
-                    <div className="cube-face face-front" />
-                    <div className="cube-face face-back" />
-                    <div className="cube-face face-right" />
-                    <div className="cube-face face-left" />
-                    <div className="cube-face face-top" />
-                    <div className="cube-face face-bottom" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
         {/* Content Container - unified container sharing same padding and max-w as other sections */}
         <div className="relative z-10 flex flex-col justify-end w-full max-w-7xl mx-auto px-4 md:px-8 pt-12 sm:pt-16 pb-8">
           
           {/* Top Quick Links & Status Bar */}
           <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6 pb-8 border-b border-border/60 text-xs font-mono">
-            {/* Primary Navigation - 2-column grid below md, balanced 2-col on md, flex row on lg */}
-            <div className="grid grid-cols-2 gap-2 w-full max-w-xs mx-auto md:max-w-none md:grid md:grid-cols-2 md:gap-x-4 md:gap-y-1 lg:flex lg:flex-row lg:items-center lg:justify-start lg:gap-x-6">
+            {/* Primary Navigation - single line items with 44px tap targets */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 sm:gap-x-6 gap-y-2">
               <Link 
                 href="/contact" 
-                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 :: Contact
               </Link>
               <Link 
                 href="/about" 
-                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 :: About
               </Link>
               <Link 
                 href="/#incubation-hub" 
-                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 :: Registrations
               </Link>
               <Link 
                 href="/events" 
-                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 whitespace-nowrap focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
                 :: Events
               </Link>
@@ -306,13 +254,64 @@ export default function Footer() {
 
           {/* Clean, Sleek Cyber Branding Display */}
           <div className="relative my-8 sm:my-10 py-8 sm:py-12 border border-border/60 bg-foreground/[0.015] backdrop-blur-sm rounded-2xl overflow-hidden">
-            {/* Blueprint Technical Corner Crosshairs */}
-            <span className="absolute top-3 left-3 font-mono text-xs text-[#BE4105]/80 select-none">+</span>
-            <span className="absolute top-3 right-3 font-mono text-xs text-[#BE4105]/80 select-none">+</span>
-            <span className="absolute bottom-3 left-3 font-mono text-xs text-[#BE4105]/80 select-none">+</span>
-            <span className="absolute bottom-3 right-3 font-mono text-xs text-[#BE4105]/80 select-none">+</span>
+            {/* Ambient Geometric Cubes (Confined inside the Card boundary to prevent visible slicing) */}
+            <div className="cube-scene">
+              {CUBES.map((c, i) => (
+                <div 
+                  key={i} 
+                  className={`cube-anchor ${i >= 4 ? "hidden md:block" : ""}`}
+                  style={{
+                    left: `${c.left}%`,
+                    top: `${c.top}%`,
+                    transform: `translate3d(0, 0, ${c.z}px)`,
+                    zIndex: c.z > 0 ? 5 : 1
+                  }}
+                >
+                  <div 
+                    className="cube-float-wrapper"
+                    style={{ 
+                      '--duration': `${c.duration}s`, 
+                      '--delay': `${c.delay}s`,
+                      '--float-amp': `${c.floatAmp}px`
+                    } as React.CSSProperties}
+                  >
+                    <div 
+                      className="cube-rotate-wrapper"
+                      style={{ 
+                        '--rot-duration': `${(c.duration * 1.3).toFixed(1)}s`, 
+                        '--rot-delay': `${(c.delay * 0.7).toFixed(1)}s`,
+                        '--base-rx': `${c.rx}deg`,
+                        '--base-ry': `${c.ry}deg`,
+                        '--rot-amp-x': `${c.rotAmpX}deg`,
+                        '--rot-amp-y': `${c.rotAmpY}deg`,
+                      } as React.CSSProperties}
+                    >
+                      <div 
+                        className="cube"
+                        style={{ 
+                          '--size': `${c.size}px`,
+                        } as React.CSSProperties}
+                      >
+                        <div className="cube-face face-front" />
+                        <div className="cube-face face-back" />
+                        <div className="cube-face face-right" />
+                        <div className="cube-face face-left" />
+                        <div className="cube-face face-top" />
+                        <div className="cube-face face-bottom" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-            <div className="text-center select-none py-2 px-4 flex flex-col items-center justify-center">
+            {/* Blueprint Technical Corner Crosshairs */}
+            <span className="absolute top-3 left-3 font-mono text-xs text-[#BE4105]/80 select-none z-10">+</span>
+            <span className="absolute top-3 right-3 font-mono text-xs text-[#BE4105]/80 select-none z-10">+</span>
+            <span className="absolute bottom-3 left-3 font-mono text-xs text-[#BE4105]/80 select-none z-10">+</span>
+            <span className="absolute bottom-3 right-3 font-mono text-xs text-[#BE4105]/80 select-none z-10">+</span>
+
+            <div className="relative z-10 text-center select-none py-2 px-4 flex flex-col items-center justify-center">
               {/* Main Clean Typography with responsive clamp sizing */}
               <div className="flex items-baseline justify-center">
                 <span className="text-[clamp(2.75rem,10vw,7.5rem)] font-black font-mono tracking-tight leading-none text-foreground drop-shadow-sm">
