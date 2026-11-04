@@ -19,22 +19,22 @@ export default function UpcomingEventHome() {
 
   return (
     <section
-      className="relative w-full py-40 px-8 lg:px-16 flex items-center justify-center min-h-[900px] z-20 overflow-hidden transition-colors duration-500 bg-background"
+      className="relative w-full py-16 sm:py-24 lg:py-32 px-4 sm:px-8 lg:px-16 flex items-center justify-center min-h-0 lg:min-h-[750px] z-20 overflow-hidden transition-colors duration-500 bg-background"
     >
       {/* Decorative glow blobs in light mode */}
       <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-green-200/30 rounded-full blur-3xl pointer-events-none dark:hidden" />
       <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-slate-300/30 rounded-full blur-3xl pointer-events-none dark:hidden" />
 
-      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
 
-        <div className="flex flex-col items-start text-left z-30 mb-20 lg:mb-0">
+        <div className="flex flex-col items-start text-left z-30 mb-8 lg:mb-0">
           <div className="flex items-center gap-2 mb-3">
             <span className="w-2.5 h-2.5 bg-[#E50914]" />
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-foreground/60">
               COMMUNITY & COMPETITIONS
             </span>
           </div>
-          <h2 className="text-5xl lg:text-7xl font-black mb-6 cyber-font text-foreground">
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-4 sm:mb-6 cyber-font text-foreground break-words tracking-tight">
             FLAGSHIP<br />
             <span className="text-[#E50914]">EVENTS</span>
           </h2>
@@ -44,9 +44,9 @@ export default function UpcomingEventHome() {
         </div>
 
         {/* Right Side Cards */}
-        <div className="relative w-full flex justify-center lg:justify-end py-10 pointer-events-auto">
+        <div className="relative w-full flex justify-center lg:justify-end py-6 sm:py-10 pointer-events-auto">
           {isLoading ? (
-            <div className="w-[600px] h-[560px] rounded-xl bg-card border border-border flex flex-col items-center justify-center text-foreground">
+            <div className="w-full max-w-[600px] h-[480px] sm:h-[560px] rounded-xl bg-card border border-border flex flex-col items-center justify-center text-foreground">
               <Loader2 className="w-8 h-8 animate-spin text-[#E50914] mb-4" />
               <p className="font-mono text-xs opacity-50 tracking-widest uppercase">Syncing to chain...</p>
             </div>
@@ -67,41 +67,46 @@ export default function UpcomingEventHome() {
                       key={event.id}
                       className="flex flex-col justify-between p-0 overflow-hidden shadow-2xl bg-card border border-border"
                     >
-                      <div className="w-full h-48 bg-black/20 flex items-center justify-center border-b border-border overflow-hidden">
+                      <div className="relative w-full aspect-[16/9] sm:h-48 sm:aspect-auto bg-black/5 dark:bg-black/20 flex items-center justify-center border-b border-border overflow-hidden shrink-0">
                         <img
                           src={event.image_url || "/placeholder-event.png"}
                           alt={event.title}
-                          className="w-full h-full object-cover object-[center_30%]"
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-contain p-2"
                         />
                       </div>
 
-                      <div className="p-8 flex flex-col justify-between flex-1">
+                      <div className="p-5 sm:p-7 flex flex-col justify-between flex-1">
                         <div>
-                          <div className="flex justify-between items-start mb-4">
-                            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest ${event.status === "open" ? "border-green-400/20 bg-green-400/10 text-green-400" :
+                          <div className="flex justify-between items-start gap-2 mb-3 sm:mb-4">
+                            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest ${event.status === "open" ? "border-emerald-500/20 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" :
                                 "border-[#E50914]/20 bg-[#E50914]/10 text-[#E50914]"
                               }`}>
-                              <span className={`w-2 h-2 rounded-full animate-ping ${event.status === "open" ? "bg-green-400" : "bg-[#E50914]"}`} />
+                              <span className="relative flex h-2 w-2">
+                                <span className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${event.status === "open" ? "bg-emerald-500" : "bg-[#E50914]"}`} />
+                                <span className={`relative inline-flex rounded-full h-2 w-2 ${event.status === "open" ? "bg-emerald-500" : "bg-[#E50914]"}`} />
+                              </span>
                               {event.status === "open" ? "Registration Open" : "Coming Soon"}
                             </div>
-                            <span className="font-mono text-xs text-foreground/50">
+                            <span className="font-mono text-xs text-foreground/50 shrink-0">
                               {event.date}
                             </span>
                           </div>
 
-                          <h2 className="text-2xl md:text-3xl font-black cyber-font leading-tight mb-2 text-foreground">
+                          <h2 className="text-xl sm:text-2xl md:text-3xl font-black cyber-font leading-tight mb-2 text-foreground break-words">
                             {event.title}
                           </h2>
-                          <p className="font-mono text-xs md:text-sm line-clamp-2 text-foreground/70">
+                          <p className="font-mono text-sm line-clamp-2 sm:line-clamp-3 text-foreground/70 break-words leading-relaxed">
                             {event.description}
                           </p>
                         </div>
 
-                        <div className="flex flex-col gap-3 mt-6">
+                        <div className="flex flex-col gap-3 mt-5 sm:mt-6">
                           {event.status === "open" ? (
                             <Link
                               href="/#incubation-hub"
-                              className="cyber-btn px-6 py-3.5 w-full font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 group bg-[#E50914] hover:bg-[#e0151e] text-white shadow-[0_0_15px_rgba(255,30,39,0.35)] cursor-pointer"
+                              className="cyber-btn min-h-[44px] px-6 py-3 w-full font-mono text-xs font-bold uppercase tracking-wider transition-all flex items-center justify-center gap-2 group bg-[#E50914] hover:bg-[#e0151e] text-white shadow-[0_0_15px_rgba(255,30,39,0.35)] cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E50914] focus-visible:ring-offset-2"
                             >
                               <span>Register for event</span>
                               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -109,14 +114,14 @@ export default function UpcomingEventHome() {
                           ) : (
                             <button
                               disabled
-                              className="px-6 py-3 w-full font-mono text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 group bg-foreground/5 text-foreground/40 cursor-not-allowed"
+                              className="min-h-[44px] px-6 py-3 w-full font-mono text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 group bg-foreground/5 text-foreground/40 cursor-not-allowed"
                             >
                               Registration not open yet
                             </button>
                           )}
                           <Link
                             href="/events"
-                            className="px-6 py-3 w-full border font-bold rounded-lg transition-all flex items-center justify-center border-[#D9D9D9]/20 dark:border-border text-[#D9D9D9] dark:text-foreground hover:bg-[#D9D9D9]/5 dark:hover:bg-foreground/5"
+                            className="min-h-[44px] px-6 py-3 w-full border font-bold text-xs sm:text-sm rounded-lg transition-all flex items-center justify-center border-border text-foreground hover:bg-foreground/5 hover:border-foreground/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
                           >
                             Explore all events
                           </Link>
@@ -126,19 +131,19 @@ export default function UpcomingEventHome() {
                   );
                 })
               ) : (
-                <Card className="flex flex-col items-center justify-center p-8 shadow-2xl h-full text-center bg-[#202221] dark:bg-card">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest border-[#D9D9D9]/20 dark:border-foreground/20 bg-[#D9D9D9]/10 dark:bg-foreground/10 text-[#D9D9D9]/50 dark:text-foreground/50 mb-6">
+                <Card className="flex flex-col items-center justify-center p-6 sm:p-8 shadow-2xl h-full text-center bg-card border border-border">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest border-border bg-foreground/5 text-foreground/60 mb-6">
                     Check Back Later
                   </div>
-                  <h2 className="text-3xl font-black leading-tight mb-4 text-[#D9D9D9] dark:text-foreground">
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight mb-4 text-foreground cyber-font">
                     No Upcoming Events
                   </h2>
-                  <p className="text-sm text-[#D9D9D9]/80 dark:text-foreground/60 mb-8 max-w-sm">
+                  <p className="font-mono text-sm text-foreground/70 mb-8 max-w-sm leading-relaxed">
                     We are currently brewing up some exciting new hackathons and workshops. Stay tuned!
                   </p>
                   <Link
                     href="/events"
-                    className="px-6 py-3 w-full border font-bold rounded-lg transition-all flex items-center justify-center border-[#D9D9D9]/20 dark:border-border text-[#D9D9D9] dark:text-foreground hover:bg-[#D9D9D9]/5 dark:hover:bg-foreground/5"
+                    className="min-h-[44px] px-6 py-3 w-full border font-bold text-xs sm:text-sm rounded-lg transition-all flex items-center justify-center border-border text-foreground hover:bg-foreground/5 hover:border-foreground/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2"
                   >
                     View Past Events
                   </Link>
