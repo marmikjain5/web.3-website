@@ -112,7 +112,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const isDesktop = availableW >= 640;
 
   const numericWidth = typeof width === 'number' ? width : 600;
-  const numericHeight = typeof height === 'number' ? height : 560;
+  const numericHeight = typeof height === 'number' ? height : (isDesktop ? 560 : 500);
 
   const maxStackShiftX = isDesktop ? 36 : 14;
   const maxStackShiftY = isDesktop ? 36 : 14;
@@ -179,9 +179,11 @@ const CardSwap: React.FC<CardSwapProps> = ({
     const mediaQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     let prefersReducedMotion = mediaQuery ? mediaQuery.matches : false;
 
+    const effectiveSkew = isDesktop ? skewAmount : 0;
+
     refs.forEach((r, i) => {
       if (r.current) {
-        placeNow(r.current, makeSlot(i, distX, distY, refs.length), skewAmount);
+        placeNow(r.current, makeSlot(i, distX, distY, refs.length), effectiveSkew);
       }
     });
 

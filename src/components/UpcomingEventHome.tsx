@@ -20,7 +20,7 @@ export default function UpcomingEventHome() {
   return (
     <section
       id="events"
-      className="relative w-full py-20 lg:py-24 px-4 sm:px-6 md:px-8 flex items-center justify-center z-20 overflow-hidden transition-colors duration-500 bg-background"
+      className="relative w-full pt-24 pb-20 sm:pt-28 sm:pb-24 lg:py-24 px-4 sm:px-6 md:px-8 flex items-center justify-center z-20 overflow-hidden transition-colors duration-500 bg-background"
     >
       {/* Decorative glow blobs in light mode */}
       <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-green-200/30 rounded-full blur-3xl pointer-events-none dark:hidden" />
@@ -45,7 +45,7 @@ export default function UpcomingEventHome() {
         </div>
 
         {/* Right Side Cards */}
-        <div className="relative w-full flex justify-center lg:justify-end pointer-events-auto">
+        <div className="relative w-full flex justify-center lg:justify-end pr-0 lg:pr-8 pointer-events-auto">
           {isLoading ? (
             <div className="w-full max-w-[600px] h-[480px] rounded-xl bg-card border border-border flex flex-col items-center justify-center text-foreground">
               <Loader2 className="w-8 h-8 animate-spin text-[#E50914] mb-4" />
@@ -78,8 +78,8 @@ export default function UpcomingEventHome() {
                       </div>
 
                       <div className="p-5 sm:p-6 lg:p-8 flex flex-col justify-between flex-1">
-                        <div className="space-y-4">
-                          <div className="flex flex-wrap justify-between items-baseline gap-2">
+                        <div className="space-y-3 sm:space-y-4">
+                          <div className="flex flex-wrap justify-between items-center gap-2">
                             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest ${event.status === "open" ? "border-green-400/20 bg-green-400/10 text-green-400" :
                                 "border-[#E50914]/20 bg-[#E50914]/10 text-[#E50914]"
                               }`}>
