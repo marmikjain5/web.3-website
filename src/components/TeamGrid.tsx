@@ -39,18 +39,19 @@ type Particle = {
   pulseSpeed: number;
 };
 
-export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
+export default function TeamGrid({ members = [] }: { members?: TeamMemberRow[] }) {
   const [selectedDept, setSelectedDept] = useState("all");
+  const safeMembers = members || [];
   const filteredMembers =
     selectedDept === "all"
-      ? members
-      : members.filter((m) => m.department?.toLowerCase() === selectedDept);
+      ? safeMembers
+      : safeMembers.filter((m) => m.department?.toLowerCase() === selectedDept);
   const chunkedRows = chunkArray(filteredMembers, 3);
 
   const departments = [
     "all",
     ...Array.from(
-      new Set(members.map((m) => m.department?.toLowerCase() || "other"))
+      new Set(safeMembers.map((m) => m.department?.toLowerCase() || "other"))
     ),
   ];
 
@@ -355,7 +356,7 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
             }}
           >
             {Array.from({ length: 2 }, () =>
-              `◈ PROTOCOL_v3.1.4 ◈ NODES_ACTIVE: ${members.length
+              `◈ PROTOCOL_v3.1.4 ◈ NODES_ACTIVE: ${safeMembers.length
                 .toString()
                 .padStart(
                   2,
@@ -406,7 +407,7 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
                   BLOCK_SYNC: 100%
                 </span>
                 <span className="px-2.5 py-1 rounded-md bg-foreground/5 border border-border/80 font-bold text-foreground text-[11px] sm:text-xs">
-                  {members.length.toString().padStart(2, "0")} ACTIVE NODES
+                  {safeMembers.length > 0 ? `${safeMembers.length.toString().padStart(2, "0")} ACTIVE NODES` : "STANDBY / 00 NODES"}
                 </span>
               </div>
             </div>
@@ -414,6 +415,7 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
         </div>
 
         {/* Filters */}
+        {safeMembers.length > 0 && departments.length > 1 && (
         <div
           style={{
             display: "flex",
@@ -448,6 +450,8 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
           })}
         </div>
 
+        )}
+
         {/* Grid */}
         <div
           style={{
@@ -462,6 +466,26 @@ export default function TeamGrid({ members }: { members: TeamMemberRow[] }) {
             chunkedRows.map((row, rowIdx) => (
               <RevealRow key={rowIdx} row={row} rowIdx={rowIdx} />
             ))
+          ) : safeMembers.length === 0 ? (
+            <div className="relative max-w-xl mx-auto my-8 p-8 sm:p-10 rounded-2xl border border-border bg-card/60 backdrop-blur-md text-center">
+              <span className="tech-bracket-tl text-[#E50914]" />
+              <span className="tech-bracket-tr text-[#E50914]" />
+              <span className="tech-bracket-bl text-[#E50914]" />
+              <span className="tech-bracket-br text-[#E50914]" />
+              <div className="w-2.5 h-2.5 rounded-full bg-[#E50914] animate-pulse mx-auto mb-4 shadow-[0_0_12px_#E50914]" />
+              <span className="text-[11px] font-mono text-[#E50914] uppercase tracking-widest font-bold block mb-2">
+                SYS:DIRECTORY // ROSTER_OFFLINE
+              </span>
+              <h3 className="text-xl sm:text-2xl font-bold font-mono text-foreground uppercase tracking-tight mb-3">
+                Team Roster Temporarily Unavailable
+              </h3>
+              <p className="font-mono text-xs sm:text-sm text-foreground/60 leading-relaxed mb-6">
+                The core contributor directory is currently updating or offline in this environment. Active member profiles will populate once the roster registry is synchronized.
+              </p>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-foreground/5 border border-border font-mono text-[11px] text-foreground/50">
+                <span>DIRECTORY_STATUS: AWAITING_DATABASE_SYNC</span>
+              </div>
+            </div>
           ) : (
             <div className="text-center py-20 font-mono text-sm text-foreground/40">
               No team members found in this division.

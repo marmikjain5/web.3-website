@@ -64,27 +64,27 @@ const infoBlocks = [
 
 export default function AboutSection() {
   return (
-    <section className="py-24 bg-background relative overflow-hidden lab-grid-bg">
+    <section className="py-16 sm:py-24 bg-background relative overflow-hidden lab-grid-bg">
       {/* Background Radial Highlights */}
       <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#FF5500]/5 rounded-full blur-[150px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-[#FF5500]/5 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="container mx-auto px-4 md:px-8 relative z-10 max-w-7xl">
         {/* Section Header */}
-        <div className="border-b border-border pb-6 mb-16">
+        <div className="border-b border-border pb-6 mb-12 sm:mb-16">
           <div className="flex items-center gap-2 mb-2">
             <span className="w-2.5 h-2.5 bg-[#FF5500] shadow-[0_0_8px_#FF5500]" />
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-foreground/60">
               MISSION_MANIFESTO
             </span>
           </div>
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black cyber-font tracking-tight text-foreground">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black cyber-font tracking-tight text-foreground">
             ABOUT LABS
           </h1>
         </div>
 
         {/* Info Blocks Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-16 sm:mb-24">
           {infoBlocks.map((block, index) => (
             <motion.div
               key={index}
@@ -94,7 +94,7 @@ export default function AboutSection() {
               transition={{ delay: index * 0.2 }}
             >
               <SpotlightCard
-                className="h-full p-8 md:p-10 rounded-2xl bg-card border border-border hover:border-[#FF5500]/50 transition-colors shadow-sm relative group"
+                className="h-full p-5 sm:p-8 md:p-10 rounded-2xl bg-card border border-border hover:border-[#FF5500]/50 transition-colors shadow-sm relative group"
                 spotlightColor="rgba(255, 85, 0, 0.12)"
               >
                 <span className="tech-bracket-tl text-[#FF5500]" />
@@ -102,18 +102,18 @@ export default function AboutSection() {
                 <span className="tech-bracket-bl text-[#FF5500]" />
                 <span className="tech-bracket-br text-[#FF5500]" />
 
-                <div className="mb-6 p-3 bg-[#FF5500]/10 w-fit rounded-xl border border-[#FF5500]/30 group-hover:scale-105 transition-transform">
+                <div className="mb-4 sm:mb-6 p-2.5 sm:p-3 bg-[#FF5500]/10 w-fit rounded-xl border border-[#FF5500]/30 group-hover:scale-105 transition-transform">
                   {block.icon}
                 </div>
-                <h2 className="text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-3 font-mono">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-foreground uppercase tracking-tight mb-3 font-mono">
                   <DecryptedText
                     text={block.title}
                     speed={40}
                     encryptedClassName="text-[#FF5500]"
                   />
                 </h2>
-                <div className="h-1 w-16 bg-[#FF5500] mb-6 rounded-full shadow-[0_0_12px_rgba(255,85,0,0.5)]" />
-                <p className="text-base text-foreground/80 leading-relaxed font-sans">
+                <div className="h-1 w-16 bg-[#FF5500] mb-4 sm:mb-6 rounded-full shadow-[0_0_12px_rgba(255,85,0,0.5)]" />
+                <p className="text-sm sm:text-base text-foreground/80 leading-relaxed font-sans">
                   {block.content}
                 </p>
               </SpotlightCard>
@@ -122,17 +122,17 @@ export default function AboutSection() {
         </div>
 
         {/* Member Benefits Section */}
-        <div className="mb-12 border-t border-border pt-16">
+        <div className="mb-8 sm:mb-12 border-t border-border pt-12 sm:pt-16">
           <div className="flex items-center gap-2 mb-2">
             <span className="w-2.5 h-2.5 bg-foreground" />
             <span className="font-mono text-xs font-bold uppercase tracking-widest text-foreground/60">
               ECOSYSTEM_ADVANTAGE
             </span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-foreground uppercase tracking-tight cyber-font">
+          <h2 className="text-2xl sm:text-4xl md:text-5xl font-black text-foreground uppercase tracking-tight cyber-font">
             <DecryptedText text="MEMBER BENEFITS" speed={50} maxIterations={12} />
           </h2>
-          <div className="h-1 w-20 bg-[#FF5500] mt-4 rounded-full shadow-[0_0_10px_rgba(255,85,0,0.5)]" />
+          <div className="h-1 w-20 bg-[#FF5500] mt-3 sm:mt-4 rounded-full shadow-[0_0_10px_rgba(255,85,0,0.5)]" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -147,25 +147,25 @@ export default function AboutSection() {
               className="h-full"
             >
               <SpotlightCard
-                className="h-full p-8 bg-card rounded-2xl border border-border hover:border-[#FF5500]/50 transition-all duration-300 shadow-sm relative group flex flex-col justify-between"
+                className="h-full p-5 sm:p-8 bg-card rounded-2xl border border-border hover:border-[#FF5500]/50 transition-all duration-300 shadow-sm relative group flex flex-col justify-between"
                 spotlightColor="rgba(255, 85, 0, 0.12)"
               >
                 <span className="tech-bracket-tl" />
                 <span className="tech-bracket-tr" />
 
                 <div>
-                  <div className="mb-6 p-3 bg-[#FF5500]/10 w-fit rounded-xl border border-[#FF5500]/20 group-hover:scale-105 transition-transform">
+                  <div className="mb-4 sm:mb-6 p-2.5 sm:p-3 bg-[#FF5500]/10 w-fit rounded-xl border border-[#FF5500]/20 group-hover:scale-105 transition-transform">
                     {benefit.icon}
                   </div>
-                  <h3 className="text-xl font-bold font-mono text-foreground mb-3">
+                  <h3 className="text-lg sm:text-xl font-bold font-mono text-foreground mb-2 sm:mb-3">
                     {benefit.title}
                   </h3>
-                  <p className="text-sm text-foreground/70 leading-relaxed font-sans">
+                  <p className="text-xs sm:text-sm text-foreground/70 leading-relaxed font-sans">
                     {benefit.description}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-border flex items-center justify-between text-[11px] font-mono text-foreground/40">
+                <div className="mt-5 sm:mt-6 pt-3 sm:pt-4 border-t border-border flex items-center justify-between text-[11px] font-mono text-foreground/40">
                   <span>TIER_01</span>
                   <span className="text-[#FF5500] font-bold">VERIFIED</span>
                 </div>

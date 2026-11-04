@@ -114,18 +114,18 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const numericWidth = typeof width === 'number' ? width : 600;
   const numericHeight = typeof height === 'number' ? height : (isDesktop ? 560 : 500);
 
-  const maxStackShiftX = isDesktop ? 36 : 14;
-  const maxStackShiftY = isDesktop ? 36 : 14;
+  const maxStackShiftX = isDesktop ? 36 : 8;
+  const maxStackShiftY = isDesktop ? 36 : 10;
 
-  const distX = Math.min(cardDistance, Math.max(6, Math.floor(maxStackShiftX / Math.max(1, totalCards - 1))));
-  const distY = Math.min(verticalDistance, Math.max(6, Math.floor(maxStackShiftY / Math.max(1, totalCards - 1))));
+  const distX = Math.min(cardDistance, Math.max(4, Math.floor(maxStackShiftX / Math.max(1, totalCards - 1))));
+  const distY = Math.min(verticalDistance, Math.max(4, Math.floor(maxStackShiftY / Math.max(1, totalCards - 1))));
 
   const totalOffsetX = (totalCards - 1) * distX;
   const totalOffsetY = (totalCards - 1) * distY;
 
   const effectiveCardWidth = isDesktop
     ? Math.min(numericWidth, availableW - totalOffsetX - 32)
-    : Math.max(280, availableW - totalOffsetX);
+    : Math.max(220, Math.min(numericWidth, availableW - totalOffsetX - 12));
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -169,21 +169,22 @@ const CardSwap: React.FC<CardSwapProps> = ({
         };
   }, [easing]);
 
+  const isPausedRef = useRef(false);
   const tlRef = useRef<gsap.core.Timeline | null>(null);
-  const intervalRef = useRef<number>(0);
-  const isPausedRef = useRef<boolean>(false);
+  const intervalRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    if (refs.length === 0) return;
+    const total = refs.length;
+    if (total === 0) return;
 
     refs.forEach((r, i) => {
       if (r.current) {
-        placeNow(r.current, makeSlot(i, distX, distY, refs.length), skewAmount);
+        placeNow(r.current, makeSlot(i, distX, distY, total), skewAmount);
       }
     });
 
     const swap = () => {
-      if (order.current.length < 2 || isPausedRef.current) return;
+      if (order.current.length < 2) return;
 
       const [front, ...rest] = order.current;
       const elFront = refs[front]?.current;
@@ -193,39 +194,38 @@ const CardSwap: React.FC<CardSwapProps> = ({
       tlRef.current = tl;
 
       tl.to(elFront, {
-        y: '+=500',
+        y: `+=${effectiveCardHeight * 0.4}`,
+        x: `-=${distX * 2}`,
+        z: 80,
+        rotationZ: -4,
         duration: config.durDrop,
         ease: config.ease
       });
 
-      tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
       rest.forEach((idx, i) => {
         const el = refs[idx]?.current;
         if (!el) return;
-        const slot = makeSlot(i, distX, distY, refs.length);
-        tl.set(el, { zIndex: slot.zIndex }, 'promote');
+        const targetSlot = makeSlot(i, distX, distY, total);
+
         tl.to(
           el,
           {
-            x: slot.x,
-            y: slot.y,
-            z: slot.z,
+            x: targetSlot.x,
+            y: targetSlot.y,
+            z: targetSlot.z,
             duration: config.durMove,
-            ease: config.ease
+            ease: config.ease,
+            onStart: () => {
+              gsap.set(el, { zIndex: targetSlot.zIndex });
+            }
           },
-          `promote+=${i * 0.15}`
+          `<+=${config.promoteOverlap}`
         );
       });
 
-      const backSlot = makeSlot(refs.length - 1, distX, distY, refs.length);
-      tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
-      tl.call(
-        () => {
-          gsap.set(elFront, { zIndex: backSlot.zIndex });
-        },
-        undefined,
-        'return'
-      );
+      const backSlot = makeSlot(total - 1, distX, distY, total);
+      tl.set(elFront, { zIndex: backSlot.zIndex, rotationZ: 0 }, 'return');
+
       tl.to(
         elFront,
         {
@@ -275,7 +275,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
         node.removeEventListener('mouseleave', resume);
       }
     };
-  }, [distX, distY, delay, pauseOnHover, skewAmount, easing, refs, config]);
+  }, [distX, distY, delay, pauseOnHover, skewAmount, easing, refs, config, effectiveCardHeight]);
 
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)

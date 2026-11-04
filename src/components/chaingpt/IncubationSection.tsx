@@ -56,8 +56,6 @@ export default function IncubationSection() {
 
   const visibleCards = SUPPORT_CARDS.slice(startIndex, startIndex + 2);
 
-
-
   useEffect(() => {
     if (!sectionRef.current) return;
 
@@ -120,7 +118,7 @@ export default function IncubationSection() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative w-full py-20 border-b border-border lab-grid-bg overflow-hidden">
+    <section ref={sectionRef} className="relative w-full py-16 sm:py-20 border-b border-border lab-grid-bg overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Section Header with Giant Typography & Scramble Animation */}
@@ -218,18 +216,18 @@ export default function IncubationSection() {
               </AnimatePresence>
             </div>
 
-            {/* Navigation Arrows */}
-            <div className="flex items-center gap-2 pt-1">
+            {/* Navigation Arrows with touch-friendly 40px+ tap targets */}
+            <div className="flex items-center gap-2.5 pt-1">
               <button
                 onClick={prevCard}
-                className="w-8 h-8 rounded-lg border border-border bg-card flex items-center justify-center hover:text-[#E50914] hover:border-[#E50914] transition-colors cursor-pointer"
+                className="w-10 h-10 sm:w-8 sm:h-8 rounded-lg border border-border bg-card flex items-center justify-center hover:text-[#E50914] hover:border-[#E50914] transition-colors cursor-pointer min-h-[40px] sm:min-h-0"
                 aria-label="Previous support items"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
               <button
                 onClick={nextCard}
-                className="w-8 h-8 rounded-lg border border-border bg-card flex items-center justify-center hover:text-[#E50914] hover:border-[#E50914] transition-colors cursor-pointer"
+                className="w-10 h-10 sm:w-8 sm:h-8 rounded-lg border border-border bg-card flex items-center justify-center hover:text-[#E50914] hover:border-[#E50914] transition-colors cursor-pointer min-h-[40px] sm:min-h-0"
                 aria-label="Next support items"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -251,7 +249,7 @@ export default function IncubationSection() {
               </span>
               <Link
                 href="/proto"
-                className="inline-flex items-center gap-1.5 font-mono text-[11px] text-foreground/70 hover:text-[#E50914] tracking-wider uppercase transition-colors group cursor-pointer"
+                className="inline-flex items-center gap-1.5 font-mono text-[11px] text-foreground/70 hover:text-[#E50914] tracking-wider uppercase transition-colors group cursor-pointer min-h-[44px]"
               >
                 <span>EXPLORE WITH PROTO</span>
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform text-[#E50914]" />
@@ -273,7 +271,7 @@ export default function IncubationSection() {
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-card border border-border relative">
+            <div className="p-5 sm:p-6 rounded-2xl bg-card border border-border relative">
               <span className="tech-bracket-tl" />
               <span className="tech-bracket-tr" />
               <span className="tech-bracket-bl" />

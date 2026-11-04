@@ -66,12 +66,12 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-mono px-6 md:px-16 pt-24 pb-16 lab-grid-bg relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground font-mono px-4 sm:px-6 md:px-16 pt-20 sm:pt-24 pb-16 lab-grid-bg relative overflow-hidden">
       {/* Background Radial Glow */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-[#FF5500]/5 rounded-full blur-[160px] pointer-events-none" />
 
       {/* Heading */}
-      <div className="max-w-6xl mx-auto mb-12 border-b border-border pb-6">
+      <div className="max-w-6xl mx-auto mb-10 sm:mb-12 border-b border-border pb-6">
         <div className="flex items-center gap-2 mb-2">
           <span className="w-2.5 h-2.5 bg-[#FF5500] shadow-[0_0_8px_#FF5500]" />
           <p className="text-[#FF5500] text-xs tracking-[0.25em] uppercase font-bold">
@@ -79,15 +79,15 @@ export default function Contact() {
           </p>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black cyber-font leading-none tracking-tight">
+        <h1 className="text-3xl sm:text-5xl md:text-7xl font-black cyber-font leading-none tracking-tight">
           CONNECT WITH <span className="text-[#FF5500]">LABS</span>
         </h1>
       </div>
 
       {/* Layout */}
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
         {/* LEFT: SEND MESSAGE FORM (7 Cols) */}
-        <div className="lg:col-span-7 bg-card border border-border p-6 md:p-8 rounded-2xl relative shadow-sm">
+        <div className="lg:col-span-7 bg-card border border-border p-5 sm:p-6 md:p-8 rounded-2xl relative shadow-sm">
           <span className="tech-bracket-tl text-[#FF5500]" />
           <span className="tech-bracket-tr text-[#FF5500]" />
           <span className="tech-bracket-bl text-[#FF5500]" />
@@ -107,7 +107,7 @@ export default function Contact() {
                   Full Name
                 </label>
                 <input
-                  className="w-full bg-foreground/[0.03] border border-border px-4 py-3 text-sm rounded-lg focus:border-[#FF5500] focus:ring-1 focus:ring-[#FF5500] outline-none transition-all"
+                  className="w-full bg-foreground/[0.03] border border-border px-4 py-3 text-sm rounded-lg focus:border-[#FF5500] focus:ring-1 focus:ring-[#FF5500] outline-none transition-all min-h-[44px]"
                   name="name"
                   placeholder="Vitalik Buterin"
                   value={form.name}
@@ -120,7 +120,7 @@ export default function Contact() {
                   Signal Address
                 </label>
                 <input
-                  className="w-full bg-foreground/[0.03] border border-border px-4 py-3 text-sm rounded-lg focus:border-[#FF5500] focus:ring-1 focus:ring-[#FF5500] outline-none transition-all"
+                  className="w-full bg-foreground/[0.03] border border-border px-4 py-3 text-sm rounded-lg focus:border-[#FF5500] focus:ring-1 focus:ring-[#FF5500] outline-none transition-all min-h-[44px]"
                   name="email"
                   type="email"
                   placeholder="builder@domain.xyz"
@@ -136,7 +136,7 @@ export default function Contact() {
                 Project / Subject
               </label>
               <input
-                className="w-full bg-foreground/[0.03] border border-border px-4 py-3 text-sm rounded-lg focus:border-[#FF5500] focus:ring-1 focus:ring-[#FF5500] outline-none transition-all"
+                className="w-full bg-foreground/[0.03] border border-border px-4 py-3 text-sm rounded-lg focus:border-[#FF5500] focus:ring-1 focus:ring-[#FF5500] outline-none transition-all min-h-[44px]"
                 name="subject"
                 placeholder="Incubation inquiry / Advisory request"
                 value={form.subject}
@@ -163,7 +163,7 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={status === "sending"}
-                className="cyber-btn px-8 py-3.5 bg-[#FF5500] hover:bg-[#FF6611] text-white font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_16px_rgba(255,85,0,0.35)] transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                className="cyber-btn w-full sm:w-auto px-8 py-3.5 bg-[#FF5500] hover:bg-[#FF6611] text-white font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_16px_rgba(255,85,0,0.35)] transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 min-h-[44px]"
               >
                 <span>{status === "sending" ? "TRANSMITTING..." : "SEND MESSAGE"}</span>
                 <Send className="w-3.5 h-3.5" />
@@ -201,20 +201,20 @@ export default function Contact() {
                 href={c.href}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center justify-between border border-border bg-card p-5 rounded-xl hover:border-[#FF5500]/60 hover:bg-foreground/[0.02] transition-all group shadow-sm relative overflow-hidden"
+                className="flex items-center justify-between border border-border bg-card p-4 sm:p-5 rounded-xl hover:border-[#FF5500]/60 hover:bg-foreground/[0.02] transition-all group shadow-sm relative overflow-hidden min-h-[44px]"
               >
                 <span className="tech-bracket-tl text-[#FF5500]" />
                 <span className="tech-bracket-tr text-[#FF5500]" />
 
-                <div>
+                <div className="min-w-0 pr-2">
                   <p className="text-[10px] tracking-widest text-foreground/40 uppercase font-bold mb-1">
                     {c.label}
                   </p>
-                  <p className="text-sm font-bold text-foreground group-hover:text-[#FF5500] transition-colors">
+                  <p className="text-sm font-bold text-foreground group-hover:text-[#FF5500] transition-colors truncate">
                     {c.value}
                   </p>
                 </div>
-                <span className="text-foreground/30 group-hover:text-[#FF5500] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-sm font-bold">
+                <span className="text-foreground/30 group-hover:text-[#FF5500] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all text-sm font-bold shrink-0">
                   ↗
                 </span>
               </a>
@@ -222,7 +222,7 @@ export default function Contact() {
           </div>
 
           {/* Verification Box */}
-          <div className="p-5 rounded-xl border border-border bg-foreground/[0.02] mt-6">
+          <div className="p-4 sm:p-5 rounded-xl border border-border bg-foreground/[0.02] mt-6">
             <div className="flex items-center justify-between text-xs font-mono text-foreground/60 mb-2">
               <span>PGP_FINGERPRINT</span>
               <span className="text-[#FF5500]">VERIFIED</span>

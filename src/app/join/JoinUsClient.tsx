@@ -25,7 +25,7 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
   );
   const isOpen = settings.is_open;
 
-  // Exact 3 states required:
+  // Exact 3 states:
   // 1. Open + Google Form URL (isOpen && hasGoogleFormUrl)
   // 2. Closed + Google Form URL (!isOpen && hasGoogleFormUrl)
   // 3. No Google Form URL (!hasGoogleFormUrl)
@@ -51,16 +51,16 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
   ].filter(Boolean);
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden py-24 sm:py-28 px-4 sm:px-6 lg:px-12 lab-grid-bg">
+    <div className="min-h-screen bg-background text-foreground relative overflow-hidden py-20 sm:py-28 px-4 sm:px-6 lg:px-12 lab-grid-bg">
       {/* Background Ambience */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-[#E50914]/10 rounded-full blur-[140px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto relative z-10 space-y-8 sm:space-y-12">
+      <div className="max-w-5xl mx-auto relative z-10 space-y-6 sm:space-y-10">
         {/* Navigation Breadcrumb / Back Link */}
-        <div className="flex items-center justify-between border-b border-border pb-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-xs font-mono text-foreground/60 hover:text-[#E50914] transition-colors group cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs font-mono text-foreground/60 hover:text-[#E50914] transition-colors group cursor-pointer min-h-[44px]"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             <span>RETURN TO HOME</span>
@@ -82,13 +82,13 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
         </div>
 
         {/* Hero Header */}
-        <div className="space-y-4 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg border border-[#E50914]/30 bg-[#E50914]/10 text-[#E50914] font-mono text-xs font-bold uppercase tracking-widest">
+        <div className="space-y-3 sm:space-y-4 text-center max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-lg border border-[#E50914]/30 bg-[#E50914]/10 text-[#E50914] font-mono text-xs font-bold uppercase tracking-widest">
             <Sparkles className="w-3.5 h-3.5" />
             <span>OFFICIAL WEB.3 SUBMISSION PORTAL</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black font-mono uppercase tracking-tight text-foreground">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-black font-mono uppercase tracking-tight text-foreground">
             {settings.join_heading}
           </h1>
 
@@ -98,7 +98,7 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
         </div>
 
         {/* ── Main Dynamic Card Container ── */}
-        <div className="relative rounded-2xl border border-border bg-card/85 p-6 sm:p-10 shadow-2xl backdrop-blur-xl space-y-8">
+        <div className="relative rounded-2xl border border-border bg-card/85 p-5 sm:p-10 shadow-2xl backdrop-blur-xl space-y-6 sm:space-y-8">
           {/* Tech Corner Brackets */}
           <span className="tech-bracket-tl text-foreground/30" />
           <span className="tech-bracket-tr text-foreground/30" />
@@ -109,10 +109,10 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
              SHARED CATEGORY CONTENT: Displayed for both Open & Closed states
           ═══════════════════════════════════════════════════════════════════ */}
           {!isStateNoUrl && (
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               {/* Feature Cards Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-5 rounded-xl border border-border/80 bg-foreground/[0.02] space-y-2">
+                <div className="p-4 sm:p-5 rounded-xl border border-border/80 bg-foreground/[0.02] space-y-2">
                   <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#E50914] uppercase">
                     <span className="w-2 h-2 bg-[#E50914] inline-block" />
                     <span>{settings.card1_heading}</span>
@@ -122,7 +122,7 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
                   </p>
                 </div>
 
-                <div className="p-5 rounded-xl border border-border/80 bg-foreground/[0.02] space-y-2">
+                <div className="p-4 sm:p-5 rounded-xl border border-border/80 bg-foreground/[0.02] space-y-2">
                   <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#E50914] uppercase">
                     <span className="w-2 h-2 bg-[#E50914] inline-block" />
                     <span>{settings.card2_heading}</span>
@@ -175,7 +175,7 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
                   href={settings.google_form_url!}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="cyber-btn px-8 py-4 bg-[#E50914] hover:bg-[#c90812] text-white font-mono font-black text-xs uppercase tracking-widest shadow-[0_8px_32px_rgba(229,9,20,0.35)] transition-all flex items-center gap-2.5 cursor-pointer text-center justify-center w-full sm:w-auto"
+                  className="cyber-btn px-6 sm:px-8 py-3.5 sm:py-4 bg-[#E50914] hover:bg-[#c90812] text-white font-mono font-black text-xs uppercase tracking-widest shadow-[0_8px_32px_rgba(229,9,20,0.35)] transition-all flex items-center gap-2.5 cursor-pointer text-center justify-center w-full sm:w-auto min-h-[44px]"
                 >
                   <span>{settings.cta_label}</span>
                   <ExternalLink className="w-4 h-4" />
@@ -197,7 +197,7 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-500 font-mono text-[10px] font-bold tracking-widest uppercase">
                   <span>SUBMISSIONS CLOSED</span>
                 </div>
-                <h3 className="text-xl font-mono font-bold uppercase text-foreground">
+                <h3 className="text-lg sm:text-xl font-mono font-bold uppercase text-foreground">
                   APPLICATIONS ARE CURRENTLY PAUSED
                 </h3>
                 <p className="font-mono text-xs sm:text-sm text-foreground/70 leading-relaxed">
@@ -218,7 +218,7 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
                       href={soc.href}
                       target={soc.href.startsWith("http") ? "_blank" : undefined}
                       rel={soc.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="flex items-center justify-between p-3.5 rounded-xl border border-border/80 bg-foreground/[0.02] hover:bg-foreground/[0.05] hover:border-[#E50914]/40 transition-all font-mono text-xs group"
+                      className="flex items-center justify-between p-3.5 rounded-xl border border-border/80 bg-foreground/[0.02] hover:bg-foreground/[0.05] hover:border-[#E50914]/40 transition-all font-mono text-xs group min-h-[44px]"
                     >
                       <span className="font-bold text-foreground/80 group-hover:text-foreground">
                         {soc.name}
@@ -233,25 +233,20 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
 
           {/* ═══════════════════════════════════════════════════════════════════
              STATE 3: NO GOOGLE FORM URL (COMING SOON)
-             Required text:
-             - COMING SOON!
-             - Opportunities are on their way.
-             - You can apply really soon! Keep checking our socials for updates and announcements.
-             - Clickable official social links.
           ═══════════════════════════════════════════════════════════════════ */}
           {isStateNoUrl && (
-            <div className="space-y-8 text-center py-6">
-              <div className="w-16 h-16 rounded-2xl border border-amber-500/30 bg-amber-500/10 flex items-center justify-center mx-auto text-amber-500">
-                <Clock className="w-8 h-8 animate-pulse" />
+            <div className="space-y-6 sm:space-y-8 text-center py-4 sm:py-6">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border border-amber-500/30 bg-amber-500/10 flex items-center justify-center mx-auto text-amber-500">
+                <Clock className="w-7 h-7 sm:w-8 sm:h-8 animate-pulse" />
               </div>
 
-              <div className="space-y-3 max-w-xl mx-auto">
+              <div className="space-y-2 sm:space-y-3 max-w-xl mx-auto">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500 font-mono text-[10px] font-bold tracking-widest uppercase">
                   <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                   <span>COMING SOON!</span>
                 </div>
 
-                <h2 className="text-2xl sm:text-3xl font-mono font-black uppercase text-foreground">
+                <h2 className="text-xl sm:text-2xl md:text-3xl font-mono font-black uppercase text-foreground">
                   Opportunities are on their way.
                 </h2>
 
@@ -272,7 +267,7 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
                       href={soc.href}
                       target={soc.href.startsWith("http") ? "_blank" : undefined}
                       rel={soc.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                      className="flex items-center justify-between p-4 rounded-xl border border-border/80 bg-foreground/[0.02] hover:bg-[#E50914]/5 hover:border-[#E50914]/40 transition-all font-mono text-xs group"
+                      className="flex items-center justify-between p-3.5 sm:p-4 rounded-xl border border-border/80 bg-foreground/[0.02] hover:bg-[#E50914]/5 hover:border-[#E50914]/40 transition-all font-mono text-xs group min-h-[44px]"
                     >
                       <div className="flex flex-col text-left">
                         <span className="font-bold text-foreground group-hover:text-[#E50914] transition-colors">
@@ -292,7 +287,7 @@ export default function JoinUsClient({ initialSettings }: JoinUsClientProps) {
         </div>
 
         {/* Informational Footer Note */}
-        <div className="p-4 rounded-xl border border-border/60 bg-card/40 text-center font-mono text-[11px] text-foreground/50 max-w-xl mx-auto">
+        <div className="p-3 sm:p-4 rounded-xl border border-border/60 bg-card/40 text-center font-mono text-[11px] text-foreground/50 max-w-xl mx-auto">
           WEB.3 BMSIT&M Council • Submissions processed through verified Google Forms for integrity and transparency.
         </div>
       </div>

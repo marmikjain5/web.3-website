@@ -29,7 +29,7 @@ export default function CookieBanner() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 20, scale: 0.95 }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 max-w-[360px] md:max-w-[400px] bg-[#101217]/95 dark:bg-[#0A0C10]/95 backdrop-blur-xl border border-white/15 dark:border-white/10 rounded-lg shadow-2xl p-4 md:p-5 flex flex-col gap-4 text-white font-mono"
+          className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 md:bottom-6 md:right-6 z-50 w-auto sm:w-[380px] max-w-[calc(100vw-2rem)] bg-[#101217]/95 dark:bg-[#0A0C10]/95 backdrop-blur-xl border border-white/15 dark:border-white/10 rounded-lg shadow-2xl p-4 md:p-5 flex flex-col gap-4 text-white font-mono"
         >
           {/* Top Row: Notice Text & Dismiss Button */}
           <div className="flex items-start justify-between gap-3">
@@ -38,7 +38,7 @@ export default function CookieBanner() {
             </p>
             <button
               onClick={() => handleConsent("rejected")}
-              className="p-1 text-white/50 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer"
+              className="p-1 text-white/50 hover:text-white hover:bg-white/10 rounded transition-colors cursor-pointer shrink-0"
               aria-label="Dismiss cookie notice"
             >
               <X className="w-4 h-4" />
@@ -65,4 +65,3 @@ export default function CookieBanner() {
     </AnimatePresence>
   );
 }
-

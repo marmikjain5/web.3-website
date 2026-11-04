@@ -88,14 +88,14 @@ export default function AdminDashboard() {
               secure_admin_session_active
             </span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold font-mono">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold font-mono">
             <span className="text-accent">ADMIN</span>_CONTROL_CENTER
           </h1>
         </div>
 
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground/[0.05] hover:bg-red-500/10 border border-border hover:border-red-500/30 text-xs font-mono text-foreground/60 hover:text-red-500 transition-all cursor-pointer w-fit"
+          className="flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-lg bg-foreground/[0.05] hover:bg-red-500/10 border border-border hover:border-red-500/30 text-xs font-mono text-foreground/60 hover:text-red-500 transition-all cursor-pointer w-fit"
           title="Lock Admin Console"
         >
           <LogOut className="w-3.5 h-3.5" />
@@ -103,15 +103,15 @@ export default function AdminDashboard() {
         </button>
       </header>
 
-      {/* Tab bar */}
-      <div className="flex flex-wrap gap-1 p-1 rounded-lg bg-foreground/[0.04] border border-foreground/[0.06] w-fit mb-8">
+      {/* Responsive Tab bar */}
+      <div className="flex gap-1.5 p-1 rounded-xl bg-foreground/[0.04] border border-foreground/[0.06] w-full sm:w-fit mb-8 overflow-x-auto no-scrollbar">
         {(["events", "team", "submissions", "projects", "links"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`font-mono text-xs font-semibold px-5 py-2.5 rounded-md transition-all duration-200 cursor-pointer ${
+            className={`font-mono text-xs font-semibold px-4 py-2.5 min-h-[44px] whitespace-nowrap rounded-lg transition-all duration-200 cursor-pointer shrink-0 ${
               tab === t
-                ? "bg-accent/[0.12] text-accent border border-accent/20"
+                ? "bg-accent/[0.12] text-accent border border-accent/20 font-bold shadow-sm"
                 : "text-foreground/40 hover:text-foreground/70 border border-transparent"
             }`}
           >
@@ -199,7 +199,7 @@ function TeamPanel() {
 
       {/* Toolbar */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-mono text-lg text-foreground/60">
+        <h2 className="font-mono text-base sm:text-lg text-foreground/60">
           Team Members <span className="text-foreground/20">({members.length})</span>
         </h2>
         <button
@@ -207,7 +207,7 @@ function TeamPanel() {
             setEditingMember(null);
             setShowForm(true);
           }}
-          className="px-5 py-2.5 bg-accent text-black font-mono text-xs font-bold rounded-lg hover:bg-green-300 transition-colors cursor-pointer"
+          className="px-4 sm:px-5 py-2.5 min-h-[44px] bg-accent text-black font-mono text-xs font-bold rounded-lg hover:bg-green-300 transition-colors cursor-pointer"
         >
           + Add Member
         </button>
@@ -245,7 +245,7 @@ function TeamPanel() {
           {members.map((member) => (
             <div
               key={member.id}
-              className="p-5 rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] hover:bg-foreground/[0.04] transition-colors"
+              className="p-4 sm:p-5 rounded-xl border border-foreground/[0.06] bg-foreground/[0.02] hover:bg-foreground/[0.04] transition-colors"
             >
               <div className="flex items-start gap-4">
                 {/* Avatar */}
@@ -284,20 +284,20 @@ function TeamPanel() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-col items-center gap-3 shrink-0">
+                <div className="flex flex-col items-center gap-2 shrink-0">
                   <button
                     onClick={() => {
                       setEditingMember(member);
                       setShowForm(true);
                     }}
-                    className="text-lg text-foreground/30 hover:text-accent transition-colors cursor-pointer"
+                    className="p-1 min-w-[36px] min-h-[36px] flex items-center justify-center text-lg text-foreground/30 hover:text-accent transition-colors cursor-pointer"
                     title="Edit"
                   >
                     ✏️
                   </button>
                   <button
                     onClick={() => handleDelete(member.id, member.name)}
-                    className="text-lg text-foreground/30 hover:text-red-400 transition-colors cursor-pointer"
+                    className="p-1 min-w-[36px] min-h-[36px] flex items-center justify-center text-lg text-foreground/30 hover:text-red-400 transition-colors cursor-pointer"
                     title="Delete"
                   >
                     🗑
@@ -359,22 +359,22 @@ function TeamMemberFormModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-4"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <div className="w-full max-w-lg max-h-[85vh] overflow-y-auto bg-[#0a0c0f] border border-green-500/20 rounded-xl shadow-[0_0_100px_rgba(34,197,94,0.15)]">
+      <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[#0a0c0f] border border-green-500/20 rounded-xl shadow-[0_0_100px_rgba(34,197,94,0.15)]">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-green-500/10 bg-foreground/[0.02] sticky top-0 z-10 backdrop-blur-md">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-green-500/10 bg-foreground/[0.02] sticky top-0 z-10 backdrop-blur-md">
           <h3 className="font-mono text-sm font-bold text-accent">{initialData ? "✏️ EDIT_TEAM_MEMBER" : "+ ADD_TEAM_MEMBER"}</h3>
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-full bg-foreground/[0.05] hover:bg-foreground/[0.1] flex items-center justify-center text-foreground/40 hover:text-foreground/80 transition-colors cursor-pointer text-xs"
+            className="w-8 h-8 rounded-full bg-foreground/[0.05] hover:bg-foreground/[0.1] flex items-center justify-center text-foreground/40 hover:text-foreground/80 transition-colors cursor-pointer text-xs"
           >
             ✕
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-5">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 flex flex-col gap-4 sm:gap-5">
           {error && (
             <div className="px-4 py-3 rounded-lg bg-red-400/10 border border-red-400/20 text-red-400 text-xs font-mono">
               {error}
@@ -388,7 +388,7 @@ function TeamMemberFormModal({
             </label>
             <div
               onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-foreground/[0.1] hover:border-accent/30 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-colors group"
+              className="border-2 border-dashed border-foreground/[0.1] hover:border-accent/30 rounded-xl p-4 sm:p-6 flex flex-col items-center justify-center cursor-pointer transition-colors group"
             >
               {imagePreview ? (
                 <img src={imagePreview} alt="Preview" className="w-20 h-20 rounded-full object-cover" />
@@ -410,13 +410,13 @@ function TeamMemberFormModal({
           </div>
 
           {/* Name + Role */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Name" name="name" defaultValue={initialData?.name} placeholder="Vitalik Buterin" required />
             <FormField label="Role" name="role" defaultValue={initialData?.role} placeholder="Protocol Lead" required />
           </div>
 
           {/* Department & Hierarchy */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-[10px] font-mono font-bold text-foreground/40 uppercase tracking-wider mb-2">
                 Department
@@ -461,7 +461,7 @@ function TeamMemberFormModal({
             <label className="block text-[10px] font-mono font-bold text-foreground/40 uppercase tracking-wider mb-2">
               Social Links
             </label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <FormField label="" name="twitter" defaultValue={initialData?.socials?.twitter || ""} placeholder="Twitter URL" />
               <FormField label="" name="linkedin" defaultValue={initialData?.socials?.linkedin || ""} placeholder="LinkedIn URL" />
               <FormField label="" name="github" defaultValue={initialData?.socials?.github || ""} placeholder="GitHub URL" />
@@ -470,18 +470,18 @@ function TeamMemberFormModal({
           </div>
 
           {/* Submit */}
-          <div className="flex gap-3 justify-end pt-2">
+          <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-3 justify-end pt-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-5 py-2.5 border border-foreground/[0.1] text-foreground/40 text-xs font-mono rounded-lg hover:text-foreground/60 transition-colors cursor-pointer"
+              className="px-5 py-2.5 border border-foreground/[0.1] text-foreground/40 text-xs font-mono rounded-lg hover:text-foreground/60 transition-colors cursor-pointer min-h-[44px]"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-6 py-2.5 bg-accent text-black text-xs font-mono font-bold rounded-lg hover:bg-green-300 transition-colors disabled:opacity-50 cursor-pointer"
+              className="px-6 py-2.5 bg-accent text-black text-xs font-mono font-bold rounded-lg hover:bg-green-300 transition-colors disabled:opacity-50 cursor-pointer min-h-[44px]"
             >
               {submitting ? (initialData ? "Updating..." : "Adding...") : (initialData ? "Update Member →" : "Add Member →")}
             </button>
@@ -524,13 +524,11 @@ function FormField({
         placeholder={placeholder}
         required={required}
         defaultValue={defaultValue}
-        className="w-full bg-foreground/[0.05] border border-foreground/[0.1] text-foreground/70 text-sm font-mono rounded-lg px-3 py-2.5 outline-none focus:border-accent/40 transition-colors placeholder:text-foreground/15"
+        className="w-full bg-foreground/[0.05] border border-foreground/[0.1] text-foreground/70 text-sm font-mono rounded-lg px-3 py-2.5 outline-none focus:border-accent/40 transition-colors placeholder:text-foreground/15 min-h-[44px]"
       />
     </div>
   );
 }
-
-
 
 // ═══════════════════════════════════════════════════════════════
 // SUBMISSIONS PORTAL PANEL
@@ -696,12 +694,12 @@ function SubmissionsPanel() {
       )}
 
       {/* ── SECTION 1: GLOBAL ACTIVE TRACK SELECTOR ── */}
-      <div className="p-6 rounded-2xl bg-card border border-border space-y-5">
+      <div className="p-4 sm:p-6 rounded-2xl bg-card border border-border space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-border pb-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]" />
-              <h2 className="text-lg font-mono font-bold uppercase tracking-wider text-foreground">
+              <h2 className="text-base sm:text-lg font-mono font-bold uppercase tracking-wider text-foreground">
                 LIVE ACTIVE SUBMISSION TRACK
               </h2>
             </div>
@@ -756,7 +754,7 @@ function SubmissionsPanel() {
                     type="button"
                     disabled={switchingActive}
                     onClick={() => handleSetActiveCategory(cat.id)}
-                    className="w-full py-2 px-3 rounded-lg bg-foreground/[0.05] hover:bg-accent/20 border border-border hover:border-accent/40 font-mono text-xs text-foreground/80 hover:text-accent font-semibold transition-all cursor-pointer text-center"
+                    className="w-full py-2.5 px-3 min-h-[44px] rounded-lg bg-foreground/[0.05] hover:bg-accent/20 border border-border hover:border-accent/40 font-mono text-xs text-foreground/80 hover:text-accent font-semibold transition-all cursor-pointer text-center"
                   >
                     Set as Active
                   </button>
@@ -771,7 +769,7 @@ function SubmissionsPanel() {
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-mono font-bold uppercase tracking-wider text-foreground">
+            <h2 className="text-lg sm:text-xl font-mono font-bold uppercase tracking-wider text-foreground">
               TRACK CONFIGURATION EDITOR
             </h2>
             <p className="font-mono text-xs text-foreground/50">
@@ -780,13 +778,13 @@ function SubmissionsPanel() {
           </div>
 
           {/* Sub-Tabs for the 4 Tracks */}
-          <div className="flex flex-wrap gap-1 p-1 rounded-lg bg-foreground/[0.04] border border-border">
+          <div className="flex gap-1.5 p-1 rounded-xl bg-foreground/[0.04] border border-border overflow-x-auto w-full sm:w-fit no-scrollbar">
             {SUBMISSION_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => handleSelectTab(cat.id)}
-                className={`font-mono text-xs font-semibold px-3.5 py-2 rounded-md transition-all cursor-pointer ${
+                className={`font-mono text-xs font-semibold px-3.5 py-2.5 min-h-[44px] whitespace-nowrap rounded-lg transition-all cursor-pointer shrink-0 ${
                   selectedCatTab === cat.id
                     ? "bg-accent/[0.14] text-accent border border-accent/25 shadow-sm"
                     : "text-foreground/45 hover:text-foreground/80 border border-transparent"
@@ -801,7 +799,7 @@ function SubmissionsPanel() {
         {/* Editor Form */}
         <form onSubmit={handleSaveCategory} className="space-y-6">
           {/* Status & Form Link Card */}
-          <div className="p-6 rounded-2xl bg-card border border-border space-y-6">
+          <div className="p-4 sm:p-6 rounded-2xl bg-card border border-border space-y-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-4">
               <div>
                 <div className="flex items-center gap-2">
@@ -864,13 +862,13 @@ function SubmissionsPanel() {
                   placeholder="https://forms.gle/xyz123... or https://docs.google.com/forms/d/e/.../viewform"
                   className={`flex-1 bg-foreground/[0.04] border ${
                     urlError ? "border-red-500" : "border-foreground/[0.1] focus:border-accent/40"
-                  } text-foreground text-sm font-mono rounded-lg p-3 outline-none transition-colors`}
+                  } text-foreground text-sm font-mono rounded-lg p-3 outline-none transition-colors min-h-[44px]`}
                 />
                 <button
                   type="button"
                   disabled={!formDraft.google_form_url || Boolean(urlError)}
                   onClick={handleTestUrl}
-                  className="px-4 py-3 rounded-lg bg-foreground/[0.05] hover:bg-foreground/[0.1] border border-border text-foreground font-mono text-xs font-bold uppercase transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap flex items-center gap-1.5"
+                  className="px-4 py-3 min-h-[44px] rounded-lg bg-foreground/[0.05] hover:bg-foreground/[0.1] border border-border text-foreground font-mono text-xs font-bold uppercase transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap flex items-center justify-center gap-1.5"
                 >
                   <span>Test Form</span>
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -879,7 +877,7 @@ function SubmissionsPanel() {
                   <button
                     type="button"
                     onClick={handleClearUrl}
-                    className="px-4 py-3 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-mono text-xs font-bold uppercase transition-colors cursor-pointer whitespace-nowrap"
+                    className="px-4 py-3 min-h-[44px] rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 font-mono text-xs font-bold uppercase transition-colors cursor-pointer whitespace-nowrap"
                   >
                     Clear URL
                   </button>
@@ -896,7 +894,7 @@ function SubmissionsPanel() {
           </div>
 
           {/* Copy Customization Section */}
-          <div className="p-6 rounded-2xl bg-card border border-border space-y-6">
+          <div className="p-4 sm:p-6 rounded-2xl bg-card border border-border space-y-6">
             <div className="border-b border-border pb-3">
               <h3 className="font-mono font-bold text-sm uppercase text-foreground">
                 Portal Copy & Headings (/join)
@@ -917,7 +915,7 @@ function SubmissionsPanel() {
                   onChange={(e) => handleFieldChange("join_heading", e.target.value)}
                   required
                   maxLength={200}
-                  className="w-full bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-sm font-mono rounded-lg p-3 outline-none focus:border-accent/40"
+                  className="w-full bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-sm font-mono rounded-lg p-3 outline-none focus:border-accent/40 min-h-[44px]"
                 />
               </div>
 
@@ -931,7 +929,7 @@ function SubmissionsPanel() {
                   onChange={(e) => handleFieldChange("cta_label", e.target.value)}
                   required
                   maxLength={100}
-                  className="w-full bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-sm font-mono rounded-lg p-3 outline-none focus:border-accent/40"
+                  className="w-full bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-sm font-mono rounded-lg p-3 outline-none focus:border-accent/40 min-h-[44px]"
                 />
               </div>
 
@@ -981,7 +979,7 @@ function SubmissionsPanel() {
                       placeholder={`Badge #${num}`}
                       required
                       maxLength={60}
-                      className="bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-xs font-mono rounded-lg p-2.5 outline-none focus:border-accent/40"
+                      className="bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-xs font-mono rounded-lg p-2.5 outline-none focus:border-accent/40 min-h-[44px]"
                     />
                   );
                 })}
@@ -1003,7 +1001,7 @@ function SubmissionsPanel() {
                     placeholder="Card 1 Heading"
                     required
                     maxLength={200}
-                    className="w-full bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-xs font-mono rounded-lg p-2.5 outline-none"
+                    className="w-full bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-xs font-mono rounded-lg p-2.5 outline-none min-h-[44px]"
                   />
                   <textarea
                     value={formDraft.card1_desc}
@@ -1025,7 +1023,7 @@ function SubmissionsPanel() {
                     placeholder="Card 2 Heading"
                     required
                     maxLength={200}
-                    className="w-full bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-xs font-mono rounded-lg p-2.5 outline-none"
+                    className="w-full bg-foreground/[0.04] border border-foreground/[0.1] text-foreground text-xs font-mono rounded-lg p-2.5 outline-none min-h-[44px]"
                   />
                   <textarea
                     value={formDraft.card2_desc}
@@ -1042,11 +1040,11 @@ function SubmissionsPanel() {
           </div>
 
           {/* Submit Action */}
-          <div className="flex justify-end gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
             <button
               type="submit"
               disabled={saving || Boolean(urlError)}
-              className="px-8 py-3.5 rounded-xl bg-accent hover:bg-accent/90 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_var(--accent-glow)] cursor-pointer disabled:opacity-50"
+              className="w-full sm:w-auto px-8 py-3.5 min-h-[44px] rounded-xl bg-accent hover:bg-accent/90 text-white font-mono font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_var(--accent-glow)] cursor-pointer disabled:opacity-50"
             >
               {saving ? "SAVING CONFIGURATION..." : `SAVE SETTINGS FOR ${selectedMeta?.name.toUpperCase()}`}
             </button>
@@ -1064,10 +1062,10 @@ function SubmissionsPanel() {
 function LinksPanel() {
   return (
     <div className="space-y-6">
-      <div className="p-6 rounded-2xl bg-card border border-border space-y-4">
+      <div className="p-4 sm:p-6 rounded-2xl bg-card border border-border space-y-4">
         <div className="flex items-center gap-2 border-b border-border pb-3">
           <div className="w-2.5 h-2.5 rounded-full bg-accent" />
-          <h2 className="text-lg font-mono font-bold uppercase tracking-wider text-foreground">
+          <h2 className="text-base sm:text-lg font-mono font-bold uppercase tracking-wider text-foreground">
             Official WEB.3 Community Channels
           </h2>
         </div>
@@ -1079,11 +1077,11 @@ function LinksPanel() {
           {OFFICIAL_CLUB_SOCIALS.map((soc) => (
             <div
               key={soc.id}
-              className="p-4 rounded-xl border border-border/80 bg-foreground/[0.02] flex items-center justify-between font-mono text-xs"
+              className="p-4 rounded-xl border border-border/80 bg-foreground/[0.02] flex items-center justify-between font-mono text-xs gap-3"
             >
-              <div className="space-y-0.5">
+              <div className="space-y-0.5 min-w-0">
                 <span className="font-bold text-foreground block">{soc.name}</span>
-                <span className="text-[11px] text-foreground/50 truncate max-w-[280px] block">
+                <span className="text-[11px] text-foreground/50 truncate block">
                   {soc.href}
                 </span>
               </div>
@@ -1091,7 +1089,7 @@ function LinksPanel() {
                 href={soc.href}
                 target={soc.href.startsWith("http") ? "_blank" : undefined}
                 rel={soc.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="p-2 rounded-lg bg-foreground/[0.05] hover:bg-accent/20 text-foreground/70 hover:text-accent transition-colors"
+                className="p-2 min-w-[36px] min-h-[36px] rounded-lg bg-foreground/[0.05] hover:bg-accent/20 text-foreground/70 hover:text-accent transition-colors flex items-center justify-center shrink-0"
                 title={`Visit ${soc.name}`}
               >
                 <ExternalLink className="w-4 h-4" />

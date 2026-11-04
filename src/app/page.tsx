@@ -1,7 +1,6 @@
-import { getTeamMembers } from "@/app/actions/admin";
 import { getPublicSubmissionPortalSettings } from "@/app/actions/submissions";
 import { getPublicProjects, getProjectsPageSettings } from "@/app/actions/projects";
-import TeamGrid from "@/components/TeamGrid";
+import TeamGallery from "@/components/TeamGallery";
 import ResidencyHero from "@/components/chaingpt/ResidencyHero";
 import ChainHero from "@/components/chaingpt/ChainHero";
 import IncubationSection from "@/components/chaingpt/IncubationSection";
@@ -12,7 +11,6 @@ import CyberSidebar from "@/components/chaingpt/CyberSidebar";
 import UpcomingEventHome from "@/components/UpcomingEventHome";
 
 export default async function Home() {
-  const members = await getTeamMembers();
   const portalSettingsResult = await getPublicSubmissionPortalSettings();
   const [projectsResult, settingsResult] = await Promise.all([
     getPublicProjects(),
@@ -51,9 +49,9 @@ export default async function Home() {
         <UpcomingEventHome />
       </div>
 
-      {/* ── Core Team / Contributors Section ── */}
+      {/* ── Community Gallery / Life at Web3 ── */}
       <div id="team">
-        <TeamGrid members={members} />
+        <TeamGallery />
       </div>
 
       {/* ── Frequently Asked Questions for Students ── */}

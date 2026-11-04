@@ -33,6 +33,7 @@ export default function Navbar() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [logoError, setLogoError] = useState(false);
 
   const { theme, setTheme, resolvedTheme } = useTheme();
   const pathname = usePathname();
@@ -155,20 +156,28 @@ export default function Navbar() {
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between gap-4">
           
-          {/* Brand Logo — web.3_ pixel logo */}
+          {/* Brand Logo — web.3_ official logo with graceful SVG/typographic fallback */}
           <Link
             href="/"
             onClick={handleLogoClick}
             className="flex items-center gap-3 select-none group shrink-0"
           >
-            <Image
-              src="/logos/web3-official-logo-transparent.png"
-              alt="web.3_ read.write.own"
-              width={140}
-              height={50}
-              priority
-              className="h-9 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
-            />
+            {!logoError ? (
+              <Image
+                src="/logos/web3-official-logo-transparent.png"
+                alt="web.3_ read.write.own"
+                width={140}
+                height={50}
+                priority
+                onError={() => setLogoError(true)}
+                className="h-8 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              />
+            ) : (
+              <div className="flex items-baseline font-mono font-black text-xl sm:text-2xl tracking-tight text-foreground select-none">
+                <span>web.3</span>
+                <span className="text-[#E50914] animate-pulse">_</span>
+              </div>
+            )}
           </Link>
 
           {/* Center Navigation Links (labs.chaingpt.org layout) */}
@@ -195,7 +204,7 @@ export default function Navbar() {
           </ul>
 
           {/* Right Action Bar */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             
             {/* Admin Portal indicator (visible ONLY to authorized administrators) */}
             {isAdmin && (
@@ -240,7 +249,7 @@ export default function Navbar() {
 
             {/* Mobile Hamburger */}
             <button
-              className="lg:hidden flex flex-col justify-center items-center gap-1 p-2 bg-transparent border-none cursor-pointer text-foreground"
+              className="lg:hidden flex flex-col justify-center items-center gap-1 p-2 min-w-[44px] min-h-[44px] bg-transparent border-none cursor-pointer text-foreground"
               onClick={() => setMenuOpen((v) => !v)}
               aria-label="Toggle menu"
             >
@@ -253,7 +262,7 @@ export default function Navbar() {
 
         {/* Mobile Full-Fidelity Cyber Drawer */}
         {menuOpen && (
-          <div className="lg:hidden border-t border-border bg-[#ECEBE8]/98 backdrop-blur-xl px-5 py-5 space-y-4 font-mono text-sm shadow-2xl animate-in slide-in-from-top-2 duration-200">
+          <div className="lg:hidden border-t border-border bg-[#ECEBE8]/98 backdrop-blur-xl px-5 py-5 space-y-4 font-mono text-sm shadow-2xl animate-in slide-in-from-top-2 duration-200 max-h-[calc(100vh-4.5rem)] overflow-y-auto">
             {/* Nav links with active pill */}
             <div className="space-y-1">
               {NAV_TABS.map((tab) => {
@@ -266,7 +275,7 @@ export default function Navbar() {
                       setWithActive(tab.label);
                       setMenuOpen(false);
                     }}
-                    className={`flex items-center justify-between py-2 px-3 rounded-lg transition-colors ${
+                    className={`flex items-center justify-between py-2.5 px-3 min-h-[44px] rounded-lg transition-colors ${
                       isActive
                         ? "bg-[#E50914]/10 text-[#E50914] font-bold"
                         : "text-foreground/80 hover:text-[#E50914] hover:bg-foreground/[0.03]"
@@ -284,7 +293,7 @@ export default function Navbar() {
               <Link
                 href="/admin"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-2 py-2 px-3 rounded-lg text-xs font-bold text-[#E50914] hover:bg-foreground/[0.03]"
+                className="flex items-center gap-2 py-2.5 px-3 min-h-[44px] rounded-lg text-xs font-bold text-[#E50914] hover:bg-foreground/[0.03]"
               >
                 <span className="text-[#E50914]">::</span>
                 <span>Admin Portal</span>
@@ -297,7 +306,7 @@ export default function Navbar() {
                 <div className="flex items-center justify-between w-full">
                   <div className="flex flex-col">
                     <span className="text-[10px] text-foreground/50">SIGNED IN AS</span>
-                    <span className="text-xs font-bold truncate max-w-[180px]">{user.email}</span>
+                    <span className="text-xs font-bold truncate max-w-[170px]">{user.email}</span>
                   </div>
                   <button
                     onClick={handleLogout}
@@ -311,7 +320,7 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={handleLogin}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-foreground/[0.05] text-xs font-bold text-foreground hover:text-[#E50914] w-full justify-center cursor-pointer"
+                  className="flex items-center gap-2 px-4 py-2.5 min-h-[44px] rounded-lg bg-foreground/[0.05] text-xs font-bold text-foreground hover:text-[#E50914] w-full justify-center cursor-pointer"
                 >
                   <LogIn className="w-4 h-4" />
                   <span>Login with Google</span>
@@ -325,7 +334,7 @@ export default function Navbar() {
                 href={SOCIAL_URLS.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 hover:text-[#E50914] transition-colors"
+                className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:text-[#E50914] transition-colors"
                 title="Instagram"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -338,7 +347,7 @@ export default function Navbar() {
                 href={SOCIAL_URLS.whatsapp}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 hover:text-[#E50914] transition-colors"
+                className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:text-[#E50914] transition-colors"
                 title="WhatsApp Community"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -347,7 +356,7 @@ export default function Navbar() {
               </Link>
               <Link
                 href={SOCIAL_URLS.contact}
-                className="p-2 hover:text-[#E50914] transition-colors"
+                className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:text-[#E50914] transition-colors"
                 title="Contact"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -359,7 +368,7 @@ export default function Navbar() {
                 href={SOCIAL_URLS.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 hover:text-[#E50914] transition-colors font-mono font-bold text-xs"
+                className="p-2 min-w-[44px] min-h-[44px] flex items-center justify-center hover:text-[#E50914] transition-colors font-mono font-bold text-xs"
                 title="LinkedIn"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
