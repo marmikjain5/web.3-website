@@ -1,39 +1,42 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { socialLinks } from "@/data/footerData";
 
-// Subtle ambient cubes placed along the perimeter to frame the central branding
+// Subtle ambient cubes placed along the perimeter to frame the central branding.
+// Positions and sizes clamped to prevent overflowing small mobile viewports.
 const CUBES = [
-  { size: 70, left: 8, top: 25, z: -150, rx: 35, ry: 45, delay: 0, duration: 6 },
-  { size: 40, left: 88, top: 15, z: -300, rx: -25, ry: 15, delay: 1.2, duration: 8.5 },
-  { size: 85, left: 14, top: 65, z: 80, rx: 15, ry: -35, delay: 0.5, duration: 7 },
-  { size: 30, left: 82, top: 72, z: -80, rx: 55, ry: 45, delay: 2, duration: 9 },
-  { size: 55, left: 92, top: 45, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11 },
-  { size: 45, left: 5, top: 80, z: -200, rx: 10, ry: -10, delay: 0.8, duration: 7.5 },
-  { size: 60, left: 78, top: 28, z: 120, rx: 45, ry: -25, delay: 2.5, duration: 9.5 },
-  { size: 40, left: 18, top: 15, z: -180, rx: -45, ry: 35, delay: 1.5, duration: 6.5 },
+  { size: 70, left: 8, top: 25, z: -150, rx: 35, ry: 45, delay: 0, duration: 6, floatAmp: -12, rotAmpX: 12, rotAmpY: 15 },
+  { size: 40, left: 80, top: 15, z: -300, rx: -25, ry: 15, delay: 1.2, duration: 8.5, floatAmp: -8, rotAmpX: -10, rotAmpY: 12 },
+  { size: 85, left: 12, top: 65, z: 80, rx: 15, ry: -35, delay: 0.5, duration: 7, floatAmp: -15, rotAmpX: 14, rotAmpY: -12 },
+  { size: 30, left: 78, top: 72, z: -80, rx: 55, ry: 45, delay: 2, duration: 9, floatAmp: -6, rotAmpX: 15, rotAmpY: 10 },
+  { size: 55, left: 76, top: 45, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11, floatAmp: -18, rotAmpX: -8, rotAmpY: 16 },
+  { size: 45, left: 5, top: 80, z: -200, rx: 10, ry: -10, delay: 0.8, duration: 7.5, floatAmp: -10, rotAmpX: 8, rotAmpY: -14 },
+  { size: 60, left: 74, top: 28, z: 120, rx: 45, ry: -25, delay: 2.5, duration: 9.5, floatAmp: -14, rotAmpX: 16, rotAmpY: -10 },
+  { size: 40, left: 18, top: 15, z: -180, rx: -45, ry: 35, delay: 1.5, duration: 6.5, floatAmp: -7, rotAmpX: -12, rotAmpY: 14 },
 ];
 
 const TICKER_ITEMS = [
   "DECENTRALIZED ARCHITECTURE",
   "READ. WRITE. OWN",
-  "INCUBATION COHORT 2026",
+  "LEARN BY BUILDING",
   "LAYER-1 & LAYER-2 ECOSYSTEMS",
   "ZERO-KNOWLEDGE INFRASTRUCTURE",
   "GLOBAL BUILDER NETWORK",
   "WEB.3_ ECOSYSTEM",
 ];
 
-export default function Footer() {
-  const [mounted, setMounted] = useState(false);
-  const { resolvedTheme } = useTheme();
+const emptySubscribe = () => () => {};
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+export default function Footer() {
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+  const { resolvedTheme } = useTheme();
 
   const isDark = !mounted || resolvedTheme !== "light";
 
@@ -68,6 +71,7 @@ export default function Footer() {
           pointer-events: none;
           z-index: 1;
           overflow: hidden;
+          contain: paint;
         }
         
         .cube-anchor {
@@ -94,7 +98,7 @@ export default function Footer() {
         
         @keyframes floatCubeVertical {
           0% { transform: translateY(0); }
-          100% { transform: translateY(-10px); }
+          100% { transform: translateY(var(--float-amp, -10px)); }
         }
 
         @keyframes rotateCubeGentle {
@@ -102,13 +106,14 @@ export default function Footer() {
             transform: rotateX(var(--base-rx)) rotateY(var(--base-ry));
           }
           100% {
-            transform: rotateX(calc(var(--base-rx) + 10deg)) rotateY(calc(var(--base-ry) + 14deg));
+            transform: rotateX(calc(var(--base-rx) + var(--rot-amp-x, 10deg))) rotateY(calc(var(--base-ry) + var(--rot-amp-y, 14deg)));
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
           .cube-float-wrapper,
-          .cube-rotate-wrapper {
+          .cube-rotate-wrapper,
+          .ticker-track {
             animation: none !important;
           }
         }
@@ -144,7 +149,7 @@ export default function Footer() {
           content: '';
           position: absolute;
           left: 0;
-          bottom: -3px;
+          bottom: 4px;
           width: 100%;
           height: 2px;
           background-color: #BE4105;
@@ -179,8 +184,8 @@ export default function Footer() {
         {/* Subtle grid background */}
         <div className="absolute inset-0 lab-grid-bg opacity-40 pointer-events-none" />
 
-        {/* Ambient Geometric Cubes (Confined to Periphery to prevent text clashing) */}
-        <div className="cube-scene">
+        {/* Ambient Geometric Cubes (Confined to Periphery with independent float/rotation parameters) */}
+        <div className="cube-scene" aria-hidden="true">
           {CUBES.map((c, i) => (
             <div 
               key={i} 
@@ -196,7 +201,8 @@ export default function Footer() {
                 className="cube-float-wrapper"
                 style={{ 
                   '--duration': `${c.duration}s`, 
-                  '--delay': `${c.delay}s` 
+                  '--delay': `${c.delay}s`,
+                  '--float-amp': `${c.floatAmp}px`
                 } as React.CSSProperties}
               >
                 <div 
@@ -206,6 +212,8 @@ export default function Footer() {
                     '--rot-delay': `${(c.delay * 0.7).toFixed(1)}s`,
                     '--base-rx': `${c.rx}deg`,
                     '--base-ry': `${c.ry}deg`,
+                    '--rot-amp-x': `${c.rotAmpX}deg`,
+                    '--rot-amp-y': `${c.rotAmpY}deg`,
                   } as React.CSSProperties}
                 >
                   <div 
@@ -228,40 +236,40 @@ export default function Footer() {
         </div>
 
         {/* Content Container */}
-        <div className="relative z-10 flex flex-col justify-end w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-12 sm:pt-16 pb-8">
+        <div className="relative z-10 flex flex-col justify-end w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-10 sm:pt-16 pb-8">
           
           {/* Top Quick Links & Status Bar */}
           <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6 pb-8 border-b border-border/60 text-xs font-mono">
             {/* Primary Navigation */}
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-5 sm:gap-6">
-              <Link href="/contact" className="link-hover text-foreground/80 font-medium">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-2">
+              <Link href="/contact" className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded">
                 :: Contact
               </Link>
-              <Link href="/about" className="link-hover text-foreground/80 font-medium">
+              <Link href="/about" className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded">
                 :: About
               </Link>
-              <Link href="/#incubation-hub" className="link-hover text-foreground/80 font-medium">
+              <Link href="/#incubation-hub" className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded">
                 :: Registrations
               </Link>
-              <Link href="/events" className="link-hover text-foreground/80 font-medium">
+              <Link href="/events" className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded">
                 :: Events
               </Link>
             </div>
 
             {/* Center Status / Copyright */}
-            <div className="text-center text-foreground/60 text-[10px] sm:text-[11px] tracking-widest uppercase">
+            <div className="text-center text-foreground/60 text-[10px] sm:text-[11px] tracking-widest uppercase py-1">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-2 animate-pulse" />
               STATUS: ONLINE // &copy; 2026 WEB.3_ BMSIT
             </div>
 
             {/* Social Links */}
-            <div className="flex flex-wrap justify-center md:justify-end gap-5 sm:gap-6 items-center">
+            <div className="flex flex-wrap justify-center md:justify-end gap-x-5 gap-y-2 items-center">
               {socialLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
                   target="_blank"
-                  className="link-hover text-xs font-mono uppercase tracking-wider text-foreground/70"
+                  className="link-hover text-xs font-mono uppercase tracking-wider text-foreground/70 min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded"
                 >
                   {link.label}
                 </Link>
@@ -300,8 +308,8 @@ export default function Footer() {
                 <span className="px-2 py-0.5 border border-border/80 rounded bg-background/50">
                   NODE: BMS INSTITUTE OF TECHNOLOGY
                 </span>
-                <span className="px-2 py-0.5 border border-border/80 rounded bg-background/50 text-[#BE4105]">
-                  PROTOCOL: INCUBATION // BUILDERS
+                <span className="px-2.5 py-0.5 border border-border/80 rounded bg-background/50 text-[#BE4105] font-semibold">
+                  PROTOCOL: LEARN // BUILD // SHIP
                 </span>
               </div>
             </div>
