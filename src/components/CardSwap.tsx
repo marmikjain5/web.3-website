@@ -35,7 +35,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({ customClass, ...res
   <div
     ref={ref}
     {...rest}
-    className={`absolute top-1/2 left-1/2 rounded-xl border backdrop-blur-lg [transform-style:preserve-3d] [will-change:transform] [backface-visibility:hidden] bg-card border-border ${customClass ?? ''} ${rest.className ?? ''}`.trim()}
+    className={`absolute top-1/2 left-1/2 rounded-2xl border [transform-style:preserve-3d] [will-change:transform] [backface-visibility:hidden] bg-card border-border shadow-md ${customClass ?? ''} ${rest.className ?? ''}`.trim()}
   />
 ));
 Card.displayName = 'Card';
@@ -46,6 +46,7 @@ interface Slot {
   y: number;
   z: number;
   zIndex: number;
+  opacity: number;
 }
 
 const makeSlot = (i: number, distX: number, distY: number, total: number): Slot => {
@@ -54,8 +55,9 @@ const makeSlot = (i: number, distX: number, distY: number, total: number): Slot 
   return {
     x: i * distX - centerOffsetX,
     y: -i * distY + centerOffsetY,
-    z: -i * distX * 1.5,
-    zIndex: total - i
+    z: -i * distX * 1.2,
+    zIndex: total - i,
+    opacity: i === 0 ? 1 : Math.max(0.65, 1 - i * 0.15)
   };
 };
 
@@ -64,6 +66,7 @@ const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
     x: slot.x,
     y: slot.y,
     z: slot.z,
+    opacity: slot.opacity,
     xPercent: -50,
     yPercent: -50,
     skewY: skew,
@@ -73,14 +76,14 @@ const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
   });
 
 const CardSwap: React.FC<CardSwapProps> = ({
-  width = 600,
-  height = 560,
-  cardDistance = 50,
-  verticalDistance = 50,
-  delay = 2000,
+  width = 580,
+  height = 540,
+  cardDistance = 32,
+  verticalDistance = 24,
+  delay = 2500,
   pauseOnHover = true,
   onCardClick,
-  skewAmount = 4,
+  skewAmount = 2.5,
   easing = 'elastic',
   children
 }) => {
@@ -113,24 +116,28 @@ const CardSwap: React.FC<CardSwapProps> = ({
     return () => ro.disconnect();
   }, []);
 
-  // Compute fluid dimensions and slot spacing from container width
+  // Compute fluid dimensions and clamped slot spacing from container width
   const totalCards = childArr.length;
-  const availableW = containerWidth ?? (typeof width === 'number' ? width : 600);
+  const availableW = containerWidth ?? (typeof width === 'number' ? width : 580);
   const isDesktop = availableW >= 640;
 
-  const maxStackOffset = Math.min(cardDistance, Math.max(12, Math.floor(availableW * 0.05)));
-  const distX = isDesktop ? cardDistance : maxStackOffset;
-  const distY = isDesktop ? verticalDistance : maxStackOffset;
+  // Clamped slot offsets: 5-6% of card width on desktop, clamped on mobile
+  const distX = isDesktop
+    ? Math.min(cardDistance, Math.max(20, Math.round(availableW * 0.055)))
+    : Math.min(18, Math.max(10, Math.round(availableW * 0.04)));
+  const distY = isDesktop
+    ? Math.min(verticalDistance, Math.max(16, Math.round(availableW * 0.04)))
+    : Math.min(16, Math.max(8, Math.round(availableW * 0.03)));
 
   const totalOffset = (totalCards - 1) * distX;
-  const maxAllowedWidth = Math.max(260, availableW - totalOffset - 4);
-  const numericWidth = typeof width === 'number' ? width : 600;
-  const numericHeight = typeof height === 'number' ? height : 560;
+  const maxAllowedWidth = Math.max(260, availableW - totalOffset - 6);
+  const numericWidth = typeof width === 'number' ? width : 580;
+  const numericHeight = typeof height === 'number' ? height : 540;
 
   const effectiveCardWidth = Math.min(numericWidth, maxAllowedWidth);
   const effectiveCardHeight = isDesktop
     ? numericHeight
-    : Math.min(numericHeight, Math.max(480, Math.round(effectiveCardWidth * 1.25)));
+    : Math.min(numericHeight, Math.max(460, Math.round(effectiveCardWidth * 1.25)));
 
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const intervalRef = useRef<number>(0);
@@ -151,7 +158,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
     reLayout();
   }, [reLayout, effectiveCardWidth, effectiveCardHeight]);
 
-  // GSAP swap execution and reduced motion check
+  // GSAP swap execution and motion controls
   useEffect(() => {
     if (refs.length < 2) return;
 
@@ -205,6 +212,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
             x: slot.x,
             y: slot.y,
             z: slot.z,
+            opacity: slot.opacity,
             duration: config.durMove,
             ease: config.ease
           },
@@ -227,6 +235,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
           x: backSlot.x,
           y: backSlot.y,
           z: backSlot.z,
+          opacity: backSlot.opacity,
           duration: config.durReturn,
           ease: config.ease
         },
@@ -278,6 +287,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       node.addEventListener('mouseleave', resume);
       node.addEventListener('touchstart', pause, { passive: true });
       node.addEventListener('touchend', resume, { passive: true });
+      node.addEventListener('touchcancel', resume, { passive: true });
     }
 
     return () => {
@@ -291,6 +301,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
         node.removeEventListener('mouseleave', resume);
         node.removeEventListener('touchstart', pause);
         node.removeEventListener('touchend', resume);
+        node.removeEventListener('touchcancel', resume);
       }
     };
   }, [distX, distY, delay, pauseOnHover, easing, refs]);
@@ -318,7 +329,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       ref={container}
       className="relative w-full max-w-[600px] perspective-[900px] overflow-visible flex items-center justify-center select-none"
       style={{
-        height: `${effectiveCardHeight}px`,
+        height: `${effectiveCardHeight + (totalCards > 1 ? distY : 0)}px`,
         margin: '0 auto'
       }}
     >
