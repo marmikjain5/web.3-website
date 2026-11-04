@@ -330,10 +330,8 @@ const CardSwap: React.FC<CardSwapProps> = ({
   return (
     <div
       ref={container}
-      className="relative perspective-[900px] overflow-visible select-none"
+      className="relative w-full max-w-[600px] perspective-[900px] overflow-visible select-none"
       style={{
-        width: `${effectiveCardWidth + totalOffsetX}px`,
-        maxWidth: '100%',
         height: `${effectiveCardHeight + totalOffsetY}px`,
         margin: '0 auto'
       }}
