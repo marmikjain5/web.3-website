@@ -23,7 +23,6 @@ export default function UpcomingEventHome() {
       className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 flex items-center justify-center z-20 overflow-hidden transition-colors duration-500 bg-background"
     >
       {/* Decorative glow blobs in light mode */}
-      <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-green-200/30 rounded-full blur-3xl pointer-events-none dark:hidden" />
       <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-slate-300/30 rounded-full blur-3xl pointer-events-none dark:hidden" />
 
       <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
