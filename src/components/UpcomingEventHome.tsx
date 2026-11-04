@@ -139,7 +139,7 @@ export default function UpcomingEventHome() {
                                   className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-full border text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider ${
                                     event.status === "open"
                                       ? "border-emerald-600/30 bg-emerald-600/10 text-emerald-700 dark:text-emerald-400"
-                                      : "event-accent-border-subtle event-accent-bg-subtle event-accent-text"
+                                      : "border-border bg-card text-foreground"
                                   }`}
                                 >
                                   <span className="relative flex h-2 w-2">
