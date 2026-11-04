@@ -7,15 +7,16 @@ import { socialLinks } from "@/data/footerData";
 
 // Subtle ambient cubes placed along the perimeter to frame the central branding.
 // Positions and sizes clamped to prevent overflowing small mobile viewports.
+// Cubes are confined vertically around the wordmark card area.
 const CUBES = [
-  { size: 70, left: 8, top: 25, z: -150, rx: 35, ry: 45, delay: 0, duration: 6, floatAmp: -12, rotAmpX: 12, rotAmpY: 15 },
-  { size: 40, left: 80, top: 15, z: -300, rx: -25, ry: 15, delay: 1.2, duration: 8.5, floatAmp: -8, rotAmpX: -10, rotAmpY: 12 },
-  { size: 85, left: 12, top: 65, z: 80, rx: 15, ry: -35, delay: 0.5, duration: 7, floatAmp: -15, rotAmpX: 14, rotAmpY: -12 },
-  { size: 30, left: 78, top: 72, z: -80, rx: 55, ry: 45, delay: 2, duration: 9, floatAmp: -6, rotAmpX: 15, rotAmpY: 10 },
-  { size: 55, left: 76, top: 45, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11, floatAmp: -18, rotAmpX: -8, rotAmpY: 16 },
-  { size: 45, left: 5, top: 80, z: -200, rx: 10, ry: -10, delay: 0.8, duration: 7.5, floatAmp: -10, rotAmpX: 8, rotAmpY: -14 },
-  { size: 60, left: 74, top: 28, z: 120, rx: 45, ry: -25, delay: 2.5, duration: 9.5, floatAmp: -14, rotAmpX: 16, rotAmpY: -10 },
-  { size: 40, left: 18, top: 15, z: -180, rx: -45, ry: 35, delay: 1.5, duration: 6.5, floatAmp: -7, rotAmpX: -12, rotAmpY: 14 },
+  { size: 70, left: 8, top: 40, z: -150, rx: 35, ry: 45, delay: 0, duration: 6, floatAmp: -12, rotAmpX: 12, rotAmpY: 15 },
+  { size: 40, left: 78, top: 38, z: -300, rx: -25, ry: 15, delay: 1.2, duration: 8.5, floatAmp: -8, rotAmpX: -10, rotAmpY: 12 },
+  { size: 65, left: 12, top: 62, z: 80, rx: 15, ry: -35, delay: 0.5, duration: 7, floatAmp: -15, rotAmpX: 14, rotAmpY: -12 },
+  { size: 30, left: 75, top: 65, z: -80, rx: 55, ry: 45, delay: 2, duration: 9, floatAmp: -6, rotAmpX: 15, rotAmpY: 10 },
+  { size: 55, left: 72, top: 48, z: 40, rx: -15, ry: 25, delay: 1.8, duration: 11, floatAmp: -18, rotAmpX: -8, rotAmpY: 16 },
+  { size: 45, left: 6, top: 55, z: -200, rx: 10, ry: -10, delay: 0.8, duration: 7.5, floatAmp: -10, rotAmpX: 8, rotAmpY: -14 },
+  { size: 60, left: 70, top: 32, z: 120, rx: 45, ry: -25, delay: 2.5, duration: 9.5, floatAmp: -14, rotAmpX: 16, rotAmpY: -10 },
+  { size: 40, left: 16, top: 35, z: -180, rx: -45, ry: 35, delay: 1.5, duration: 6.5, floatAmp: -7, rotAmpX: -12, rotAmpY: 14 },
 ];
 
 const TICKER_ITEMS = [
@@ -149,7 +150,7 @@ export default function Footer() {
           content: '';
           position: absolute;
           left: 0;
-          bottom: 4px;
+          bottom: -3px;
           width: 100%;
           height: 2px;
           background-color: #BE4105;
@@ -162,6 +163,20 @@ export default function Footer() {
         }
         .link-hover:hover::after {
           transform: scaleX(1);
+        }
+
+        @keyframes ticker {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+
+        .ticker-track {
+          display: flex;
+          width: max-content;
+          animation: ticker var(--ticker-duration, 28s) linear infinite;
+        }
+        .ticker-track:hover {
+          animation-play-state: paused;
         }
       `}</style>
 
@@ -184,12 +199,12 @@ export default function Footer() {
         {/* Subtle grid background */}
         <div className="absolute inset-0 lab-grid-bg opacity-40 pointer-events-none" />
 
-        {/* Ambient Geometric Cubes (Confined to Periphery with independent float/rotation parameters) */}
-        <div className="cube-scene" aria-hidden="true">
+        {/* Ambient Geometric Cubes (Confined to Periphery/Wordmark to prevent text clash) */}
+        <div className="cube-scene">
           {CUBES.map((c, i) => (
             <div 
               key={i} 
-              className={`cube-anchor ${i > 4 ? 'hidden md:block' : ''}`}
+              className={`cube-anchor ${i >= 4 ? "hidden md:block" : ""}`}
               style={{
                 left: `${c.left}%`,
                 top: `${c.top}%`,
@@ -222,12 +237,12 @@ export default function Footer() {
                       '--size': `${c.size}px`,
                     } as React.CSSProperties}
                   >
-                    <div className="cube-face face-front"></div>
-                    <div className="cube-face face-back"></div>
-                    <div className="cube-face face-right"></div>
-                    <div className="cube-face face-left"></div>
-                    <div className="cube-face face-top"></div>
-                    <div className="cube-face face-bottom"></div>
+                    <div className="cube-face face-front" />
+                    <div className="cube-face face-back" />
+                    <div className="cube-face face-right" />
+                    <div className="cube-face face-left" />
+                    <div className="cube-face face-top" />
+                    <div className="cube-face face-bottom" />
                   </div>
                 </div>
               </div>
@@ -235,23 +250,35 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Content Container */}
-        <div className="relative z-10 flex flex-col justify-end w-full max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-10 sm:pt-16 pb-8">
+        {/* Content Container - unified container sharing same padding and max-w as other sections */}
+        <div className="relative z-10 flex flex-col justify-end w-full max-w-7xl mx-auto px-4 md:px-8 pt-12 sm:pt-16 pb-8">
           
           {/* Top Quick Links & Status Bar */}
           <div className="grid grid-cols-1 md:grid-cols-3 items-center gap-6 pb-8 border-b border-border/60 text-xs font-mono">
-            {/* Primary Navigation */}
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-5 gap-y-2">
-              <Link href="/contact" className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded">
+            {/* Primary Navigation - 2-column grid below md, inline flex from md */}
+            <div className="grid grid-cols-2 gap-2 w-full max-w-xs mx-auto md:max-w-none md:flex md:flex-wrap md:items-center md:justify-start md:gap-x-6 md:gap-y-2">
+              <Link 
+                href="/contact" 
+                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
                 :: Contact
               </Link>
-              <Link href="/about" className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded">
+              <Link 
+                href="/about" 
+                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
                 :: About
               </Link>
-              <Link href="/#incubation-hub" className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded">
+              <Link 
+                href="/#incubation-hub" 
+                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
                 :: Registrations
               </Link>
-              <Link href="/events" className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded">
+              <Link 
+                href="/events" 
+                className="link-hover text-foreground/80 font-medium min-h-[44px] inline-flex items-center justify-center md:justify-start px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
                 :: Events
               </Link>
             </div>
@@ -263,13 +290,13 @@ export default function Footer() {
             </div>
 
             {/* Social Links */}
-            <div className="flex flex-wrap justify-center md:justify-end gap-x-5 gap-y-2 items-center">
+            <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 items-center">
               {socialLinks.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
                   target="_blank"
-                  className="link-hover text-xs font-mono uppercase tracking-wider text-foreground/70 min-h-[44px] inline-flex items-center py-2 px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#BE4105] rounded"
+                  className="link-hover text-xs font-mono uppercase tracking-wider text-foreground/70 min-h-[44px] inline-flex items-center justify-center px-2 py-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                 >
                   {link.label}
                 </Link>
@@ -286,15 +313,25 @@ export default function Footer() {
             <span className="absolute bottom-3 right-3 font-mono text-xs text-[#BE4105]/80 select-none">+</span>
 
             <div className="text-center select-none py-2 px-4 flex flex-col items-center justify-center">
-              {/* Main Clean Typography */}
+              {/* Main Clean Typography with responsive clamp sizing */}
               <div className="flex items-baseline justify-center">
-                <span className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black font-mono tracking-tight leading-none text-foreground drop-shadow-sm">
+                <span className="text-[clamp(2.75rem,10vw,7.5rem)] font-black font-mono tracking-tight leading-none text-foreground drop-shadow-sm">
                   web.3
                 </span>
-                <span className="inline-block w-3 sm:w-5 md:w-7 h-2 sm:h-3 md:h-4 bg-[#BE4105] ml-2 sm:ml-3 animate-pulse align-baseline shadow-[0_0_12px_#BE4105]" />
+                <span className="inline-block w-[clamp(0.75rem,2vw,1.75rem)] h-[clamp(0.5rem,1.2vw,1rem)] bg-[#BE4105] ml-2 sm:ml-3 animate-pulse align-baseline shadow-[0_0_12px_#BE4105]" />
               </div>
 
-              {/* Tagline */}
+              {/* Sub-telemetry Pills directly beneath on same alignment axis */}
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[9px] sm:text-[10px] font-mono text-foreground/50 tracking-wider">
+                <span className="px-2 py-0.5 border border-border/80 rounded bg-background/50">
+                  NODE: BMS INSTITUTE OF TECHNOLOGY
+                </span>
+                <span className="px-2 py-0.5 border border-border/80 rounded bg-background/50 text-[#BE4105]">
+                  PROTOCOL: LEARN // BUILD // SHIP
+                </span>
+              </div>
+
+              {/* Tagline follows at consistent spacing */}
               <div className="flex items-center gap-2 sm:gap-3 mt-4 sm:mt-5">
                 <span className="h-[1px] w-6 sm:w-12 bg-border/80" />
                 <span className="font-mono text-[10px] sm:text-xs md:text-sm tracking-[0.35em] sm:tracking-[0.45em] uppercase text-foreground/60 font-semibold">
@@ -302,21 +339,11 @@ export default function Footer() {
                 </span>
                 <span className="h-[1px] w-6 sm:w-12 bg-border/80" />
               </div>
-
-              {/* Sub-telemetry Pill */}
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[9px] sm:text-[10px] font-mono text-foreground/50 tracking-wider">
-                <span className="px-2 py-0.5 border border-border/80 rounded bg-background/50">
-                  NODE: BMS INSTITUTE OF TECHNOLOGY
-                </span>
-                <span className="px-2.5 py-0.5 border border-border/80 rounded bg-background/50 text-[#BE4105] font-semibold">
-                  PROTOCOL: LEARN // BUILD // SHIP
-                </span>
-              </div>
             </div>
           </div>
 
-          {/* Bottom Micro Footer */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-foreground/40 pt-2">
+          {/* Bottom Micro Footer - stacks on mobile, splits left/right from md */}
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-[10px] sm:text-[11px] font-mono text-foreground/40 pt-2 text-center md:text-left">
             <div>BUILDING DECENTRALIZED FUTURES</div>
             <div>ALL SYSTEMS OPERATIONAL // LATENCY: 24ms</div>
           </div>
