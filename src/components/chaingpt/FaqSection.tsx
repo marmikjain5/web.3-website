@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
@@ -166,20 +165,109 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
                 <span>SEC_V4</span>
               </div>
 
-              {/* 3D Glass Orb Engine (Official ChainGPT 3D Element) */}
-              <motion.div
-                className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center"
-                animate={shouldReduceMotion ? undefined : { y: [-4, 4, -4], rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              {/* Web3 Cryptographic Query Engine Vector Graphic */}
+              <div
+                className="relative w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center select-none"
+                aria-hidden="true"
               >
-                <Image
-                  src="/chaingpt-assets/3d-glass-orb.png"
-                  alt="Query Engine 3D Glass Orb"
-                  width={96}
-                  height={96}
-                  className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-xl"
-                />
-              </motion.div>
+                <svg
+                  viewBox="0 0 100 100"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-full h-full"
+                >
+                  {/* Outer Segmented Cryptographic Ring */}
+                  <motion.circle
+                    cx="50"
+                    cy="50"
+                    r="44"
+                    stroke="currentColor"
+                    strokeWidth="1"
+                    strokeDasharray="6 8 2 8"
+                    className="text-foreground/20"
+                    style={{ transformOrigin: "50px 50px" }}
+                    animate={shouldReduceMotion ? undefined : { rotate: 360 }}
+                    transition={{ duration: 24, repeat: Infinity, ease: "linear" }}
+                  />
+
+                  {/* Cardinal Crosshair Ticks */}
+                  <line x1="50" y1="2" x2="50" y2="7" stroke="currentColor" strokeWidth="1" className="text-foreground/40" />
+                  <line x1="50" y1="93" x2="50" y2="98" stroke="currentColor" strokeWidth="1" className="text-foreground/40" />
+                  <line x1="2" y1="50" x2="7" y2="50" stroke="currentColor" strokeWidth="1" className="text-foreground/40" />
+                  <line x1="93" y1="50" x2="98" y2="50" stroke="currentColor" strokeWidth="1" className="text-foreground/40" />
+
+                  {/* Counter-Rotating Inner Orbital Ring with Network Nodes */}
+                  <motion.g
+                    style={{ transformOrigin: "50px 50px" }}
+                    animate={shouldReduceMotion ? undefined : { rotate: -360 }}
+                    transition={{ duration: 16, repeat: Infinity, ease: "linear" }}
+                  >
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="28"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeDasharray="2 4"
+                      className="text-foreground/30"
+                    />
+                    {/* Orbital Vertex Nodes */}
+                    <circle cx="50" cy="22" r="2" fill="currentColor" className="text-foreground/60" />
+                    <circle cx="78" cy="50" r="2.5" fill="#E50914" />
+                    <circle cx="50" cy="78" r="2" fill="currentColor" className="text-foreground/60" />
+                    <circle cx="22" cy="50" r="1.5" fill="currentColor" className="text-foreground/40" />
+                  </motion.g>
+
+                  {/* Central Web3 Isometric Polyhedral Block */}
+                  <motion.g
+                    animate={shouldReduceMotion ? undefined : { y: [-2, 2, -2] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    {/* Isometric Top Face */}
+                    <polygon
+                      points="50,36 63,43.5 50,51 37,43.5"
+                      fill="currentColor"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeLinejoin="round"
+                      className="text-foreground/10"
+                    />
+                    {/* Isometric Left Face */}
+                    <polygon
+                      points="37,43.5 50,51 50,65 37,57.5"
+                      fill="currentColor"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeLinejoin="round"
+                      className="text-foreground/5"
+                    />
+                    {/* Isometric Right Face with Club Accent */}
+                    <polygon
+                      points="50,51 63,43.5 63,57.5 50,65"
+                      fill="#E50914"
+                      fillOpacity="0.12"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeLinejoin="round"
+                      className="text-foreground/40"
+                    />
+                    {/* Isometric Wireframe Seams */}
+                    <line x1="50" y1="51" x2="50" y2="65" stroke="currentColor" strokeWidth="1" className="text-foreground/40" />
+                    <line x1="50" y1="51" x2="37" y2="43.5" stroke="currentColor" strokeWidth="1" className="text-foreground/40" />
+                    <line x1="50" y1="51" x2="63" y2="43.5" stroke="currentColor" strokeWidth="1" className="text-foreground/40" />
+
+                    {/* Glowing Core Vertex */}
+                    <motion.circle
+                      cx="50"
+                      cy="51"
+                      r="2"
+                      fill="#E50914"
+                      animate={shouldReduceMotion ? undefined : { opacity: [0.4, 1, 0.4] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    />
+                  </motion.g>
+                </svg>
+              </div>
 
               <div className="flex items-center gap-2 text-[10px] font-mono text-[#E50914]">
                 <motion.span
