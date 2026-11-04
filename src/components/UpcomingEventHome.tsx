@@ -20,7 +20,7 @@ export default function UpcomingEventHome() {
   return (
     <section
       id="events"
-      className="relative w-full pt-24 pb-20 sm:pt-28 sm:pb-24 lg:py-24 px-4 sm:px-6 md:px-8 flex items-center justify-center z-20 overflow-hidden transition-colors duration-500 bg-background"
+      className="relative w-full py-16 sm:py-20 lg:py-24 px-4 sm:px-6 md:px-8 flex items-center justify-center z-20 overflow-hidden transition-colors duration-500 bg-background"
     >
       {/* Decorative glow blobs in light mode */}
       <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-green-200/30 rounded-full blur-3xl pointer-events-none dark:hidden" />
@@ -47,14 +47,14 @@ export default function UpcomingEventHome() {
         {/* Right Side Cards */}
         <div className="relative w-full flex justify-center lg:justify-end pr-0 lg:pr-8 pointer-events-auto">
           {isLoading ? (
-            <div className="w-full max-w-[600px] h-[480px] rounded-xl bg-card border border-border flex flex-col items-center justify-center text-foreground">
+            <div className="w-full max-w-[600px] h-[560px] rounded-xl bg-card border border-border flex flex-col items-center justify-center text-foreground">
               <Loader2 className="w-8 h-8 animate-spin text-[#E50914] mb-4" />
               <p className="font-mono text-xs opacity-50 tracking-widest uppercase">Syncing to chain...</p>
             </div>
           ) : (
             <CardSwap
               width={600}
-              height={480}
+              height={560}
               cardDistance={40}
               verticalDistance={40}
               delay={2500}
@@ -68,7 +68,7 @@ export default function UpcomingEventHome() {
                       key={event.id}
                       className="flex flex-col justify-between p-0 overflow-hidden shadow-2xl bg-card border border-border"
                     >
-                      <div className="w-full aspect-[16/10] bg-black/20 flex items-center justify-center border-b border-border overflow-hidden">
+                      <div className="w-full h-[220px] sm:h-[260px] lg:h-[295px] bg-black/20 flex items-center justify-center border-b border-border overflow-hidden">
                         <img
                           src={event.image_url || "/placeholder-event.png"}
                           alt={event.title}
@@ -77,29 +77,28 @@ export default function UpcomingEventHome() {
                         />
                       </div>
 
-                      <div className="p-5 sm:p-6 lg:p-8 flex flex-col justify-between flex-1">
-                        <div className="space-y-3 sm:space-y-4">
-                          <div className="flex flex-wrap justify-between items-center gap-2">
-                            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest ${event.status === "open" ? "border-green-400/20 bg-green-400/10 text-green-400" :
-                                "border-[#E50914]/20 bg-[#E50914]/10 text-[#E50914]"
-                              }`}>
-                              <span className={`w-2 h-2 rounded-full animate-ping ${event.status === "open" ? "bg-green-400" : "bg-[#E50914]"}`} />
-                              {event.status === "open" ? "Registration Open" : "Coming Soon"}
-                            </div>
-                            <span className="font-mono text-xs text-foreground/50 whitespace-nowrap">
-                              {event.date}
-                            </span>
-                          </div>
+                      <div className="p-5 sm:p-6 lg:p-8 flex flex-col flex-1">
+                        <h2 className="text-2xl md:text-4xl font-black cyber-font leading-tight text-foreground line-clamp-2 break-words">
+                          {event.title}
+                        </h2>
 
-                          <h2 className="text-xl sm:text-2xl md:text-3xl font-black cyber-font leading-tight text-foreground line-clamp-2 break-words">
-                            {event.title}
-                          </h2>
-                          <p className="font-mono text-xs md:text-sm line-clamp-3 text-foreground/70 leading-relaxed">
-                            {event.description}
-                          </p>
+                        <div className="flex flex-wrap justify-between items-center gap-2 mt-3 sm:mt-4">
+                          <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest ${event.status === "open" ? "border-green-400/20 bg-green-400/10 text-green-400" :
+                              "border-[#E50914]/20 bg-[#E50914]/10 text-[#E50914]"
+                            }`}>
+                            <span className={`w-2 h-2 rounded-full animate-ping ${event.status === "open" ? "bg-green-400" : "bg-[#E50914]"}`} />
+                            {event.status === "open" ? "Registration Open" : "Coming Soon"}
+                          </div>
+                          <span className="font-mono text-xs text-foreground/50 whitespace-nowrap">
+                            {event.date}
+                          </span>
                         </div>
 
-                        <div className="flex flex-col sm:flex-row gap-3 mt-6">
+                        <p className="font-mono text-xs md:text-sm line-clamp-3 text-foreground/70 leading-relaxed mt-3 sm:mt-4">
+                          {event.description}
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-3 mt-auto pt-6">
                           {event.status === "open" ? (
                             <Link
                               href="/#incubation-hub"

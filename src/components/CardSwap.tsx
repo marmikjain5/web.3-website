@@ -176,19 +176,14 @@ const CardSwap: React.FC<CardSwapProps> = ({
   useEffect(() => {
     if (refs.length === 0) return;
 
-    const mediaQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
-    let prefersReducedMotion = mediaQuery ? mediaQuery.matches : false;
-
-    const effectiveSkew = isDesktop ? skewAmount : 0;
-
     refs.forEach((r, i) => {
       if (r.current) {
-        placeNow(r.current, makeSlot(i, distX, distY, refs.length), effectiveSkew);
+        placeNow(r.current, makeSlot(i, distX, distY, refs.length), skewAmount);
       }
     });
 
     const swap = () => {
-      if (order.current.length < 2 || isPausedRef.current || prefersReducedMotion) return;
+      if (order.current.length < 2 || isPausedRef.current) return;
 
       const [front, ...rest] = order.current;
       const elFront = refs[front]?.current;
@@ -250,26 +245,10 @@ const CardSwap: React.FC<CardSwapProps> = ({
 
     const startTimer = () => {
       clearInterval(intervalRef.current);
-      if (!prefersReducedMotion) {
-        intervalRef.current = window.setInterval(swap, delay);
-      }
+      intervalRef.current = window.setInterval(swap, delay);
     };
 
     startTimer();
-
-    const handleMotionChange = (e: MediaQueryListEvent) => {
-      prefersReducedMotion = e.matches;
-      if (prefersReducedMotion) {
-        clearInterval(intervalRef.current);
-        tlRef.current?.pause();
-      } else {
-        startTimer();
-      }
-    };
-
-    if (mediaQuery) {
-      mediaQuery.addEventListener('change', handleMotionChange);
-    }
 
     const node = container.current;
     const pause = () => {
@@ -286,23 +265,14 @@ const CardSwap: React.FC<CardSwapProps> = ({
     if (node && pauseOnHover) {
       node.addEventListener('mouseenter', pause);
       node.addEventListener('mouseleave', resume);
-      node.addEventListener('touchstart', pause, { passive: true });
-      node.addEventListener('touchend', resume, { passive: true });
-      node.addEventListener('touchcancel', resume, { passive: true });
     }
 
     return () => {
       clearInterval(intervalRef.current);
       tlRef.current?.kill();
-      if (mediaQuery) {
-        mediaQuery.removeEventListener('change', handleMotionChange);
-      }
       if (node && pauseOnHover) {
         node.removeEventListener('mouseenter', pause);
         node.removeEventListener('mouseleave', resume);
-        node.removeEventListener('touchstart', pause);
-        node.removeEventListener('touchend', resume);
-        node.removeEventListener('touchcancel', resume);
       }
     };
   }, [distX, distY, delay, pauseOnHover, skewAmount, easing, refs, config]);
