@@ -8,7 +8,8 @@ import React, {
   RefObject,
   useEffect,
   useMemo,
-  useRef
+  useRef,
+  useState
 } from 'react';
 import gsap from 'gsap';
 
@@ -33,7 +34,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({ customClass, ...res
   <div
     ref={ref}
     {...rest}
-    className={`absolute top-1/2 left-1/2 rounded-xl border backdrop-blur-lg [transform-style:preserve-3d] [will-change:transform] [backface-visibility:hidden] bg-slate-700 border-slate-600/30 dark:bg-[#0d1015]/90 dark:border-white/20 ${customClass ?? ''} ${rest.className ?? ''}`.trim()}
+    className={`absolute top-1/2 left-1/2 rounded-xl border backdrop-blur-lg [transform-style:preserve-3d] [will-change:transform] [backface-visibility:hidden] bg-white border-black/10 ${customClass ?? ''} ${rest.className ?? ''}`.trim()}
   />
 ));
 Card.displayName = 'Card';
@@ -67,19 +68,89 @@ const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
   });
 
 const CardSwap: React.FC<CardSwapProps> = ({
-  width = 500,
-  height = 400,
-  cardDistance = 60,
-  verticalDistance = 70,
-  delay = 5000,
-  pauseOnHover = false,
+  width = 600,
+  height = 560,
+  cardDistance = 40,
+  verticalDistance = 40,
+  delay = 2500,
+  pauseOnHover = true,
   onCardClick,
-  skewAmount = 6,
+  skewAmount = 4,
   easing = 'elastic',
   children
 }) => {
-  const config =
-    easing === 'elastic'
+  const childArr = useMemo(() => Children.toArray(children) as ReactElement<CardProps>[], [children]);
+  const refs = useMemo<CardRef[]>(() => childArr.map(() => React.createRef<HTMLDivElement>()), [childArr]);
+  const order = useRef<number[]>([]);
+  const container = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState<number | null>(null);
+  const [measuredHeight, setMeasuredHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    order.current = Array.from({ length: childArr.length }, (_, i) => i);
+  }, [childArr.length]);
+
+  useEffect(() => {
+    const el = container.current;
+    if (!el) return;
+
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const w = entry.contentRect.width;
+        if (w > 0) {
+          setContainerWidth(Math.floor(w));
+        }
+      }
+    });
+
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  const totalCards = childArr.length;
+  const availableW = containerWidth ?? (typeof width === 'number' ? width : 600);
+  const isDesktop = availableW >= 640;
+
+  const numericWidth = typeof width === 'number' ? width : 600;
+  const numericHeight = typeof height === 'number' ? height : (isDesktop ? 560 : 500);
+
+  const maxStackShiftX = isDesktop ? 36 : 14;
+  const maxStackShiftY = isDesktop ? 36 : 14;
+
+  const distX = Math.min(cardDistance, Math.max(6, Math.floor(maxStackShiftX / Math.max(1, totalCards - 1))));
+  const distY = Math.min(verticalDistance, Math.max(6, Math.floor(maxStackShiftY / Math.max(1, totalCards - 1))));
+
+  const totalOffsetX = (totalCards - 1) * distX;
+  const totalOffsetY = (totalCards - 1) * distY;
+
+  const effectiveCardWidth = isDesktop
+    ? Math.min(numericWidth, availableW - totalOffsetX - 32)
+    : Math.max(280, availableW - totalOffsetX);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let maxH = 0;
+      refs.forEach((r) => {
+        if (r.current) {
+          let childTotal = 0;
+          for (let i = 0; i < r.current.children.length; i++) {
+            childTotal += (r.current.children[i] as HTMLElement).offsetHeight || 0;
+          }
+          const h = Math.max(r.current.scrollHeight, childTotal);
+          if (h > maxH) maxH = h;
+        }
+      });
+      if (maxH > 200) {
+        setMeasuredHeight(maxH);
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [refs, effectiveCardWidth, childArr.length]);
+
+  const effectiveCardHeight = measuredHeight ?? numericHeight;
+
+  const config = useMemo(() => {
+    return easing === 'elastic'
       ? {
           ease: 'elastic.out(0.6,0.9)',
           durDrop: 2,
@@ -96,25 +167,28 @@ const CardSwap: React.FC<CardSwapProps> = ({
           promoteOverlap: 0.45,
           returnDelay: 0.2
         };
-
-  const childArr = useMemo(() => Children.toArray(children) as ReactElement<CardProps>[], [children]);
-  const refs = useMemo<CardRef[]>(() => childArr.map(() => React.createRef<HTMLDivElement>()), [childArr.length]);
-
-  const order = useRef<number[]>(Array.from({ length: childArr.length }, (_, i) => i));
+  }, [easing]);
 
   const tlRef = useRef<gsap.core.Timeline | null>(null);
   const intervalRef = useRef<number>(0);
-  const container = useRef<HTMLDivElement>(null);
+  const isPausedRef = useRef<boolean>(false);
 
   useEffect(() => {
-    const total = refs.length;
-    refs.forEach((r, i) => placeNow(r.current!, makeSlot(i, cardDistance, verticalDistance, total), skewAmount));
+    if (refs.length === 0) return;
+
+    refs.forEach((r, i) => {
+      if (r.current) {
+        placeNow(r.current, makeSlot(i, distX, distY, refs.length), skewAmount);
+      }
+    });
 
     const swap = () => {
-      if (order.current.length < 2) return;
+      if (order.current.length < 2 || isPausedRef.current) return;
 
       const [front, ...rest] = order.current;
-      const elFront = refs[front].current!;
+      const elFront = refs[front]?.current;
+      if (!elFront) return;
+
       const tl = gsap.timeline();
       tlRef.current = tl;
 
@@ -126,8 +200,9 @@ const CardSwap: React.FC<CardSwapProps> = ({
 
       tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
       rest.forEach((idx, i) => {
-        const el = refs[idx].current!;
-        const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
+        const el = refs[idx]?.current;
+        if (!el) return;
+        const slot = makeSlot(i, distX, distY, refs.length);
         tl.set(el, { zIndex: slot.zIndex }, 'promote');
         tl.to(
           el,
@@ -142,7 +217,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
         );
       });
 
-      const backSlot = makeSlot(refs.length - 1, cardDistance, verticalDistance, refs.length);
+      const backSlot = makeSlot(refs.length - 1, distX, distY, refs.length);
       tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
       tl.call(
         () => {
@@ -168,37 +243,53 @@ const CardSwap: React.FC<CardSwapProps> = ({
       });
     };
 
-    swap();
-    intervalRef.current = window.setInterval(swap, delay);
+    const startTimer = () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = window.setInterval(swap, delay);
+    };
 
-    if (pauseOnHover) {
-      const node = container.current!;
-      const pause = () => {
-        tlRef.current?.pause();
-        clearInterval(intervalRef.current);
-      };
-      const resume = () => {
-        tlRef.current?.play();
-        intervalRef.current = window.setInterval(swap, delay);
-      };
+    startTimer();
+
+    const node = container.current;
+    const pause = () => {
+      isPausedRef.current = true;
+      tlRef.current?.pause();
+      clearInterval(intervalRef.current);
+    };
+    const resume = () => {
+      isPausedRef.current = false;
+      tlRef.current?.play();
+      startTimer();
+    };
+
+    if (node && pauseOnHover) {
       node.addEventListener('mouseenter', pause);
       node.addEventListener('mouseleave', resume);
-      return () => {
+    }
+
+    return () => {
+      clearInterval(intervalRef.current);
+      tlRef.current?.kill();
+      if (node && pauseOnHover) {
         node.removeEventListener('mouseenter', pause);
         node.removeEventListener('mouseleave', resume);
-        clearInterval(intervalRef.current);
-      };
-    }
-    return () => clearInterval(intervalRef.current);
-  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
+      }
+    };
+  }, [distX, distY, delay, pauseOnHover, skewAmount, easing, refs, config]);
 
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)
       ? cloneElement(child, {
           key: i,
           ref: refs[i],
-          style: { width, height, ...(child.props.style ?? {}) },
-          onClick: e => {
+          style: {
+            width: `${effectiveCardWidth}px`,
+            minWidth: `${effectiveCardWidth}px`,
+            maxWidth: `${effectiveCardWidth}px`,
+            height: `${effectiveCardHeight}px`,
+            ...(child.props.style ?? {})
+          },
+          onClick: (e) => {
             child.props.onClick?.(e as React.MouseEvent<HTMLDivElement>);
             onCardClick?.(i);
           }
@@ -209,8 +300,11 @@ const CardSwap: React.FC<CardSwapProps> = ({
   return (
     <div
       ref={container}
-      className="relative perspective-[900px] overflow-visible max-[768px]:scale-[0.8] max-[480px]:scale-[0.6]"
-      style={{ width, height, margin: '0 auto' }}
+      className="relative w-full max-w-[600px] perspective-[900px] overflow-visible select-none"
+      style={{
+        height: `${effectiveCardHeight + totalOffsetY}px`,
+        margin: '0 auto'
+      }}
     >
       {rendered}
     </div>
