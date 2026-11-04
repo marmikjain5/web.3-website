@@ -68,7 +68,7 @@ export default function UpcomingEventHome() {
                       key={event.id}
                       className="flex flex-col justify-between p-0 overflow-hidden shadow-2xl bg-card border border-border"
                     >
-                      <div className="w-full h-[220px] sm:h-[260px] lg:h-[295px] bg-black/20 flex items-center justify-center border-b border-border overflow-hidden">
+                      <div className="w-full h-[220px] sm:h-[260px] lg:h-[295px] bg-foreground/[0.03] flex items-center justify-center border-b border-border overflow-hidden">
                         <img
                           src={event.image_url || "/placeholder-event.png"}
                           alt={event.title}
@@ -117,7 +117,7 @@ export default function UpcomingEventHome() {
                           )}
                           <Link
                             href="/events"
-                            className="px-6 py-3.5 w-full sm:flex-1 min-h-[44px] border font-bold uppercase tracking-wider font-mono text-xs rounded-lg transition-all flex items-center justify-center gap-2 group border-[#D9D9D9]/20 dark:border-border text-[#D9D9D9] dark:text-foreground hover:bg-[#D9D9D9]/5 dark:hover:bg-foreground/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                            className="px-6 py-3.5 w-full sm:flex-1 min-h-[44px] border font-bold uppercase tracking-wider font-mono text-xs rounded-lg transition-all flex items-center justify-center gap-2 group border-border text-foreground hover:bg-foreground/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                           >
                             <span>Explore all events</span>
                             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -128,19 +128,19 @@ export default function UpcomingEventHome() {
                   );
                 })
               ) : (
-                <Card className="flex flex-col items-center justify-center p-6 sm:p-8 shadow-2xl h-full text-center bg-[#202221] dark:bg-card">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest border-[#D9D9D9]/20 dark:border-foreground/20 bg-[#D9D9D9]/10 dark:bg-foreground/10 text-[#D9D9D9]/50 dark:text-foreground/50 mb-6">
+                <Card className="flex flex-col items-center justify-center p-6 sm:p-8 shadow-2xl h-full text-center bg-card border border-border">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] font-mono font-bold uppercase tracking-widest border-foreground/20 bg-foreground/5 text-foreground/50 mb-6">
                     Check Back Later
                   </div>
-                  <h2 className="text-2xl sm:text-3xl font-black leading-tight mb-4 text-[#D9D9D9] dark:text-foreground">
+                  <h2 className="text-2xl sm:text-3xl font-black leading-tight mb-4 text-foreground">
                     No Upcoming Events
                   </h2>
-                  <p className="text-sm text-[#D9D9D9]/80 dark:text-foreground/60 mb-8 max-w-sm">
+                  <p className="text-sm text-foreground/70 mb-8 max-w-sm">
                     We are currently brewing up some exciting new hackathons and workshops. Stay tuned!
                   </p>
                   <Link
                     href="/events"
-                    className="px-6 py-3.5 w-full min-h-[44px] border font-bold font-mono text-xs uppercase tracking-wider rounded-lg transition-all flex items-center justify-center gap-2 border-[#D9D9D9]/20 dark:border-border text-[#D9D9D9] dark:text-foreground hover:bg-[#D9D9D9]/5 dark:hover:bg-foreground/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    className="px-6 py-3.5 w-full min-h-[44px] border font-bold font-mono text-xs uppercase tracking-wider rounded-lg transition-all flex items-center justify-center gap-2 border-border text-foreground hover:bg-foreground/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                   >
                     <span>View Past Events</span>
                     <ArrowRight className="w-4 h-4" />
