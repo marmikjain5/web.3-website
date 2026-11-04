@@ -25,48 +25,48 @@ const DEFAULT_FAQS: FaqItem[] = [
   {
     question: "Who can join the Web.3 Club, and is there any membership fee?",
     answer:
-      "Membership is 100% free and open to all BMSIT&M students across every engineering branch and semester. No prior experience is needed to become a member.",
+      "Membership is free and open to all BMSIT&M students across every engineering branch and semester. No prior experience is needed.",
     category: "Eligibility",
   },
   {
     question: "Do I need prior coding or blockchain experience to participate?",
     answer:
-      "No prior experience is required. Our student-led workshops and bootcamps start from fundamentals, helping you build practical skills from the ground up.",
+      "No prior experience is needed. Workshops and bootcamps start from fundamentals.",
     category: "Learning",
   },
   {
     question: "What technologies and technical tracks does the club focus on?",
     answer:
-      "We focus on Solidity, smart contracts, EVM, dApps, Rust, and ZK proofs for blockchain, alongside Next.js, TypeScript, and React for web development, as well as AI/ML applications including LLMs, generative AI, and computer vision.",
+      "We focus on three tracks: Blockchain, Web Dev, and AI & ML. These cover Solidity, smart contracts, EVM, Rust, and ZK proofs; Next.js, TypeScript, and React; and LLMs, generative AI, and computer vision.",
     category: "Technologies",
   },
   {
     question: "How do student projects and peer mentoring work?",
     answer:
-      "We run three technical tracks open to all members: Blockchain, AI & Machine Learning, and Web Development. Students build dApps and open-source tooling while pairing directly with senior student developers for guidance and code reviews.",
+      "Students build dApps and open-source tooling alongside senior student peers. Members participate through pairing with senior student developers.",
     category: "Projects",
   },
   {
     question: "What kinds of workshops and learning sessions does the club organize?",
     answer:
-      "We host student-led workshops, hands-on bootcamps, peer reviews, and campus demo days designed to help members learn by building real-world projects.",
+      "We organize workshops, bootcamps, peer review, and campus demo days.",
     category: "Workshops",
   },
   {
     question: "Does the club participate in hackathons?",
     answer:
-      "Yes, we organize team delegations to major hackathons and developer gatherings, including ETHIndia, Solana Renaissance, and Polygon Guilds.",
+      "Yes, we organize team delegations to ETHIndia, Solana Renaissance, and Polygon Guilds.",
     category: "Hackathons",
   },
   {
     question: "How do I register for events or join the club?",
     answer: (
       <span>
-        You can join the club through our{" "}
+        You can join via the{" "}
         <Link href="/join" className="underline">
           Join page
         </Link>
-        . Event registrations are announced on our official WhatsApp community and under{" "}
+        . Community discussions take place on WhatsApp via the link in the navbar. Event registration is available through the Register for event button on event cards, which leads to{" "}
         <Link href="/#incubation-hub" className="underline">
           Registrations
         </Link>
@@ -194,13 +194,13 @@ export default function FaqSection({ faqs = DEFAULT_FAQS }: FaqSectionProps) {
 
           {/* RIGHT — FAQ Accordion */}
           <div className="lg:col-span-8">
-            {/* Header: label lines, title and subtitle on one left edge, 16px between lines, 32-48px before list */}
+            {/* Header: title and subtitle sharing the same left edge as each other and the list below */}
             <div className="space-y-4 mb-8 sm:mb-10">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 bg-foreground" />
                 <h3 className="font-mono text-lg md:text-xl font-bold uppercase tracking-wider text-foreground">
                   Most Common Questions
                 </h3>
+                <span className="w-2.5 h-2.5 bg-foreground inline-block" />
               </div>
               <p className="font-mono text-xs text-foreground/50">
                 No worries — here you can find all the answers
