@@ -168,7 +168,7 @@ export default function EventDetailClient({ event }: { event: EventDetail }) {
             </div>
 
             {/* Event Title */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-amiga text-foreground tracking-tight mb-3">
+            <h1 className="text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-black font-amiga text-foreground tracking-tight mb-3 break-words">
               <ScrambleText text={event.title} as="span" />
             </h1>
 
@@ -255,7 +255,7 @@ export default function EventDetailClient({ event }: { event: EventDetail }) {
             <MagneticButton strength={0.2}>
               <Link
                 href="/#incubation-hub"
-                className="cyber-btn px-6 py-3 bg-[#FF5500] hover:bg-[#FF6611] text-white font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_16px_rgba(255,85,0,0.35)] shrink-0 transition-all text-center block cursor-pointer"
+                className="cyber-btn px-6 py-3.5 bg-[#FF5500] hover:bg-[#FF6611] text-white font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_16px_rgba(255,85,0,0.35)] shrink-0 transition-all text-center flex items-center justify-center cursor-pointer w-full sm:w-auto min-h-[44px]"
               >
                 GO TO REGISTRATIONS →
               </Link>
@@ -340,7 +340,7 @@ export default function EventDetailClient({ event }: { event: EventDetail }) {
         {/* ── DYNAMIC MULTI-DAY SCHEDULE ── */}
         {days.length > 0 && (
           <div className="mb-10">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-[#FF5500]" />
                 <h3 className="font-mono text-xs font-bold uppercase tracking-widest text-foreground/70">
@@ -349,7 +349,7 @@ export default function EventDetailClient({ event }: { event: EventDetail }) {
               </div>
 
               {/* Day selection tabs */}
-              <div className="flex gap-1.5 p-1 rounded-xl bg-card border border-border font-mono text-xs">
+              <div className="flex gap-1.5 p-1 rounded-xl bg-card border border-border font-mono text-xs overflow-x-auto max-w-full">
                 {days.map((d, i) => (
                   <button
                     key={d.id || i}

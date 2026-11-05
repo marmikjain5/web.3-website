@@ -171,11 +171,11 @@ export default function PortfolioSection({
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative w-full py-20 border-b border-border lab-grid-bg overflow-hidden">
+    <section ref={sectionRef} className="relative w-full py-16 sm:py-20 border-b border-border lab-grid-bg overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         
         {/* Top Header Block */}
-        <div ref={headerRef} className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end border-b border-border pb-8 mb-12">
+        <div ref={headerRef} className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-end border-b border-border pb-6 sm:pb-8 mb-8 sm:mb-12">
           
           {/* Left Title Box */}
           <div className="lg:col-span-8 space-y-2">
@@ -188,13 +188,13 @@ export default function PortfolioSection({
             <ScrambleText
               text={settings.heading || "OUR PROJECTS"}
               as="h2"
-              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-amiga tracking-tight text-foreground block max-w-full break-words"
+              className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black font-amiga tracking-tight text-foreground block max-w-full break-words"
             />
           </div>
 
           {/* Right Stat Widget: All Projects [ count ] */}
-          <div className="lg:col-span-4 flex justify-start lg:justify-end">
-            <div className="bg-card border border-border p-6 rounded-2xl flex items-center justify-between gap-8 min-w-[240px] shadow-sm relative group hover:border-[#E50914]/50 transition-colors">
+          <div className="lg:col-span-4 flex justify-start lg:justify-end w-full sm:w-auto">
+            <div className="bg-card border border-border p-4 sm:p-6 rounded-2xl flex items-center justify-between gap-6 sm:gap-8 w-full sm:w-auto min-w-0 sm:min-w-[240px] shadow-sm relative group hover:border-[#E50914]/50 transition-colors">
               <span className="tech-bracket-tl" />
               <span className="tech-bracket-tr" />
               <span className="tech-bracket-bl" />
@@ -204,12 +204,12 @@ export default function PortfolioSection({
                 <span className="block font-mono text-xs font-bold text-foreground/50 uppercase">
                   Active Showcase
                 </span>
-                <span className="font-mono text-4xl md:text-5xl font-black text-foreground">
+                <span className="font-mono text-3xl sm:text-4xl md:text-5xl font-black text-foreground">
                   {projects.length}
                 </span>
               </div>
 
-              <div className="w-12 h-12 rounded-xl bg-foreground text-background flex items-center justify-center group-hover:bg-[#E50914] group-hover:text-white transition-all shadow-sm">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-foreground text-background flex items-center justify-center group-hover:bg-[#E50914] group-hover:text-white transition-all shadow-sm shrink-0">
                 <Compass className="w-5 h-5" />
               </div>
             </div>
@@ -241,8 +241,8 @@ export default function PortfolioSection({
 
         {/* Empty State vs Cards Grid */}
         {projects.length === 0 ? (
-          <div className="min-h-[320px] flex items-center justify-center py-16 px-4">
-            <div className="max-w-2xl w-full p-8 sm:p-12 rounded-2xl bg-card border border-border shadow-sm text-center relative overflow-hidden">
+          <div className="min-h-[320px] flex items-center justify-center py-12 sm:py-16 px-4">
+            <div className="max-w-2xl w-full p-6 sm:p-12 rounded-2xl bg-card border border-border shadow-sm text-center relative overflow-hidden">
               <span className="tech-bracket-tl text-[#E50914]" />
               <span className="tech-bracket-tr text-[#E50914]" />
               <span className="tech-bracket-bl text-[#E50914]" />
@@ -253,7 +253,7 @@ export default function PortfolioSection({
                 <span>{settings.empty_status || "AWAITING FIRST BUILD"}</span>
               </div>
 
-              <h3 className="font-mono font-black text-2xl sm:text-3xl text-foreground uppercase tracking-tight mb-3">
+              <h3 className="font-mono font-black text-xl sm:text-3xl text-foreground uppercase tracking-tight mb-3">
                 {settings.empty_heading || "THE NEXT BIG IDEA STARTS HERE."}
               </h3>
 
@@ -265,7 +265,7 @@ export default function PortfolioSection({
               {settings.show_cta && settings.cta_text && (
                 <Link
                   href={settings.cta_url || "/join"}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#E50914] hover:bg-[#b80710] text-white font-mono font-bold text-xs uppercase tracking-wider rounded-lg shadow-md transition-all cursor-pointer group"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#E50914] hover:bg-[#b80710] text-white font-mono font-bold text-xs uppercase tracking-wider rounded-lg shadow-md transition-all cursor-pointer group min-h-[44px]"
                 >
                   <span>{settings.cta_text}</span>
                   <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -313,13 +313,13 @@ export default function PortfolioSection({
                       )}
 
                       {/* Card Header */}
-                      <div className="p-6 border-b border-border flex items-start justify-between bg-foreground/[0.01] gap-3">
+                      <div className="p-4 sm:p-6 border-b border-border flex items-start justify-between bg-foreground/[0.01] gap-3">
                         <div className="flex items-start gap-3 flex-1 min-w-0">
                           <div className="w-10 h-10 rounded-lg bg-[#E50914]/10 border border-[#E50914]/20 flex items-center justify-center text-[#E50914] shrink-0 group-hover:scale-110 transition-transform">
                             <ProjectIcon iconName={project.icon_name} symbol={project.symbol} />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <h3 className="font-mono font-black text-lg sm:text-xl text-foreground group-hover:text-[#E50914] transition-colors truncate">
+                            <h3 className="font-mono font-black text-base sm:text-xl text-foreground group-hover:text-[#E50914] transition-colors truncate">
                               {project.title}
                             </h3>
                             <div className="flex items-center gap-2 mt-1">
@@ -351,7 +351,7 @@ export default function PortfolioSection({
                       </div>
 
                       {/* Card Body — Narrative Description */}
-                      <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                      <div className="p-4 sm:p-6 flex-1 flex flex-col justify-between space-y-4">
                         <p className="font-mono text-xs sm:text-sm text-foreground/75 leading-relaxed">
                           {project.description}
                         </p>
@@ -362,41 +362,27 @@ export default function PortfolioSection({
                             {project.tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="font-mono text-[10px] text-foreground/70 bg-foreground/[0.04] border border-border px-2.5 py-1 rounded-md"
+                                className="px-2 py-0.5 rounded bg-foreground/[0.04] border border-border text-[9px] font-mono uppercase text-foreground/60"
                               >
                                 {tag}
                               </span>
                             ))}
                           </div>
                         )}
-                      </div>
 
-                      {/* Card Footer: Metadata, Contributors & Links */}
-                      <div className="p-4 bg-foreground/[0.02] border-t border-border flex items-center justify-between text-xs font-mono text-foreground/50">
-                        {isExploration ? (
-                          <div className="flex items-center justify-between w-full">
-                            <span className="text-[10px] font-mono text-foreground/45 uppercase tracking-wider">
-                              :: LEARNING &amp; BUILDING TRACK
-                            </span>
-                            <span className="text-[10px] font-mono text-[#E50914] uppercase font-bold">
-                              OPEN TO ALL
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center justify-between w-full">
-                            {/* Contributors count */}
+                        {/* Card Footer: Contributors & Links */}
+                        {(project.contributors?.length || project.demo_url || project.github_url || project.docs_url) && (
+                          <div className="pt-4 border-t border-border flex items-center justify-between text-xs font-mono">
+                            {/* Contributors display */}
                             {project.contributors && project.contributors.length > 0 ? (
-                              <div className="flex items-center gap-1.5 text-[11px] text-foreground/60">
-                                <Users className="w-3.5 h-3.5 text-[#E50914]" />
-                                <span>
-                                  {project.contributors.length}{" "}
-                                  {project.contributors.length === 1 ? "Contributor" : "Contributors"}
+                              <div className="flex items-center gap-2">
+                                <Users className="w-3.5 h-3.5 text-foreground/40" />
+                                <span className="text-[10px] text-foreground/50 truncate max-w-[150px]">
+                                  {project.contributors.map((c) => c.name).join(", ")}
                                 </span>
                               </div>
                             ) : (
-                              <span className="text-[10px] text-foreground/40 uppercase">
-                                WEB.3 ECOSYSTEM
-                              </span>
+                              <span className="text-[10px] text-foreground/40 uppercase">WEB.3 INITIATIVE</span>
                             )}
 
                             {/* Action icons */}
@@ -406,7 +392,7 @@ export default function PortfolioSection({
                                   href={project.github_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-foreground/50 hover:text-foreground transition-colors"
+                                  className="text-foreground/50 hover:text-foreground transition-colors p-1"
                                   title="GitHub Repository"
                                 >
                                   <GithubIcon className="w-4 h-4" />
@@ -417,7 +403,7 @@ export default function PortfolioSection({
                                   href={project.docs_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-foreground/50 hover:text-foreground transition-colors"
+                                  className="text-foreground/50 hover:text-foreground transition-colors p-1"
                                   title="Documentation"
                                 >
                                   <BookOpen className="w-4 h-4" />
@@ -428,7 +414,7 @@ export default function PortfolioSection({
                                   href={project.demo_url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-foreground/50 hover:text-[#E50914] transition-colors"
+                                  className="text-foreground/50 hover:text-[#E50914] transition-colors p-1"
                                   title="Live Demo"
                                 >
                                   <ExternalLink className="w-4 h-4" />
@@ -448,8 +434,8 @@ export default function PortfolioSection({
 
         {/* Carousel Pagination Controls (Shown when there is more than 1 page) */}
         {projects.length > 0 && (
-          <div className="mt-8 flex items-center justify-between pt-4 border-t border-border">
-            <span className="font-mono text-xs text-foreground/50">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-border">
+            <span className="font-mono text-xs text-foreground/50 text-center sm:text-left">
               SHOWING {projects.length === 0 ? 0 : page * pageSize + 1} -{" "}
               {Math.min((page + 1) * pageSize, projects.length)} OF {projects.length} ENTRIES
             </span>
@@ -459,7 +445,7 @@ export default function PortfolioSection({
                 <button
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
                   disabled={page === 0}
-                  className="p-2.5 rounded-lg border border-border bg-card hover:text-[#E50914] hover:border-[#E50914] disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer flex items-center justify-center"
+                  className="p-2.5 min-w-[44px] min-h-[44px] rounded-lg border border-border bg-card hover:text-[#E50914] hover:border-[#E50914] disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer flex items-center justify-center"
                   aria-label="Previous page"
                 >
                   <ChevronLeft className="w-4 h-4" />
@@ -470,7 +456,7 @@ export default function PortfolioSection({
                 <button
                   onClick={() => setPage((p) => Math.min(maxPage, p + 1))}
                   disabled={page >= maxPage}
-                  className="p-2.5 rounded-lg border border-border bg-card hover:text-[#E50914] hover:border-[#E50914] disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer flex items-center justify-center"
+                  className="p-2.5 min-w-[44px] min-h-[44px] rounded-lg border border-border bg-card hover:text-[#E50914] hover:border-[#E50914] disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer flex items-center justify-center"
                   aria-label="Next page"
                 >
                   <ChevronRight className="w-4 h-4" />

@@ -57,6 +57,11 @@
   --font-logo: var(--font-logo);
 }
 
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -424,7 +429,12 @@ body {
 
 /* ── Lenis smooth scroll compatibility ── */
 html.lenis,
-html.lenis body {
+html.lenis html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
   height: auto;
 }
 

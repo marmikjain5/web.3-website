@@ -85,7 +85,7 @@ export default function Events() {
     <section
       id="events"
       ref={sectionRef}
-      className="relative max-w-5xl mx-auto px-5 sm:px-6 py-20 lab-grid-bg"
+      className="relative max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-20 lab-grid-bg overflow-hidden"
     >
       {/* ── Section header ─────────────────────────────────── */}
       <div className="flex items-center gap-2 mb-2">
@@ -95,16 +95,16 @@ export default function Events() {
         </p>
       </div>
 
-      <h2 className="text-3xl sm:text-5xl md:text-6xl font-black cyber-font text-foreground mb-3 leading-[1.1] tracking-tight">
+      <h2 className="text-2xl sm:text-4xl md:text-6xl font-black cyber-font text-foreground mb-3 leading-[1.1] tracking-tight">
         WHAT&apos;S HAPPENING{" "}
         <span className="text-[#FF5500]">ON-CHAIN</span>
       </h2>
-      <p className="font-mono text-sm sm:text-base text-foreground/60 max-w-xl leading-relaxed mb-8">
+      <p className="font-mono text-xs sm:text-base text-foreground/60 max-w-xl leading-relaxed mb-6 sm:mb-8">
         Hackathons, incubator sprints, and build-weeks — built for visionaries who ship on-chain. Explore event schedules, curricula and archives.
       </p>
 
       {/* ── Registration Information Directive ──────────────── */}
-      <div className="p-4 sm:p-5 rounded-xl border border-[#FF5500]/30 bg-card shadow-sm mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-4 sm:p-5 rounded-xl border border-[#FF5500]/30 bg-card shadow-sm mb-8 sm:mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3">
           <Info className="w-4 h-4 text-[#FF5500] shrink-0 mt-0.5" />
           <div>
@@ -118,7 +118,7 @@ export default function Events() {
         </div>
         <Link
           href="/#incubation-hub"
-          className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#FF5500] hover:text-[#FF6611] shrink-0 transition-colors cursor-pointer group"
+          className="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-[#FF5500] hover:text-[#FF6611] shrink-0 transition-colors cursor-pointer group min-h-[44px]"
         >
           <span>GO TO REGISTRATIONS</span>
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
@@ -126,12 +126,12 @@ export default function Events() {
       </div>
 
       {/* ── Tab bar (Upcoming / Archive) ────────────────────── */}
-      <div className="flex gap-1 p-1 rounded-xl bg-card border border-border w-fit mb-14 font-mono shadow-sm">
+      <div className="flex gap-1 p-1 rounded-xl bg-card border border-border w-fit mb-10 sm:mb-14 font-mono shadow-sm">
         {(["upcoming", "past"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`text-xs font-bold px-5 py-2 rounded-lg transition-all duration-200 cursor-pointer ${
+            className={`text-xs font-bold px-4 sm:px-5 py-2.5 min-h-[44px] rounded-lg transition-all duration-200 cursor-pointer ${
               activeTab === tab
                 ? "bg-[#FF5500]/15 text-[#FF5500] border border-[#FF5500]/40 shadow-[0_0_12px_rgba(255,85,0,0.15)]"
                 : "text-foreground/50 hover:text-foreground border border-transparent"
@@ -149,7 +149,7 @@ export default function Events() {
         {/* SVG chain axis */}
         {chainHeight > 0 && (
           <svg
-            className="absolute left-[11px] md:left-1/2 md:-translate-x-px top-0 pointer-events-none z-0"
+            className="absolute left-[9px] sm:left-[11px] md:left-1/2 md:-translate-x-px top-0 pointer-events-none z-0"
             width="2"
             height={chainHeight}
             viewBox={`0 0 2 ${chainHeight}`}
@@ -189,20 +189,20 @@ export default function Events() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: activeTab === "upcoming" ? 20 : -20 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="flex flex-col gap-12 md:gap-16"
+              className="flex flex-col gap-10 sm:gap-12 md:gap-16"
             >
               {activeEvents.length > 0 ? (
                 activeEvents.map((event, i) => (
                   <div
                     key={event.id}
-                    className="grid grid-cols-[24px_1fr] md:grid-cols-[1fr_48px_1fr] items-start"
+                    className="grid grid-cols-[20px_1fr] sm:grid-cols-[24px_1fr] md:grid-cols-[1fr_48px_1fr] items-start gap-2 sm:gap-0"
                   >
                     {/* Card */}
                     <div
                       className={
                         i % 2 === 0
-                          ? "col-start-2 md:col-start-1 row-start-1"
-                          : "col-start-2 md:col-start-3 row-start-1"
+                          ? "col-start-2 md:col-start-1 row-start-1 min-w-0"
+                          : "col-start-2 md:col-start-3 row-start-1 min-w-0"
                       }
                     >
                       <HackathonCard event={event as any} isPast={isPast} />
@@ -227,7 +227,7 @@ export default function Events() {
                   </div>
                 ))
               ) : (
-                <div className="text-center py-20 p-8 rounded-2xl border border-dashed border-border bg-card/50">
+                <div className="text-center py-16 sm:py-20 p-6 sm:p-8 rounded-2xl border border-dashed border-border bg-card/50">
                   <p className="font-mono text-sm font-bold text-foreground/60 uppercase tracking-wider mb-1">
                     {activeTab === "upcoming"
                       ? "NO UPCOMING EVENTS RIGHT NOW."

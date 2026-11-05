@@ -88,7 +88,7 @@ export default function MemberCard({
       <motion.div
         whileHover={{ y: -6 }}
         transition={{ duration: 0.2 }}
-        className="relative bg-card border border-border p-5 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#E50914]/60 transition-colors duration-300 flex flex-col justify-between group h-full"
+        className="relative bg-card border border-border p-4 sm:p-5 rounded-2xl shadow-sm hover:shadow-xl hover:border-[#E50914]/60 transition-colors duration-300 flex flex-col justify-between group h-full"
       >
         {/* 4 Corner Markers */}
         <span className="tech-bracket-tl text-[#E50914]" />
@@ -97,8 +97,8 @@ export default function MemberCard({
         <span className="tech-bracket-br text-[#E50914]" />
 
         {/* Member Name & Role at Top */}
-        <div className="text-center mb-4 select-none">
-          <h3 className="font-mono font-bold text-base md:text-lg text-foreground tracking-tight group-hover:text-[#E50914] transition-colors line-clamp-1">
+        <div className="text-center mb-3 sm:mb-4 select-none">
+          <h3 className="font-mono font-bold text-sm sm:text-base md:text-lg text-foreground tracking-tight group-hover:text-[#E50914] transition-colors line-clamp-1">
             {name}
           </h3>
           <span className="font-mono text-[10px] md:text-xs uppercase tracking-widest text-foreground/50 block mt-0.5 truncate">
@@ -117,23 +117,23 @@ export default function MemberCard({
         </div>
 
         {/* Bottom Bar: BIO + Trigger Button */}
-        <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
+        <div className="mt-3 sm:mt-4 pt-3 border-t border-border flex items-center justify-between">
           <button
             onClick={() => setShowBio(true)}
-            className="flex items-center gap-1.5 font-mono text-xs font-bold text-foreground/70 hover:text-[#E50914] transition-colors cursor-pointer py-1"
+            className="flex items-center gap-1.5 font-mono text-xs font-bold text-foreground/70 hover:text-[#E50914] transition-colors cursor-pointer py-1 min-h-[36px]"
           >
             <span>BIO</span>
             <Plus className="w-3.5 h-3.5 text-[#E50914] stroke-[3]" />
           </button>
 
           {/* Minimal Social Links */}
-          <div className="flex items-center gap-2.5 text-foreground/40">
+          <div className="flex items-center gap-2 text-foreground/40">
             {socials?.twitter && (
               <a
                 href={socials.twitter}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-[#E50914] transition-colors"
+                className="hover:text-[#E50914] transition-colors p-1"
                 title="Twitter / X"
               >
                 <TwitterIcon className="w-3.5 h-3.5" />
@@ -144,7 +144,7 @@ export default function MemberCard({
                 href={socials.linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-[#E50914] transition-colors"
+                className="hover:text-[#E50914] transition-colors p-1"
                 title="LinkedIn"
               >
                 <LinkedinIcon className="w-3.5 h-3.5" />
@@ -155,7 +155,7 @@ export default function MemberCard({
                 href={socials.github}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-[#E50914] transition-colors"
+                className="hover:text-[#E50914] transition-colors p-1"
                 title="GitHub"
               >
                 <GithubIcon className="w-3.5 h-3.5" />
@@ -166,7 +166,7 @@ export default function MemberCard({
                 href={socials.instagram}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:text-[#E50914] transition-colors"
+                className="hover:text-[#E50914] transition-colors p-1"
                 title="Instagram"
               >
                 <InstagramIcon className="w-3.5 h-3.5" />
@@ -185,7 +185,7 @@ export default function MemberCard({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 z-[100000] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md"
+                className="fixed inset-0 z-[100000] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md"
                 onClick={() => setShowBio(false)}
               >
                 <motion.div
@@ -193,7 +193,7 @@ export default function MemberCard({
                   animate={{ scale: 1, y: 0 }}
                   exit={{ scale: 0.95, y: 15 }}
                   transition={{ duration: 0.2 }}
-                  className="relative w-full max-w-lg bg-[#0c0d0e] border border-white/15 p-6 md:p-8 rounded-2xl shadow-[0_0_60px_rgba(0,0,0,0.9)] overflow-hidden font-mono select-text"
+                  className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto bg-[#0c0d0e] border border-white/15 p-4 sm:p-6 md:p-8 rounded-2xl shadow-[0_0_60px_rgba(0,0,0,0.9)] font-mono select-text"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="tech-bracket-tl text-[#E50914]" />
@@ -203,14 +203,14 @@ export default function MemberCard({
 
                   <button
                     onClick={() => setShowBio(false)}
-                    className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white bg-white/5 hover:bg-[#E50914] rounded-lg border border-white/10 transition-colors cursor-pointer"
+                    className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 text-zinc-400 hover:text-white bg-white/5 hover:bg-[#E50914] rounded-lg border border-white/10 transition-colors cursor-pointer"
                     aria-label="Close dossier"
                   >
                     <X className="w-5 h-5" />
                   </button>
 
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-white/20 bg-black/50 shrink-0">
+                  <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6 pr-8">
+                    <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-white/20 bg-black/50 shrink-0">
                       <img
                         src={image || defaultAvatar}
                         alt={name}
@@ -224,7 +224,7 @@ export default function MemberCard({
                           // EXECUTIVE DOSSIER
                         </span>
                       </div>
-                      <h3 className="text-xl sm:text-2xl font-bold font-mono text-white truncate tracking-tight">
+                      <h3 className="text-lg sm:text-2xl font-bold font-mono text-white truncate tracking-tight">
                         {name}
                       </h3>
                       <span className="text-xs uppercase text-zinc-400 font-mono font-semibold tracking-wider block mt-0.5 truncate">
@@ -285,22 +285,22 @@ export default function MemberCard({
                         )}
                       </div>
                     </div>
-                    <div className="max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-                      <p className="text-sm text-zinc-200 leading-relaxed font-sans whitespace-pre-line">
+                    <div className="max-h-52 sm:max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                      <p className="text-xs sm:text-sm text-zinc-200 leading-relaxed font-sans whitespace-pre-line">
                         {description ||
                           "Core member of Web3 Labs driving incubator acceleration, tokenomics strategy, and partner integrations across the global decentralized ecosystem."}
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-zinc-400">
-                    <span className="flex items-center gap-2 font-bold text-emerald-400">
+                  <div className="mt-5 sm:mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-zinc-400">
+                    <span className="flex items-center gap-2 font-bold text-emerald-400 text-[11px] sm:text-xs">
                       <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                       STATUS: ACTIVE_OPERATOR
                     </span>
                     <button
                       onClick={() => setShowBio(false)}
-                      className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-[#E50914] text-white transition-colors cursor-pointer font-bold border border-white/10"
+                      className="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-[#E50914] text-white transition-colors cursor-pointer font-bold border border-white/10 min-h-[36px]"
                     >
                       Close
                     </button>

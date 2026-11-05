@@ -90,15 +90,15 @@ export default function CoinShowcaseSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full py-20 border-b border-border lab-grid-bg overflow-hidden"
+      className="relative w-full py-16 sm:py-20 border-b border-border lab-grid-bg overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         {/* Section Header */}
-        <div className="coin-title-anim flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-6 mb-14 gap-4">
+        <div className="coin-title-anim flex flex-col md:flex-row md:items-end justify-between border-b border-border pb-6 mb-12 sm:mb-14 gap-4">
           <ScrambleText
             text="WEB.3 COMMUNITY"
             as="h2"
-            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-amiga tracking-tight text-foreground"
+            className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-amiga tracking-tight text-foreground break-words"
           />
           <div className="flex items-center gap-2 text-xs font-mono text-foreground/60 shrink-0">
             <Sparkles className="w-3.5 h-3.5 text-[rgb(255,122,0)]" />
@@ -107,7 +107,7 @@ export default function CoinShowcaseSection() {
         </div>
 
         {/* 2-Column Layout: Coin Left | Info Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-12 items-center">
           {/* Left: 3D Coin with Parallax */}
           <div className="coin-left-anim flex flex-col items-center justify-center">
             <motion.div
@@ -119,7 +119,7 @@ export default function CoinShowcaseSection() {
               }}
               transition={{ type: "spring", damping: 18, stiffness: 140 }}
               style={{ transformStyle: "preserve-3d", perspective: 800 }}
-              className="relative w-full max-w-[360px] aspect-square rounded-2xl flex items-center justify-center cursor-grab active:cursor-grabbing"
+              className="relative w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[360px] aspect-square rounded-2xl flex items-center justify-center cursor-grab active:cursor-grabbing"
             >
               {/* Ambient glow */}
               <div className="absolute inset-8 blur-3xl rounded-full bg-[rgb(255,122,0)]/20 pointer-events-none" />
@@ -145,18 +145,18 @@ export default function CoinShowcaseSection() {
             </motion.div>
 
             {/* Status bar */}
-            <span className="mt-3 font-mono text-[10px] text-foreground/40 uppercase tracking-widest">
+            <span className="mt-3 font-mono text-[10px] text-foreground/40 uppercase tracking-widest text-center">
               :: SEAMLESS 360° ORBIT — MOUSE TO INTERACT
             </span>
           </div>
 
           {/* Right: Description + Feature Cards */}
-          <div className="coin-right-anim space-y-8">
+          <div className="coin-right-anim space-y-6 sm:space-y-8">
             <div>
-              <h3 className="font-mono text-xl md:text-2xl font-bold uppercase tracking-wider text-foreground mb-3">
+              <h3 className="font-mono text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-wider text-foreground mb-3">
                 EXPLORE. BUILD. INNOVATE.
               </h3>
-              <p className="font-mono text-sm text-foreground/70 leading-relaxed max-w-lg">
+              <p className="font-mono text-xs sm:text-sm text-foreground/70 leading-relaxed max-w-lg">
                 Welcome to BMSIT&M WEB.3 Club — a community of curious minds,
                 developers and innovators exploring the future of technology. From
                 blockchain and Web3 to artificial intelligence and emerging
@@ -166,13 +166,13 @@ export default function CoinShowcaseSection() {
             </div>
 
             {/* Feature cards */}
-            <div className="space-y-4">
+            <div className="space-y-3.5 sm:space-y-4">
               {COIN_FEATURES.map((feat) => {
                 const Icon = feat.icon;
                 return (
                   <div
                     key={feat.title}
-                    className="coin-feature-card group flex items-start gap-4 p-4 rounded-xl bg-card border border-border hover:border-[rgb(255,122,0)]/50 transition-colors relative"
+                    className="coin-feature-card group flex items-start gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-xl bg-card border border-border hover:border-[rgb(255,122,0)]/50 transition-colors relative"
                   >
                     <span className="tech-bracket-tl" />
                     <span className="tech-bracket-tr" />
@@ -180,7 +180,7 @@ export default function CoinShowcaseSection() {
                       <Icon className="w-5 h-5" />
                     </div>
                     <div>
-                      <h4 className="font-mono font-bold text-sm text-foreground group-hover:text-[rgb(255,122,0)] transition-colors">
+                      <h4 className="font-mono font-bold text-xs sm:text-sm text-foreground group-hover:text-[rgb(255,122,0)] transition-colors">
                         {feat.title}
                       </h4>
                       <p className="font-mono text-[11px] text-foreground/55 leading-relaxed mt-1">
@@ -196,7 +196,7 @@ export default function CoinShowcaseSection() {
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
               <Link
                 href="/proto"
-                className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-foreground/70 hover:text-[rgb(255,122,0)] transition-colors group cursor-pointer"
+                className="inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-wider text-foreground/70 hover:text-[rgb(255,122,0)] transition-colors group cursor-pointer min-h-[44px]"
               >
                 <span>KNOW MORE WITH PROTO</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[rgb(255,122,0)]" />

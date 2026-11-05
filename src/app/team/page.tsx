@@ -1,8 +1,16 @@
 import TeamGrid from "@/components/TeamGrid";
 import { getTeamMembers } from "@/app/actions/admin";
 
+export const dynamic = "force-dynamic";
+
 export default async function TeamPage() {
-  const members = await getTeamMembers();
+  let members: Awaited<ReturnType<typeof getTeamMembers>> = [];
+  try {
+    members = await getTeamMembers();
+  } catch (err) {
+    console.error("Failed to load team members:", err);
+    members = [];
+  }
 
   return (
     <main className="min-h-screen bg-background text-foreground">

@@ -1256,7 +1256,7 @@ function ScheduleModal({
                       key={sIdx}
                       className="p-3.5 rounded-xl border border-foreground/[0.08] bg-foreground/[0.02] space-y-3"
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                         <input
                           type="text"
                           value={slot.time_slot}
@@ -1264,7 +1264,7 @@ function ScheduleModal({
                             handleSessionChange(sIdx, "time_slot", e.target.value)
                           }
                           placeholder="09:00–10:20"
-                          className="w-32 px-2.5 py-1.5 bg-foreground/[0.04] border border-foreground/[0.1] rounded-lg font-mono text-xs text-foreground focus:outline-none font-bold"
+                          className="w-full sm:w-32 px-2.5 py-1.5 bg-foreground/[0.04] border border-foreground/[0.1] rounded-lg font-mono text-xs text-foreground focus:outline-none font-bold"
                         />
                         <input
                           type="text"
@@ -1435,7 +1435,7 @@ function GalleryModal({
         </div>
 
         {/* Upload Form */}
-        <div className="p-4 rounded-xl border border-foreground/[0.08] bg-foreground/[0.02] flex items-center gap-3">
+        <div className="p-4 rounded-xl border border-foreground/[0.08] bg-foreground/[0.02] flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <input
             type="text"
             value={caption}
@@ -1447,7 +1447,7 @@ function GalleryModal({
             type="button"
             disabled={uploading}
             onClick={() => fileInputRef.current?.click()}
-            className="cyber-btn px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold uppercase rounded-lg cursor-pointer flex items-center gap-1.5"
+            className="cyber-btn px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold uppercase rounded-lg cursor-pointer flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-0"
           >
             <Upload className="w-3.5 h-3.5" />
             <span>{uploading ? "Uploading..." : "Upload Photo"}</span>
@@ -1462,7 +1462,7 @@ function GalleryModal({
         </div>
 
         {/* Image Grid */}
-        <div className="grid grid-cols-3 gap-3 max-h-96 overflow-y-auto">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
           {gallery.map((img) => (
             <div
               key={img.id}

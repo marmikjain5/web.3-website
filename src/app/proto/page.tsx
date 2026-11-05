@@ -35,7 +35,7 @@ export default function ProtoPage() {
 
       <div className="max-w-4xl mx-auto relative z-10 space-y-8 sm:space-y-12">
         {/* Navigation Breadcrumb & Status Pill */}
-        <div className="flex items-center justify-between border-b border-border pb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border pb-4">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-xs font-mono text-foreground/60 hover:text-[#E50914] transition-colors group cursor-pointer"
@@ -58,7 +58,7 @@ export default function ProtoPage() {
             <span>OFFICIAL WEB.3 AI COMPANION</span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black font-mono uppercase tracking-tight text-foreground">
+          <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-6xl font-black font-mono uppercase tracking-tight text-foreground break-words">
             PROTO IS GETTING READY.
           </h1>
 
@@ -145,7 +145,7 @@ export default function ProtoPage() {
             <MagneticButton strength={0.25}>
               <Link
                 href="/"
-                className="cyber-btn px-8 py-3.5 bg-[#E50914] hover:bg-[#c90812] text-white font-mono font-black text-xs uppercase tracking-widest shadow-[0_8px_24px_rgba(229,9,20,0.35)] transition-all flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
+                className="cyber-btn px-8 py-3.5 bg-[#E50914] hover:bg-[#c90812] text-white font-mono font-black text-xs uppercase tracking-widest shadow-[0_8px_24px_rgba(229,9,20,0.35)] transition-all flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto min-h-[44px]"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>BACK TO WEB.3</span>

@@ -60,21 +60,21 @@ export default function AdminGate() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 relative z-20">
-      <div className="w-full max-w-md bg-card/90 backdrop-blur-xl border border-border p-8 rounded-2xl shadow-2xl relative overflow-hidden">
+    <div className="min-h-[80vh] flex items-center justify-center px-3 sm:px-4 relative z-20">
+      <div className="w-full max-w-md bg-card/90 backdrop-blur-xl border border-border p-5 sm:p-8 rounded-2xl shadow-2xl relative overflow-hidden">
         {/* Subtle top accent line */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#FF5500] to-transparent" />
 
         {/* Header Icon & Title */}
-        <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-[#FF5500]/10 border border-[#FF5500]/30 flex items-center justify-center mb-4 text-[#FF5500] shadow-[0_0_24px_rgba(255,85,0,0.25)]">
-            {user ? <ShieldAlert className="w-8 h-8" /> : <Lock className="w-8 h-8" />}
+        <div className="flex flex-col items-center text-center mb-6 sm:mb-8">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#FF5500]/10 border border-[#FF5500]/30 flex items-center justify-center mb-4 text-[#FF5500] shadow-[0_0_24px_rgba(255,85,0,0.25)]">
+            {user ? <ShieldAlert className="w-7 h-7 sm:w-8 sm:h-8" /> : <Lock className="w-7 h-7 sm:w-8 sm:h-8" />}
           </div>
-          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-widest text-[#FF5500] mb-1">
+          <div className="flex items-center gap-2 text-[10px] sm:text-[11px] font-mono uppercase tracking-widest text-[#FF5500] mb-1">
             <Terminal className="w-3.5 h-3.5" />
             <span>{user ? "UNAUTHORIZED_ROLE // ACCESS_DENIED" : "RESTRICTED_ACCESS // SEC_LVL_4"}</span>
           </div>
-          <h1 className="text-2xl font-black font-mono tracking-tight text-foreground">
+          <h1 className="text-xl sm:text-2xl font-black font-mono tracking-tight text-foreground">
             {user ? "ACCESS_DENIED" : "ADMIN_CONTROL_GATE"}
           </h1>
           <p className="text-xs font-mono text-foreground/50 mt-2 max-w-xs leading-relaxed">
@@ -104,7 +104,7 @@ export default function AdminGate() {
                 type="button"
                 onClick={handleSwitchAccount}
                 disabled={signingIn}
-                className="w-full py-3.5 px-6 rounded-xl bg-[#FF5500] hover:bg-[#FF6611] active:scale-[0.99] text-white font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,85,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl bg-[#FF5500] hover:bg-[#FF6611] active:scale-[0.99] text-white font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,85,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer min-h-[44px]"
               >
                 {signingIn ? (
                   <>
@@ -121,7 +121,7 @@ export default function AdminGate() {
 
               <Link
                 href="/"
-                className="w-full py-3 px-6 rounded-xl border border-border hover:bg-foreground/[0.05] text-foreground/70 hover:text-foreground font-mono text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 sm:px-6 rounded-xl border border-border hover:bg-foreground/[0.05] text-foreground/70 hover:text-foreground font-mono text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-2 min-h-[44px]"
               >
                 <span>RETURN TO HOMEPAGE</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -133,7 +133,7 @@ export default function AdminGate() {
                 type="button"
                 onClick={handleLogin}
                 disabled={loading || signingIn}
-                className="w-full py-3.5 px-6 rounded-xl bg-[#FF5500] hover:bg-[#FF6611] active:scale-[0.99] text-white font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,85,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full py-3 sm:py-3.5 px-4 sm:px-6 rounded-xl bg-[#FF5500] hover:bg-[#FF6611] active:scale-[0.99] text-white font-mono font-bold text-xs uppercase tracking-wider transition-all duration-200 flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,85,0,0.3)] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer min-h-[44px]"
               >
                 {signingIn ? (
                   <>
@@ -150,19 +150,13 @@ export default function AdminGate() {
 
               <Link
                 href="/"
-                className="w-full py-3 px-6 rounded-xl border border-border hover:bg-foreground/[0.05] text-foreground/70 hover:text-foreground font-mono text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 sm:px-6 rounded-xl border border-border hover:bg-foreground/[0.05] text-foreground/70 hover:text-foreground font-mono text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-2 min-h-[44px]"
               >
                 <span>RETURN TO HOMEPAGE</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </>
           )}
-        </div>
-
-        {/* Footer info - NO credentials, NO hardcoded passwords */}
-        <div className="mt-8 pt-4 border-t border-border/60 flex items-center justify-between text-[10px] font-mono text-foreground/40">
-          <span>PORTAL_VER: 2.6.4</span>
-          <span>AUTH: SUPABASE_RBAC</span>
         </div>
       </div>
     </div>

@@ -201,7 +201,7 @@ export default function ChainHero({ portalSettings, onApplyClick }: ChainHeroPro
                 <Link
                   href="/join"
                   onClick={onApplyClick}
-                  className="cyber-btn px-6 py-3.5 bg-[#E50914] hover:bg-[#e05500] text-white font-mono font-black text-xs uppercase tracking-widest shadow-[0_8px_24px_rgba(229,9,20,0.35)] transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
+                  className="cyber-btn px-6 py-3.5 bg-[#E50914] hover:bg-[#e05500] text-white font-mono font-black text-xs uppercase tracking-widest shadow-[0_8px_24px_rgba(229,9,20,0.35)] transition-all flex items-center justify-center gap-2 w-full sm:w-auto min-h-[44px]"
                 >
                   <span>{portalSettings?.cta_label || "SUBMIT PROJECT PROPOSAL"}</span>
                   <ArrowRight className="w-4 h-4" />
@@ -215,7 +215,7 @@ export default function ChainHero({ portalSettings, onApplyClick }: ChainHeroPro
             ref={centerColRef}
             className="lg:col-span-5 flex flex-col items-center justify-center py-2 px-1 select-none"
           >
-            <div className="relative w-full max-w-[320px] sm:max-w-[420px] lg:max-w-[540px] aspect-[490/594] overflow-hidden flex items-center justify-center">
+            <div className="relative w-full max-w-[280px] xs:max-w-[320px] sm:max-w-[420px] lg:max-w-[540px] aspect-[490/594] overflow-hidden flex items-center justify-center">
               <video
                 src="/chaingpt-assets/mechanical-core-loop.mp4"
                 autoPlay
@@ -331,12 +331,12 @@ export default function ChainHero({ portalSettings, onApplyClick }: ChainHeroPro
 
       </div>
 
-      {/* ── Cookie Banner (Matching Screenshot 1 exactly) ── */}
+      {/* ── Cookie Banner (Responsive & Fluid for Mobile) ── */}
       {showCookies && (
-        <div className="fixed bottom-4 right-4 z-50 max-w-sm bg-[#1A1A1A] text-white p-5 rounded-xl border border-white/10 shadow-2xl font-mono text-xs animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 z-50 w-auto sm:w-[380px] max-w-[calc(100vw-2rem)] bg-[#1A1A1A] text-white p-5 rounded-xl border border-white/10 shadow-2xl font-mono text-xs animate-in fade-in slide-in-from-bottom-4 duration-300">
           <button
             onClick={handleDismissCookies}
-            className="absolute top-2.5 right-2.5 text-white/40 hover:text-white transition-colors"
+            className="absolute top-2.5 right-2.5 text-white/40 hover:text-white transition-colors p-1"
             aria-label="Close notice"
           >
             <X className="w-3.5 h-3.5" />
@@ -347,13 +347,13 @@ export default function ChainHero({ portalSettings, onApplyClick }: ChainHeroPro
           <div className="flex items-center gap-2">
             <button
               onClick={handleDismissCookies}
-              className="flex-1 py-2 px-3 bg-white text-black font-bold rounded-lg text-center hover:bg-white/90 transition-colors cursor-pointer text-[10px] uppercase tracking-wider"
+              className="flex-1 py-2.5 px-3 min-h-[44px] bg-white text-black font-bold rounded-lg text-center hover:bg-white/90 transition-colors cursor-pointer text-[10px] uppercase tracking-wider"
             >
               ACCEPT
             </button>
             <button
               onClick={handleDismissCookies}
-              className="flex-1 py-2 px-3 bg-transparent border border-white/20 text-white font-bold rounded-lg text-center hover:bg-white/10 transition-colors cursor-pointer text-[10px] uppercase tracking-wider"
+              className="flex-1 py-2.5 px-3 min-h-[44px] bg-transparent border border-white/20 text-white font-bold rounded-lg text-center hover:bg-white/10 transition-colors cursor-pointer text-[10px] uppercase tracking-wider"
             >
               REJECT
             </button>
